@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jim Agent From Scratch — 25 章实战课程</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050510;--bg2:#0a0a1a;--bg3:#10101f;
+  --surface:rgba(15,15,35,.6);--surface-hover:rgba(20,20,50,.8);
+  --border:rgba(255,255,255,.06);--border-hover:rgba(0,212,255,.25);
+  --fg:#e2e8f0;--fg2:#94a3b8;--fg3:#64748b;
+  --cyan:#00d4ff;--violet:#8b5cf6;--emerald:#10b981;--amber:#f59e0b;--rose:#f43f5e;
+  --radius:16px;--radius-sm:10px;
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--bg);color:var(--fg);line-height:1.7;overflow-x:hidden}
+a{color:var(--cyan);text-decoration:none;transition:color .2s}
+a:hover{color:#fff}
+code,pre{font-family:var(--font-mono)}
+
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.grid-bg{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,.02) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent)}
+
+.orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none}
+.orb-1{width:600px;height:600px;top:-200px;left:-100px;background:rgba(139,92,246,.12)}
+.orb-2{width:500px;height:500px;bottom:-100px;right:-100px;background:rgba(0,212,255,.08)}
+.orb-3{width:400px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(16,185,129,.05)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(5,5,16,.8);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);padding:0 2rem}
+nav .inner{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+nav .logo{font-family:var(--font-display);font-weight:700;font-size:1.05rem;color:#fff;
+  display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
+nav .logo .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));font-size:.85rem}
+nav .links{display:flex;gap:2rem}
+nav .links a{color:var(--fg3);font-size:.875rem;font-weight:500;transition:color .2s;letter-spacing:.01em}
+nav .links a:hover{color:#fff}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:7rem 2rem 5rem;position:relative}
+.hero-content{position:relative;z-index:1;max-width:820px}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;
+  border-radius:100px;font-size:.8rem;font-weight:500;color:var(--cyan);
+  background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);margin-bottom:2rem;letter-spacing:.04em}
+.hero .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.5rem,6vw,4.2rem);font-weight:700;
+  line-height:1.1;margin-bottom:1.5rem;letter-spacing:-.03em}
+.hero h1 .gradient{background:linear-gradient(135deg,#fff 0%,var(--cyan) 40%,var(--violet) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .subtitle{font-size:1.15rem;color:var(--fg2);max-width:620px;margin:0 auto 2.5rem;line-height:1.8}
+
+.cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:var(--radius-sm);
+  font-size:.95rem;font-weight:600;cursor:pointer;border:none;transition:all .25s;font-family:var(--font-body)}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#fff;
+  box-shadow:0 0 30px rgba(0,212,255,.2),0 0 60px rgba(139,92,246,.1)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(0,212,255,.3),0 0 80px rgba(139,92,246,.15)}
+.btn-secondary{background:var(--surface);color:var(--fg);
+  border:1px solid var(--border);backdrop-filter:blur(10px)}
+.btn-secondary:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3.5rem;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat .val{font-family:var(--font-display);font-size:2.2rem;font-weight:700;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stat .lbl{font-size:.8rem;color:var(--fg3);margin-top:2px;letter-spacing:.02em}
+
+section{padding:6rem 2rem;max-width:1200px;margin:auto;position:relative;z-index:1}
+.section-header{text-align:center;margin-bottom:4rem}
+.section-header .tag{display:inline-block;padding:4px 14px;border-radius:100px;font-size:.75rem;
+  font-weight:600;color:var(--cyan);background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.15);
+  letter-spacing:.06em;margin-bottom:1rem}
+.section-header h2{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,2.4rem);
+  font-weight:700;letter-spacing:-.02em;margin-bottom:.75rem}
+.section-header p{color:var(--fg2);font-size:1.05rem;max-width:550px;margin:0 auto}
+
+.bento{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+.bento-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:2rem;position:relative;overflow:hidden;transition:all .3s;backdrop-filter:blur(10px)}
+.bento-card:hover{border-color:var(--border-hover);transform:translateY(-3px);
+  box-shadow:0 8px 40px rgba(0,212,255,.06)}
+.bento-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:opacity .3s}
+.bento-card:hover::before{opacity:1}
+.bento-card .card-icon{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;
+  align-items:center;justify-content:center;margin-bottom:1.25rem;font-size:1.2rem}
+.bento-card h3{font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin-bottom:.4rem;letter-spacing:-.01em}
+.bento-card .desc{color:var(--fg2);font-size:.88rem;margin-bottom:1.25rem;line-height:1.6}
+.bento-card .tags{display:flex;flex-wrap:wrap;gap:6px}
+.bento-card .tag{padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:500;
+  background:rgba(255,255,255,.04);color:var(--fg3);letter-spacing:.01em}
+
+.bento-card.m1 .card-icon{background:rgba(0,212,255,.1);color:var(--cyan)}
+.bento-card.m2 .card-icon{background:rgba(16,185,129,.1);color:var(--emerald)}
+.bento-card.m3 .card-icon{background:rgba(139,92,246,.1);color:var(--violet)}
+.bento-card.m4 .card-icon{background:rgba(245,158,11,.1);color:var(--amber)}
+.bento-card.m5 .card-icon{background:rgba(244,63,94,.1);color:var(--rose)}
+
+.curriculum-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+.curr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;backdrop-filter:blur(10px)}
+.curr-card .curr-head{padding:1.25rem 1.5rem;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border)}
+.curr-card .curr-dot{width:8px;height:8px;border-radius:50%}
+.curr-card .curr-title{font-family:var(--font-display);font-weight:600;font-size:.95rem}
+.curr-card ul{list-style:none;padding:.5rem 0}
+.curr-card li{padding:.55rem 1.5rem;font-size:.88rem;color:var(--fg2);display:flex;
+  align-items:center;gap:12px;transition:background .2s;cursor:default}
+.curr-card li:hover{background:rgba(255,255,255,.02)}
+.curr-card li .ch-num{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:.72rem;font-weight:600;background:rgba(255,255,255,.04);
+  color:var(--fg3);flex-shrink:0;font-family:var(--font-mono)}
+
+.curr-card.m1 .curr-dot{background:var(--cyan)}
+.curr-card.m2 .curr-dot{background:var(--emerald)}
+.curr-card.m3 .curr-dot{background:var(--violet)}
+.curr-card.m4 .curr-dot{background:var(--amber)}
+.curr-card.m5 .curr-dot{background:var(--rose)}
+
+.arch-container{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:2.5rem;overflow-x:auto;backdrop-filter:blur(10px);position:relative}
+.arch-container::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--violet),transparent)}
+.arch-container pre{font-family:var(--font-mono);font-size:.82rem;line-height:1.9;color:var(--fg2)}
+.arch-container .kw{color:var(--violet)}
+.arch-container .str{color:var(--emerald)}
+.arch-container .cm{color:#3a3a5a;font-style:italic}
+.arch-container .hl{color:var(--cyan);font-weight:600}
+
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.75rem;backdrop-filter:blur(10px);transition:all .3s}
+.feature-card:hover{border-color:var(--border-hover)}
+.feature-card .f-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;
+  align-items:center;justify-content:center;margin-bottom:1rem;
+  background:rgba(0,212,255,.08);color:var(--cyan)}
+.feature-card h4{font-family:var(--font-display);font-size:.95rem;font-weight:600;margin-bottom:.4rem}
+.feature-card p{font-size:.84rem;color:var(--fg2);line-height:1.6}
+
+.quickstart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:2.5rem;max-width:720px;margin:0 auto;backdrop-filter:blur(10px);position:relative}
+.quickstart-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.qs-step{display:flex;gap:1.25rem;margin-bottom:2rem;align-items:flex-start}
+.qs-step:last-child{margin-bottom:0}
+.qs-step .step-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:.85rem;font-weight:700;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(139,92,246,.15));
+  color:var(--cyan);border:1px solid rgba(0,212,255,.2)}
+.qs-step h4{font-family:var(--font-display);font-size:.95rem;font-weight:600;margin-bottom:.5rem}
+.qs-step pre{background:var(--bg);padding:1rem 1.25rem;border-radius:var(--radius-sm);
+  font-size:.82rem;color:var(--emerald);overflow-x:auto;border:1px solid var(--border)}
+
+.tech-row{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:2.5rem}
+.tech-pill{padding:6px 16px;border-radius:100px;font-size:.78rem;font-weight:500;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--fg3);
+  transition:all .2s;cursor:default}
+.tech-pill:hover{border-color:var(--border-hover);color:var(--fg)}
+
+.cta-section{text-align:center;padding:6rem 2rem;position:relative;z-index:1}
+.cta-box{max-width:600px;margin:0 auto;padding:3rem;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);backdrop-filter:blur(10px);
+  position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;inset:-1px;border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--cyan),var(--violet));opacity:.1;z-index:0}
+.cta-box>*{position:relative;z-index:1}
+.cta-box h2{font-family:var(--font-display);font-size:1.8rem;font-weight:700;margin-bottom:.75rem}
+.cta-box p{color:var(--fg2);margin-bottom:1.5rem}
+
+footer{text-align:center;padding:3rem 2rem;border-top:1px solid var(--border);
+  color:var(--fg3);font-size:.82rem;position:relative;z-index:1}
+footer .brand{font-family:var(--font-display);font-weight:600;color:var(--fg2)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0;animation:fadeUp .6s cubic-bezier(.22,1,.36,1) forwards}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}
+.reveal{opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:1024px){.bento,.curriculum-grid,.features-grid{grid-template-columns:1fr}}
+@media(max-width:768px){
+  nav .links{display:none}
+  .hero h1{font-size:2.2rem}
+  .hero-stats{gap:1.5rem}
+  section{padding:3.5rem 1.25rem}
+  .bento,.curriculum-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+}
+nav{padding-left:170px!important}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- 导航 -->
+<nav>
+  <div class="inner">
+    <div class="logo">
+      <div class="icon">J</div>
+      Jim Agent
+    </div>
+    <div class="links">
+      <a href="#modules">课程模块</a>
+      <a href="#curriculum">完整大纲</a>
+      <a href="#architecture">架构设计</a>
+      <a href="#features">学完收获</a>
+      <a href="#quickstart">快速开始</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 首屏 -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow fade-up"><span class="dot"></span> 25 章实战 &middot; 从零构建 &middot; 工程级代码</div>
+    <h1 class="fade-up d1"><span class="gradient">Jim Agent</span><br>From Scratch</h1>
+    <p class="subtitle fade-up d2">不调用框架，不依赖黑盒。用 Python 从第一行代码开始，亲手构建一个能读文件、写代码、跑命令的 AI 编程助手。</p>
+    <div class="cta-group fade-up d3">
+      <a href="#quickstart" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        立即开始
+      </a>
+      <a href="#curriculum" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        查看大纲
+      </a>
+    </div>
+    <div class="hero-stats fade-up d4">
+      <div class="hero-stat"><div class="val">25</div><div class="lbl">实战章节</div></div>
+      <div class="hero-stat"><div class="val">110+</div><div class="lbl">单元测试</div></div>
+      <div class="hero-stat"><div class="val">6</div><div class="lbl">核心工具</div></div>
+      <div class="hero-stat"><div class="val">2</div><div class="lbl">LLM Provider</div></div>
+      <div class="hero-stat"><div class="val">100%</div><div class="lbl">Mock 可测</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TARGET AUDIENCE -->
+<section style="padding:120px 80px;background:rgba(0,212,255,.02)">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-eyebrow">这门课适合谁？</div>
+    <h2 class="section-title">找到与你相似的学员</h2>
+    <p class="section-sub">不同背景的学员，都能从这门课中获得价值</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px">
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">查看 README.md</div>
+        <div style="font-size:.85rem;color:var(--fg3)">了解完整用户画像</div>
+      </div>
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">3 个典型学员</div>
+        <div style="font-size:.85rem;color:var(--fg3)">不同背景都能获益</div>
+      </div>
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">学习路径</div>
+        <div style="font-size:.85rem;color:var(--fg3)">清晰的进阶路线</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:48px">
+      <a class="btn-primary" href="README.md" style="display:inline-flex">查看完整用户画像</a>
+    </div>
+  </div>
+</section>
+<style>.persona-card:hover{border-color:rgba(0,212,255,.25)!important;transform:translateY(-4px)}</style>
+
+<section class="modules" id="modules">  <div class="section-header">    <div class="section-eyebrow">课程模块</div>    <h2 class="section-title">六大模块，从零到一</h2>    <p class="section-sub">每个模块独立成体系，循序渐进掌握核心能力</p>  </div></section>
+
+<!-- 课程模块 -->
+<section id="modules">
+  <div class="section-header">
+    <div class="tag">核心模块</div>
+    <h2>五大构建模块</h2>
+    <p>从类型系统到高级能力，循序渐进</p>
+  </div>
+  <div class="bento">
+    <div class="bento-card m1 reveal">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </div>
+      <h3>模块一 &mdash; 基础架构</h3>
+      <p class="desc">类型系统、Provider 抽象、流式输出、消息历史管理、Tool Use 协议</p>
+      <div class="tags">
+        <span class="tag">dataclass</span><span class="tag">Protocol</span>
+        <span class="tag">StreamEvent</span><span class="tag">MessageHistory</span>
+        <span class="tag">create_provider()</span>
+      </div>
+    </div>
+    <div class="bento-card m2 reveal">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <h3>模块二 &mdash; 工具实现</h3>
+      <p class="desc">文件读写、命令执行、代码搜索 &mdash; 赋予 Agent 双手</p>
+      <div class="tags">
+        <span class="tag">ReadFileTool</span><span class="tag">WriteFileTool</span>
+        <span class="tag">EditFileTool</span><span class="tag">BashTool</span>
+        <span class="tag">SearchFilesTool</span><span class="tag">GrepContentTool</span>
+      </div>
+    </div>
+    <div class="bento-card m3 reveal">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      </div>
+      <h3>模块三 &mdash; Agent 核心</h3>
+      <p class="desc">核心循环、并发执行、任务规划、错误恢复 &mdash; Agent 的心脏</p>
+      <div class="tags">
+        <span class="tag">AgentLoop</span><span class="tag">ConcurrentAgent</span>
+        <span class="tag">Plan-Then-Execute</span><span class="tag">retry_with_backoff</span>
+        <span class="tag">ResilientAgent</span>
+      </div>
+    </div>
+    <div class="bento-card m4 reveal">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>模块四 &mdash; 生产增强</h3>
+      <p class="desc">Prompt 设计、Token 管理、上下文压缩、CLI、安全防护、测试、最终集成</p>
+      <div class="tags">
+        <span class="tag">SystemPromptBuilder</span><span class="tag">TokenBudget</span>
+        <span class="tag">ContextCompressor</span><span class="tag">InjectionDetector</span>
+        <span class="tag">ProjectScanner</span><span class="tag">CodingAgent</span>
+      </div>
+    </div>
+    <div class="bento-card m5 reveal">
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </div>
+      <h3>模块五 &mdash; 高级能力</h3>
+      <p class="desc">AST 代码理解、智能编辑、Git 集成、自动修复、语义搜索 &mdash; Agent 的眼睛</p>
+      <div class="tags">
+        <span class="tag">CodeAnalyzer</span><span class="tag">StructuredEditor</span>
+        <span class="tag">GitTool</span><span class="tag">FixLoop</span>
+        <span class="tag">SemanticSearchTool</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 课程大纲 -->
+<section id="curriculum">
+  <div class="section-header">
+    <div class="tag">完整大纲</div>
+    <h2>25 章课程目录</h2>
+    <p>每章包含：教案 + 可运行 Demo + Mock 测试套件</p>
+  </div>
+  <div class="curriculum-grid">
+    <div class="curr-card m1 reveal">
+      <div class="curr-head"><span class="curr-dot"></span><span class="curr-title">模块一：基础架构</span></div>
+      <ul>
+        <li><span class="ch-num">01</span> LLM Provider 抽象 &mdash; types.py + Protocol + 工厂模式</li>
+        <li><span class="ch-num">02</span> 流式响应与 SSE &mdash; StreamEvent + 增量解析</li>
+        <li><span class="ch-num">03</span> 消息历史管理 &mdash; MessageHistory + 不可变保护</li>
+        <li><span class="ch-num">04</span> Tool Use 协议 &mdash; JSON Schema + ToolExecutor</li>
+      </ul>
+    </div>
+    <div class="curr-card m2 reveal">
+      <div class="curr-head"><span class="curr-dot"></span><span class="curr-title">模块二：工具实现</span></div>
+      <ul>
+        <li><span class="ch-num">05</span> Read 文件读取 &mdash; 行号/偏移/二进制检测</li>
+        <li><span class="ch-num">06</span> Write/Edit 文件 &mdash; 原子写入/精确替换</li>
+        <li><span class="ch-num">07</span> Bash 命令执行 &mdash; 超时控制/安全黑名单</li>
+        <li><span class="ch-num">08</span> Search 代码搜索 &mdash; glob + regex 双引擎</li>
+      </ul>
+    </div>
+    <div class="curr-card m3 reveal">
+      <div class="curr-head"><span class="curr-dot"></span><span class="curr-title">模块三：Agent 核心</span></div>
+      <ul>
+        <li><span class="ch-num">09</span> 核心 Agent Loop &mdash; LLM &rarr; Tool &rarr; Result &rarr; Loop</li>
+        <li><span class="ch-num">10</span> 并发工具调用 &mdash; ThreadPoolExecutor 并行</li>
+        <li><span class="ch-num">11</span> 规划与任务分解 &mdash; Plan-Then-Execute</li>
+        <li><span class="ch-num">12</span> 错误处理与恢复 &mdash; 指数退避/自我修正</li>
+      </ul>
+    </div>
+    <div class="curr-card m4 reveal">
+      <div class="curr-head"><span class="curr-dot"></span><span class="curr-title">模块四：生产增强</span></div>
+      <ul>
+        <li><span class="ch-num">13</span> System Prompt 设计 &mdash; 分层/动态上下文</li>
+        <li><span class="ch-num">14</span> Token 计数与预算 &mdash; tiktoken + 分配策略</li>
+        <li><span class="ch-num">15</span> 上下文压缩 &mdash; 截断/滑动窗口/LLM 摘要</li>
+        <li><span class="ch-num">16</span> CLI 界面 &mdash; Rich + 流式 Markdown</li>
+        <li><span class="ch-num">17</span> 安全防护 &mdash; 注入检测/命令黑名单/路径安全</li>
+        <li><span class="ch-num">18</span> 项目感知 &mdash; 目录扫描/技术栈检测</li>
+        <li><span class="ch-num">19</span> 测试与调试 &mdash; MockFactory + E2E 测试</li>
+        <li><span class="ch-num">20</span> 最终集成 &mdash; 完整 CodingAgent</li>
+      </ul>
+    </div>
+    <div class="curr-card m5 reveal">
+      <div class="curr-head"><span class="curr-dot"></span><span class="curr-title">模块五：高级能力</span></div>
+      <ul>
+        <li><span class="ch-num">21</span> AST 代码解析 &mdash; 符号提取 + 依赖图</li>
+        <li><span class="ch-num">22</span> 智能文件编辑 &mdash; Diff 管理 + Undo/Redo</li>
+        <li><span class="ch-num">23</span> Git 集成 &mdash; 版本控制 + 安全策略</li>
+        <li><span class="ch-num">24</span> 测试驱动修复 &mdash; Edit &rarr; Test &rarr; Fix 闭环</li>
+        <li><span class="ch-num">25</span> 语义代码搜索 &mdash; 向量检索 + Embedding</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 架构设计 -->
+<section id="architecture">
+  <div class="section-header">
+    <div class="tag">架构设计</div>
+    <h2>工程化设计，不是玩具</h2>
+    <p>贯穿始终的生产级设计模式</p>
+  </div>
+  <div class="arch-container reveal">
+<pre><span class="cm">// 核心类型系统</span>
+<span class="kw">dataclass</span>  Message         <span class="cm">// 统一消息 — system / user / assistant / tool</span>
+<span class="kw">dataclass</span>  ChatResponse    <span class="cm">// LLM 响应 — content + tool_calls + usage</span>
+<span class="kw">dataclass</span>  StreamEvent     <span class="cm">// 流式事件 — text / tool_call_start / done</span>
+<span class="kw">dataclass</span>  ToolCall        <span class="cm">// 工具调用 — id + name + arguments</span>
+<span class="kw">Protocol</span>   LLMProvider     <span class="cm">// Provider 接口 — chat() + chat_stream()</span>
+
+<span class="cm">// Provider 实现（工厂模式）</span>
+<span class="hl">create_provider()</span> &rarr;
+  &boxvr;&nbsp; OpenAICompatibleProvider   <span class="cm">// GPT / 兼容 API</span>
+  &boxur;&nbsp; AnthropicProvider          <span class="cm">// Claude</span>
+
+<span class="cm">// 消息历史（不可变保护）</span>
+MessageHistory
+  &boxvr;&nbsp; add_user / add_assistant / add_tool_result
+  &boxvr;&nbsp; get_messages()  <span class="cm">// &larr; 返回浅拷贝</span>
+  &boxur;&nbsp; truncate / estimate_tokens
+
+<span class="cm">// Agent 核心</span>
+CodingAgent
+  &boxvr;&nbsp; <span class="hl">AgentLoop</span>:  LLM &rarr; Tool &rarr; Result &rarr; Loop
+  &boxvr;&nbsp; <span class="hl">Tools</span>:     read_file / write_file / edit_file / run_bash / search / grep
+  &boxvr;&nbsp; <span class="hl">Stream</span>:    流式输出 + 流式 tool_use 拼接
+  &boxvr;&nbsp; <span class="hl">Safety</span>:    注入检测 + 命令黑名单 + 路径安全
+  &boxur;&nbsp; <span class="hl">Context</span>:   Token 预算 + 上下文压缩 + 项目感知</pre>
+  </div>
+</section>
+
+<!-- 学完收获 -->
+<section id="features">
+  <div class="section-header">
+    <div class="tag">学完收获</div>
+    <h2>不是只会调 API</h2>
+    <p>理解 AI Agent 的每一个零件</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="f-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <h4>Protocol 与类型系统</h4>
+      <p>用 dataclass + Protocol 构建可扩展的类型体系，理解结构化子类型</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="f-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      </div>
+      <h4>Agent Loop 核心循环</h4>
+      <p>LLM 思考 &rarr; 调用工具 &rarr; 接收结果 &rarr; 继续思考，亲手实现这个心脏</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="f-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <h4>流式输出与 SSE</h4>
+      <p>增量解析 delta.content / delta.tool_calls，实现打字机效果</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="f-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h4>安全防护体系</h4>
+      <p>注入检测、命令黑名单、路径安全 &mdash; 生产级安全策略</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="f-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 1.66-4 6-9 6s-9-4.34-9-6 4-6 9-6 9 4.34 9 6z"/></svg>
+      </div>
+      <h4>Mock 测试方法论</h4>
+      <p>无需 API Key 即可运行完整测试套件，掌握 unittest.mock 技巧</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="f-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <h4>Token 与上下文管理</h4>
+      <p>Token 计数、预算分配、上下文压缩 &mdash; 让 Agent 在长对话中保持稳定</p>
+    </div>
+  </div>
+</section>
+
+<!-- 快速开始 -->
+<section id="quickstart">
+  <div class="section-header">
+    <div class="tag">快速开始</div>
+    <h2>5 分钟跑起来</h2>
+  </div>
+  <div class="quickstart-card reveal">
+    <div class="qs-step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>安装依赖</h4>
+        <pre>pip install -r requirements.txt</pre>
+      </div>
+    </div>
+    <div class="qs-step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>运行任意章节（无需 API Key，Mock 测试可直接跑）</h4>
+        <pre>python demos/ch09/main.py    <span style="color:var(--fg3)"># 核心 Agent Loop</span>
+python demos/ch19/main.py    <span style="color:var(--fg3)"># 完整测试套件</span></pre>
+      </div>
+    </div>
+    <div class="qs-step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>启动完整 Agent（需要 API Key）</h4>
+        <pre>export OPENAI_API_KEY=your_key
+python demos/ch20/main.py</pre>
+      </div>
+    </div>
+  </div>
+  <div class="tech-row">
+    <span class="tech-pill">Python 3.10+</span>
+    <span class="tech-pill">OpenAI API</span>
+    <span class="tech-pill">Anthropic API</span>
+    <span class="tech-pill">dataclass</span>
+    <span class="tech-pill">Protocol</span>
+    <span class="tech-pill">tiktoken</span>
+    <span class="tech-pill">subprocess</span>
+    <span class="tech-pill">unittest.mock</span>
+    <span class="tech-pill">ThreadPoolExecutor</span>
+    <span class="tech-pill">Rich</span>
+    <span class="tech-pill">prompt_toolkit</span>
+    <span class="tech-pill">ast</span>
+    <span class="tech-pill">difflib</span>
+    <span class="tech-pill">numpy</span>
+  </div>
+</section>
+
+<!-- 行动号召 -->
+<div class="cta-section">
+  <div class="cta-box reveal">
+    <h2>准备好开始了吗？</h2>
+    <p>25 章课程，130+ 测试，一个完整的 AI Agent，零框架依赖。</p>
+    <a href="#quickstart" class="btn btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      开始构建
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p><span class="brand">Jim Agent From Scratch</span> &mdash; 从零构建你的 AI Coding Agent</p>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+<style>#sx-back{position:fixed;left:18px;top:16px;z-index:99999;display:flex;align-items:center;gap:8px;
+background:rgba(6,13,26,.82);border:1px solid rgba(0,180,216,.3);border-radius:999px;
+padding:6px 16px 6px 12px;text-decoration:none;color:#A8B8CC;
+font:12px/1 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.5px;
+backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+#sx-back:hover{border-color:rgba(255,140,66,.6);color:#fff}
+#sx-back img{width:15px;height:15px;display:block}</style>
+<a id="sx-back" href="/"><img src="/images/logo.png" alt="">← 熵减智算</a>
+</body>
+</html>

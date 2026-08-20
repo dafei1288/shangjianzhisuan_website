@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'GeistMono';
+  src: url('/node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    /* 深空秩序配色方案 — Deep Space Order */
+    --background: 222 47% 5%;            /* #060D1A 深空蓝 */
+    --foreground: 0 0% 100%;
+    --card: 220 50% 9%;                  /* #0B1626 深蓝卡片 */
+    --card-foreground: 0 0% 100%;
+    --popover: 222 47% 5%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 190 100% 42%;             /* #00B4D8 量子青 */
+    --primary-foreground: 222 47% 8%;
+    --secondary: 190 75% 21%;            /* #0D4F5C 深青墨 */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 222 30% 13%;                /* 静默蓝灰 */
+    --muted-foreground: 200 15% 68%;     /* 蓝灰文字 */
+    --accent: 24 100% 63%;               /* #FF8C42 熵火橙 */
+    --accent-foreground: 222 47% 8%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 190 80% 50% / 0.12;        /* 量子青微透明边 */
+    --input: 222 30% 13%;
+    --ring: 190 100% 42%;                /* 量子青聚焦环 */
+    --radius: 0px;
+  }
+
+  body {
+    @apply bg-[#060D1A] text-white;
+    font-family: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    font-weight: 200;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'EB Garamond', 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+    font-weight: 400;
+  }
+}
+
+@layer components {
+  @keyframes blur-text {
+    0% {
+      filter: blur(0px);
+      opacity: 1;
+    }
+    100% {
+      filter: blur(4px);
+      opacity: 0.4;
+    }
+  }
+
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: #060D1A;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  .loading-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .loading-text {
+    display: flex;
+    gap: 12px;
+  }
+
+  .loading-text span {
+    display: inline-block;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    font-size: 18px;
+    letter-spacing: 8px;
+    filter: blur(0px);
+    animation: blur-text 1.5s infinite linear alternate;
+  }
+
+  .loading-text span:nth-child(1) { animation-delay: 0.0s; }
+  .loading-text span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-text span:nth-child(3) { animation-delay: 0.4s; }
+  .loading-text span:nth-child(4) { animation-delay: 0.6s; }
+  .loading-text span:nth-child(5) { animation-delay: 0.8s; }
+  .loading-text span:nth-child(6) { animation-delay: 1.0s; }
+  .loading-text span:nth-child(7) { animation-delay: 1.2s; }
+
+  .nav-link {
+    position: relative;
+    color: #A8B8CC;
+    font-family: 'GeistMono', 'Fira Code', 'PingFang SC', 'Microsoft YaHei', monospace;
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    padding-bottom: 2px;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(0, 180, 216, 0.6);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-link:hover {
+    color: #ffffff;
+  }
+
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .nav-dropdown-item {
+    display: block;
+    padding: 10px 22px;
+    color: #A8B8CC;
+    font-family: 'GeistMono', 'Fira Code', 'PingFang SC', 'Microsoft YaHei', monospace;
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .nav-dropdown-item:hover {
+    color: #FF8C42;
+    background-color: rgba(0, 180, 216, 0.06);
+  }
+
+  .course-card {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+  }
+
+  .course-card:hover {
+    transform: translateY(-4px);
+    background-color: #0d1a2e;
+  }
+
+  .course-card:hover .course-card-title {
+    color: var(--course-accent) !important;
+  }
+}

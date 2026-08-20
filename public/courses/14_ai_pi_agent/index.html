@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pi 智能体内核实战 — 30章从使用到深度定制</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05080f;--bg2:#080d1a;
+  --fg:#e8eef5;--fg2:#8896ad;--fg3:#45506a;
+  --border:rgba(34,211,238,.09);
+  --accent:#22d3ee;--accent2:#38bdf8;--accent3:#7dd3fc;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'Outfit',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --nav-h:64px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-b);background:var(--bg);color:var(--fg);overflow-x:hidden;line-height:1.6}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 48px 0 172px;transition:background .4s,backdrop-filter .4s}
+nav.scrolled{background:rgba(5,8,15,.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-m);font-size:1.1rem;letter-spacing:.08em;color:var(--fg);text-decoration:none}
+.nav-logo em{color:var(--accent);font-style:normal}
+.nav-logo .cursor{color:var(--fg3);animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:var(--nav-h) 48px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(34,211,238,.07) 0%,transparent 60%)}
+.hero-eyebrow{font-family:var(--font-m);font-size:.78rem;color:var(--accent);letter-spacing:.22em;text-transform:uppercase;margin-bottom:28px}
+.hero-title{font-family:var(--font-d);font-size:clamp(3rem,10vw,8rem);line-height:.9;letter-spacing:.02em;margin-bottom:24px}
+.hero-title .ghost{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.22)}
+.hero-sub{font-size:clamp(.95rem,1.8vw,1.2rem);color:var(--fg2);font-weight:300;max-width:640px;margin:0 auto 32px}
+.hero-quote{font-family:var(--font-m);font-size:.8rem;color:var(--fg3);margin-bottom:48px}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:100px;font-size:.9rem;font-weight:600;background:var(--accent);color:#04121a;text-decoration:none;transition:all .3s;border:none}
+.hero-cta:hover{transform:translateY(-3px);background:var(--accent2);box-shadow:0 20px 40px rgba(34,211,238,.25)}
+
+/* STATS */
+.stats{max-width:1100px;margin:0 auto;padding:0 48px 80px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:28px 24px;text-align:center}
+.stat-v{font-family:var(--font-d);font-size:2.5rem;color:var(--accent);letter-spacing:.02em}
+.stat-l{font-family:var(--font-m);font-size:.72rem;color:var(--fg3);letter-spacing:.12em;text-transform:uppercase;margin-top:6px}
+
+/* MODULES */
+.modules{max-width:1100px;margin:0 auto;padding:80px 48px}
+.module{margin-bottom:64px}
+.module-title{font-family:var(--font-d);font-size:2rem;letter-spacing:.04em;margin-bottom:8px;color:var(--accent)}
+.module-desc{color:var(--fg2);font-size:.95rem;margin-bottom:24px;max-width:640px}
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.chapter-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:20px 24px;transition:all .3s}
+.chapter-card:hover{background:rgba(34,211,238,.05);border-color:rgba(34,211,238,.22);transform:translateY(-2px)}
+.chapter-num{font-family:var(--font-m);font-size:.72rem;color:var(--accent);letter-spacing:.12em;margin-bottom:8px}
+.chapter-name{font-size:1.05rem;font-weight:600;margin-bottom:6px}
+.chapter-detail{font-size:.82rem;color:var(--fg2);line-height:1.5}
+
+/* TECH */
+.tech-section{max-width:1100px;margin:0 auto;padding:0 48px 80px}
+.tech-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tech-tag{font-family:var(--font-m);font-size:.75rem;padding:6px 14px;border-radius:6px;background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.15);color:var(--accent2)}
+
+/* FOOTER */
+footer{background:#03060c;border-top:1px solid var(--border);padding:48px;text-align:center;font-size:.85rem;color:var(--fg3)}
+
+@media(max-width:768px){
+  nav{padding:0 24px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .chapter-grid{grid-template-columns:1fr}
+  .modules{padding:60px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="nav-logo" href="#hero">pi <em>@</em> your-workflow<span class="cursor">_</span></a>
+  <div style="display:flex;gap:16px;align-items:center">
+    <a href="#modules" style="color:var(--fg2);text-decoration:none;font-size:.85rem">课程大纲</a>
+    <a href="docs/" style="color:var(--fg2);text-decoration:none;font-size:.85rem">教案文档</a>
+    <a href="#tech" style="color:var(--fg2);text-decoration:none;font-size:.85rem">技术栈</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">// 30 章深度课程 · 极简内核智能体框架</div>
+  <h1 class="hero-title">Pi<br><span class="ghost">Agent 实战</span></h1>
+  <p class="hero-sub">围绕 pi（pi.dev）——一个极简内核的终端编码智能体。从 Agent Loop 原理，到扩展开发、SDK 嵌入，再到拆解生产级开源扩展 pi-agent-hud。一套内容，两条路径：入门者学会用，开发者学会造。</p>
+  <div class="hero-quote">"There are many agent harnesses, but this one is yours."</div>
+  <a class="hero-cta" href="docs/">开始学习 →</a>
+</section>
+
+<div class="stats" id="stats">
+  <div class="stat"><div class="stat-v">30</div><div class="stat-l">章节</div></div>
+  <div class="stat"><div class="stat-v">8</div><div class="stat-l">模块</div></div>
+  <div class="stat"><div class="stat-v">2</div><div class="stat-l">学习路径</div></div>
+  <div class="stat"><div class="stat-v">1</div><div class="stat-l">生产级实战项目</div></div>
+</div>
+
+<div class="modules" id="modules">
+  <div class="module">
+    <div class="module-title">Module 1: 认识 pi 与智能体基础</div>
+    <div class="module-desc">极简内核是什么、Agent Loop 怎么转、如何装好跑起第一个会话。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch01</div><div class="chapter-name">认识 pi：极简内核智能体</div><div class="chapter-detail">定位、与 Claude Code/Codex 对比、四个扩展维度、哲学</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch02</div><div class="chapter-name">智能体工作原理：Agent Loop</div><div class="chapter-detail">LLM+工具+循环、四工具职责、系统提示、为什么内核可以极小</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch03</div><div class="chapter-name">安装与第一次对话</div><div class="chapter-detail">npm/curl 安装、/login 认证、API Key vs 订阅、首会话</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch04</div><div class="chapter-name">四大运行模式</div><div class="chapter-detail">interactive / print / json / rpc 一次看懂</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 2: 日常驾驶 pi</div>
+    <div class="module-desc">把交互界面的效率拉满：输入技巧、命令体系、会话树、上下文压缩、项目配置。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch05</div><div class="chapter-name">交互模式：编辑器与输入技巧</div><div class="chapter-detail">@文件引用、!/!! bash、多行、贴图、外置编辑器、快捷键</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch06</div><div class="chapter-name">斜杠命令与消息队列</div><div class="chapter-detail">内置命令、模型切换、thinking 等级、steering/follow-up</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch07</div><div class="chapter-name">会话树：分支、恢复与导出</div><div class="chapter-detail">JSONL 树、/tree、/fork、/clone、export/import/share</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch08</div><div class="chapter-name">上下文压缩 Compaction</div><div class="chapter-detail">手动/自动、threshold/overflow、有损性与 /tree 找回</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch09</div><div class="chapter-name">设置、上下文文件与项目信任</div><div class="chapter-detail">settings.json、AGENTS.md/CLAUDE.md、SYSTEM.md、trust 流程</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 3: 模型与提示</div>
+    <div class="module-desc">让模型"更懂你"：提示模板、提供商与思维等级、自定义模型。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch10</div><div class="chapter-name">提示模板 Prompt Templates</div><div class="chapter-detail">/名称 展开、{{变量}}、存放位置、模板库设计</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch11</div><div class="chapter-name">模型、提供商与思维等级</div><div class="chapter-detail">20+ 提供商、订阅 vs API Key、thinking 七档、llama.cpp</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch12</div><div class="chapter-name">自定义模型与提供商</div><div class="chapter-detail">models.json、自定义 provider、扩展实现 OAuth</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 4: 技能体系 Skills</div>
+    <div class="module-desc">按需加载的能力包：渐进式披露、SKILL.md、技能生态复用。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch13</div><div class="chapter-name">技能：渐进式能力加载</div><div class="chapter-detail">Agent Skills 标准、SKILL.md 结构、渐进式披露原理</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch14</div><div class="chapter-name">编写你的第一个技能</div><div class="chapter-detail">SKILL.md + 脚本 + 参考、测试调试、失败兜底</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch15</div><div class="chapter-name">技能生态与跨工具复用</div><div class="chapter-detail">技能仓库、复用 Claude/Codex 目录、分发方式</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 5: 扩展开发（核心）</div>
+    <div class="module-desc">TypeScript 扩展全链路：工具、事件、命令、UI、安全，最后拆解生产级开源扩展 pi-agent-hud。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch16</div><div class="chapter-name">扩展入门：第一个 Extension</div><div class="chapter-detail">三种形态、jiti 加载、registerTool+事件起步</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch17</div><div class="chapter-name">自定义工具开发</div><div class="chapter-detail">execute 契约、typebox schema、动态工具、setActiveTools</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch18</div><div class="chapter-name">事件系统：拦截与改造一切</div><div class="chapter-detail">事件生命周期、tool_call 拦截、tool_result 改写、input 转换</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch19</div><div class="chapter-name">自定义命令、快捷键与标志</div><div class="chapter-detail">registerCommand/Shortcut/Flag、waitForIdle/newSession/reload</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch20</div><div class="chapter-name">用户交互与自定义 TUI</div><div class="chapter-detail">select/confirm/input、custom 组件、widget/status、编辑器替换</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch21</div><div class="chapter-name">安全扩展：权限门与沙箱</div><div class="chapter-detail">危险命令拦截、路径保护、白名单、容器化、git 检查点</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch22</div><div class="chapter-name">实战：拆解 pi-agent-hud</div><div class="chapter-detail">⭐ 使用+开发双视角：状态栏/浮层/插件系统、八模块源码解剖</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 6: 打包与分享</div>
+    <div class="module-desc">把能力变成可分发产品：Pi 包机制与哲学落地。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch23</div><div class="chapter-name">Pi 包：分发你的扩展</div><div class="chapter-detail">pi install/remove/update、pi 清单、git vs npm 包</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch24</div><div class="chapter-name">哲学落地：亲手补齐缺失功能</div><div class="chapter-detail">tmux 子代理、MCP 扩展、plan.md、TODO.md</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 7: 程序化使用</div>
+    <div class="module-desc">把 agent 装进你的程序：SDK 嵌入、会话运行时、RPC 与事件流。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch25</div><div class="chapter-name">SDK 入门：嵌入你的应用</div><div class="chapter-detail">createAgentSession、ModelRuntime、subscribe、prompt/steer</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch26</div><div class="chapter-name">SDK 进阶：会话、设置与运行时</div><div class="chapter-detail">SessionManager、SettingsManager、AgentSessionRuntime、run modes</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch27</div><div class="chapter-name">RPC 模式与 JSON 事件流</div><div class="chapter-detail">--mode rpc 协议、--mode json、CI 自动化、SDK vs RPC 选型</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 8: 综合实战</div>
+    <div class="module-desc">毕业之路：子代理编排、专属工作流、发布自己的 Pi 包。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch28</div><div class="chapter-name">实战：构建 Sub-Agent 编排扩展</div><div class="chapter-detail">委派系统、tmux worker、结果文件协议、汇总</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch29</div><div class="chapter-name">实战：专属智能体工作流</div><div class="chapter-detail">五层架构：宪法/能力/快捷/逻辑/观察，团队模板化</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch30</div><div class="chapter-name">毕业项目：发布你的第一个 Pi 包</div><div class="chapter-detail">打包、本地测试、npm 发布、文档宣传、课程总结</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="tech-section" id="tech">
+  <div class="module-title" style="margin-bottom:16px">技术栈</div>
+  <div class="tech-grid">
+    <span class="tech-tag">pi (pi-coding-agent)</span>
+    <span class="tech-tag">TypeScript</span>
+    <span class="tech-tag">Node.js</span>
+    <span class="tech-tag">typebox</span>
+    <span class="tech-tag">Agent Skills</span>
+    <span class="tech-tag">SDK</span>
+    <span class="tech-tag">RPC / JSONL</span>
+    <span class="tech-tag">tmux</span>
+    <span class="tech-tag">pi-agent-hud</span>
+    <span class="tech-tag">HyperFrames 视频</span>
+  </div>
+</div>
+
+<footer>
+  <p>Pi 智能体内核实战 · 30 章从使用到深度定制 · pi.dev · Jim's Courses © 2026</p>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, {passive:true});
+</script>
+
+<style>#sx-back{position:fixed;left:18px;top:16px;z-index:99999;display:flex;align-items:center;gap:8px;
+background:rgba(6,13,26,.82);border:1px solid rgba(0,180,216,.3);border-radius:999px;
+padding:6px 16px 6px 12px;text-decoration:none;color:#A8B8CC;
+font:12px/1 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.5px;
+backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+#sx-back:hover{border-color:rgba(255,140,66,.6);color:#fff}
+#sx-back img{width:15px;height:15px;display:block}</style>
+<a id="sx-back" href="/"><img src="/images/logo.png" alt="">← 熵减智算</a>
+</body>
+</html>

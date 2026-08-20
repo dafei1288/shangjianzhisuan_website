@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从零写编程语言 JimLang — 30章实战，亲手构建脚本语言</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#060d0a;--bg2:#0a1410;
+  --fg:#e8f0ec;--fg2:#88a898;--fg3:#3a5045;
+  --border:rgba(255,255,255,.07);
+  --accent:#10b981;--accent2:#34d399;--accent3:#6ee7b7;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'Outfit',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --nav-h:64px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-b);background:var(--bg);color:var(--fg);overflow-x:hidden;line-height:1.6}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 48px 0 172px;transition:background .4s}
+nav.scrolled{background:rgba(6,13,10,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-d);font-size:1.5rem;letter-spacing:.08em;color:var(--fg);text-decoration:none}
+.nav-logo em{color:var(--accent);font-style:normal}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-size:.82rem;color:var(--fg2);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-m);transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{font-size:.82rem;font-weight:600;color:#fff;background:var(--accent);border:none;padding:8px 20px;border-radius:100px;cursor:pointer;transition:all .2s;text-decoration:none}
+.nav-cta:hover{background:var(--accent2);transform:translateY(-1px)}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:var(--nav-h) 80px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 20% 50%,rgba(16,185,129,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 20%,rgba(52,211,153,.04) 0%,transparent 50%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 20%,transparent 80%)}
+.hero-visual{position:absolute;right:80px;top:50%;transform:translateY(-50%);width:460px;opacity:0;animation:fadeUp .8s .6s forwards}
+.pipeline{background:#0a1410;border:1px solid rgba(16,185,129,.2);border-radius:12px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 60px rgba(16,185,129,.05);padding:28px;font-family:var(--font-m);font-size:.78rem}
+.pipe-title{color:var(--fg3);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px}
+.pipe-stage{display:flex;align-items:flex-start;gap:14px;padding:12px 14px;border-radius:8px;margin-bottom:6px;border:1px solid transparent;transition:all .3s}
+.pipe-stage:hover{border-color:rgba(16,185,129,.25);background:rgba(16,185,129,.04)}
+.pipe-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.pipe-info{flex:1}
+.pipe-name{color:var(--fg);font-weight:500;margin-bottom:2px}
+.pipe-detail{font-size:.68rem;color:var(--fg3);line-height:1.5}
+.pipe-arrow{text-align:center;color:var(--fg3);font-size:.7rem;margin:2px 14px;opacity:.4}
+.hero-eyebrow{font-family:var(--font-m);font-size:.78rem;color:var(--accent);letter-spacing:.2em;text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeUp .8s .1s forwards}
+.hero-title{font-family:var(--font-d);font-size:clamp(3.5rem,8vw,7rem);line-height:.92;letter-spacing:.02em;margin-bottom:24px;opacity:0;animation:fadeUp .8s .25s forwards;max-width:640px}
+.hero-title .hl{color:var(--accent)}
+.hero-sub{font-size:1.05rem;color:var(--fg2);font-weight:300;max-width:500px;margin-bottom:48px;opacity:0;animation:fadeUp .8s .4s forwards;line-height:1.75}
+.hero-actions{display:flex;gap:16px;align-items:center;opacity:0;animation:fadeUp .8s .55s forwards}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:100px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .3s;border:none;text-decoration:none;background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 20px 40px rgba(16,185,129,.25)}
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:100px;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .3s;border:1px solid var(--border);text-decoration:none;color:var(--fg);background:rgba(255,255,255,.04)}
+.btn-secondary:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:48px;margin-top:64px;opacity:0;animation:fadeUp .8s .7s forwards}
+.stat-num{font-family:var(--font-d);font-size:2.5rem;color:var(--accent);line-height:1}
+.stat-label{font-family:var(--font-m);font-size:.7rem;color:var(--fg3);letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.modules{padding:120px 80px}
+.section-eyebrow{font-family:var(--font-m);font-size:.72rem;color:var(--accent);letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+.section-title{font-family:var(--font-d);font-size:clamp(2.5rem,5vw,4rem);letter-spacing:.02em;margin-bottom:16px}
+.section-sub{font-size:1rem;color:var(--fg2);font-weight:300;max-width:560px;margin-bottom:64px;line-height:1.75}
+.modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.module-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s;position:relative;overflow:hidden}
+.module-card:hover{border-color:rgba(16,185,129,.25);transform:translateY(-4px);background:rgba(16,185,129,.03)}
+.module-num{font-family:var(--font-d);font-size:3.5rem;line-height:1;opacity:.07;position:absolute;top:16px;right:20px}
+.module-tag{font-family:var(--font-m);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;border-radius:100px;border:1px solid;margin-bottom:20px;display:inline-block}
+.module-name{font-family:var(--font-d);font-size:1.6rem;letter-spacing:.02em;margin-bottom:12px}
+.module-desc{font-size:.88rem;color:var(--fg2);line-height:1.7}
+.module-chapters{font-family:var(--font-m);font-size:.7rem;color:var(--fg3);margin-top:16px;letter-spacing:.06em}
+.features{padding:0 80px 120px;display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.feature-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:20px;padding:40px;transition:all .3s}
+.feature-card:hover{border-color:rgba(16,185,129,.2);background:rgba(16,185,129,.02)}
+.feature-icon{font-size:2rem;margin-bottom:20px}
+.feature-name{font-family:var(--font-d);font-size:1.8rem;letter-spacing:.02em;margin-bottom:12px}
+.feature-desc{font-size:.92rem;color:var(--fg2);line-height:1.75}
+.feature-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.ftag{font-family:var(--font-m);font-size:.68rem;padding:4px 10px;border-radius:6px;background:rgba(16,185,129,.08);color:var(--accent);border:1px solid rgba(16,185,129,.15)}
+.stack{padding:0 80px 120px}
+.stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.stack-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;transition:all .3s}
+.stack-item:hover{border-color:rgba(16,185,129,.2);transform:translateY(-3px)}
+.stack-name{font-family:var(--font-d);font-size:1.4rem;letter-spacing:.04em;margin-bottom:6px}
+.stack-desc{font-size:.8rem;color:var(--fg3)}
+footer{padding:80px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:var(--font-d);font-size:1.8rem;letter-spacing:.06em}
+.footer-logo em{color:var(--accent);font-style:normal}
+.footer-links{display:flex;gap:32px}
+.footer-links a{font-size:.85rem;color:var(--fg3);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--fg)}
+.footer-back{font-size:.82rem;color:var(--fg3);text-decoration:none;font-family:var(--font-m);transition:color .2s}
+.footer-back:hover{color:var(--accent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<nav id="nav">
+  <a class="nav-logo" href="#">JIM<em>LANG</em></a>
+  <div class="nav-links">
+    <a href="#modules">模块</a>
+    <a href="#features">核心技术</a>
+    <a href="#stack">技术栈</a>
+    <a class="nav-cta" href="/">← 返回主页</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-visual">
+    <div class="pipeline">
+      <div class="pipe-title">JimLang 编译流水线</div>
+      <div class="pipe-stage">
+        <div class="pipe-dot" style="background:#10b981"></div>
+        <div class="pipe-info"><div class="pipe-name">源代码</div><div class="pipe-detail">字符流输入</div></div>
+      </div>
+      <div class="pipe-arrow">↓ 词法分析</div>
+      <div class="pipe-stage">
+        <div class="pipe-dot" style="background:#34d399"></div>
+        <div class="pipe-info"><div class="pipe-name">Lexer</div><div class="pipe-detail">Token 流 · 手写状态机 · ANTLR4</div></div>
+      </div>
+      <div class="pipe-arrow">↓ 语法分析</div>
+      <div class="pipe-stage">
+        <div class="pipe-dot" style="background:#6ee7b7"></div>
+        <div class="pipe-info"><div class="pipe-name">Parser</div><div class="pipe-detail">AST · 递归下降 · Pratt 解析</div></div>
+      </div>
+      <div class="pipe-arrow">↓ 语义分析</div>
+      <div class="pipe-stage">
+        <div class="pipe-dot" style="background:#a7f3d0"></div>
+        <div class="pipe-info"><div class="pipe-name">Resolver</div><div class="pipe-detail">作用域 · 符号表 · 闭包分析</div></div>
+      </div>
+      <div class="pipe-arrow">↓ 执行</div>
+      <div class="pipe-stage">
+        <div class="pipe-dot" style="background:#fbbf24"></div>
+        <div class="pipe-info"><div class="pipe-name">Interpreter</div><div class="pipe-detail">树遍历 · Environment 链 · 闭包</div></div>
+      </div>
+      <div class="pipe-arrow">↓ 编译优化</div>
+      <div class="pipe-stage">
+        <div class="pipe-dot" style="background:#f97316"></div>
+        <div class="pipe-info"><div class="pipe-name">Bytecode Compiler</div><div class="pipe-detail">OpCode · Chunk · 跳转回填</div></div>
+      </div>
+      <div class="pipe-arrow">↓ 运行时</div>
+      <div class="pipe-stage">
+        <div class="pipe-dot" style="background:#ef4444"></div>
+        <div class="pipe-info"><div class="pipe-name">Stack VM</div><div class="pipe-detail">操作数栈 · CallFrame · GC</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-eyebrow">Java 实战课程 · 30 章</div>
+  <h1 class="hero-title">从零写<br><span class="hl">编程语言</span></h1>
+  <p class="hero-sub">以 JimLang 开源项目为主线，亲手实现词法分析、递归下降 Parser、树遍历解释器、字节码编译器、栈式虚拟机与垃圾回收。不调黑盒，全程手写。</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#modules">查看课程模块</a>
+    <a class="btn-secondary" href="https://github.com/dafei1288/jimlang">GitHub 源码</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">章节</div></div>
+    <div class="stat-item"><div class="stat-num">10</div><div class="stat-label">模块</div></div>
+    <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">执行引擎</div></div>
+    <div class="stat-item"><div class="stat-num">Java 21</div><div class="stat-label">技术栈</div></div>
+  </div>
+</section>
+
+</section>
+
+<!-- TARGET AUDIENCE -->
+<section style="padding:120px 80px;background:rgba(16,185,129,.02);position:relative">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-eyebrow">这门课适合谁？</div>
+    <h2 class="section-title">找到与你相似的学员</h2>
+    <p class="section-sub">不同背景的学员，都能从这门课中获得价值</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px">
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">小李 - 编译原理苦手</div>
+        <div style="font-size:.85rem;color:var(--fg3);margin-bottom:16px;font-family:var(--font-m)">大三/大四 · 编译原理课听不懂</div>
+        <div style="margin-bottom:16px"><div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>痛点</strong></div><p style="font-size:.82rem;color:var(--fg3);line-height:1.6">不理解词法分析→语法分析→AST流程，面试被问解释器和编译器的区别答不上来</p></div>
+        <div><div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>学完后</strong></div><p style="font-size:.82rem;color:var(--accent);line-height:1.6">能用 Java 实现一个完整的脚本语言，理解 Lexer/Parser/Interpreter 原理，面试编译器岗不虚</p></div>
+      </div>
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">小王 - DSL 设计者</div>
+        <div style="font-size:.85rem;color:var(--fg3);margin-bottom:16px;font-family:var(--font-m)">工作 3 年 · 要设计配置 DSL</div>
+        <div style="margin-bottom:16px"><div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>痛点</strong></div><p style="font-size:.82rem;color:var(--fg3);line-height:1.6">用 ANTLR4 但不懂原理，出错不会改，想自己实现一个轻量级解释器</p></div>
+        <div><div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>学完后</strong></div><p style="font-size:.82rem;color:var(--accent);line-height:1.6">能给公司设计并实现配置 DSL，能优化解析性能，能给团队做技术分享</p></div>
+      </div>
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">老张 - 语言爱好者</div>
+        <div style="font-size:.85rem;color:var(--fg3);margin-bottom:16px;font-family:var(--font-m)">想设计自己的编程语言</div>
+        <div style="margin-bottom:16px"><div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>痛点</strong></div><p style="font-size:.82rem;color:var(--fg3);line-height:1.6">看过 Python/JavaScript 源码但太复杂，想从简单的解释器学起</p></div>
+        <div><div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>学完后</strong></div><p style="font-size:.82rem;color:var(--accent);line-height:1.6">能实现自己的脚本语言（支持变量、函数、闭包），发布到 GitHub，参与语言设计讨论</p></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:48px"><a class="btn-primary" href="/" style="display:inline-flex">查看完整学习路径</a></div>
+  </div>
+</section>
+<style>.persona-card:hover{border-color:rgba(16,185,129,.25)!important;transform:translateY(-4px)}</style>
+
+<section class="modules" id="modules">
+  <div class="section-eyebrow">课程模块</div>
+  <h2 class="section-title">10 大模块，覆盖语言实现全栈</h2>
+  <p class="section-sub">从词法分析到字节码虚拟机，两条执行路径（树遍历解释器 + 栈式 VM），每章配套可运行 Demo 和单元测试。</p>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-num">01</div>
+      <div class="module-tag" style="color:#10b981;border-color:rgba(16,185,129,.3)">Ch01–02</div>
+      <div class="module-name">破冰篇</div>
+      <p class="module-desc">编程语言是什么、不是什么。解释器 vs 编译器，代码的完整旅程，JimLang 整体架构导览。</p>
+      <div class="module-chapters">Lexer→Parser→Resolver→Interpreter 流水线</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">02</div>
+      <div class="module-tag" style="color:#34d399;border-color:rgba(52,211,153,.3)">Ch03–05</div>
+      <div class="module-name">词法分析</div>
+      <p class="module-desc">Token 体系，手写状态机 Lexer，关键字/字符串/数字/注释处理，ANTLR4 词法规则对比。</p>
+      <div class="module-chapters">手写 Lexer · ANTLR4 · Token 流可视化</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">03</div>
+      <div class="module-tag" style="color:#6ee7b7;border-color:rgba(110,231,183,.3)">Ch06–08</div>
+      <div class="module-name">语法分析</div>
+      <p class="module-desc">CFG/BNF/EBNF，递归下降 Parser，Pratt 运算符优先级解析，AST 节点设计，ANTLR4 对比。</p>
+      <div class="module-chapters">递归下降 · Pratt · AST 构建</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">04</div>
+      <div class="module-tag" style="color:#a7f3d0;border-color:rgba(167,243,208,.3)">Ch09–10</div>
+      <div class="module-name">语义分析</div>
+      <p class="module-desc">词法作用域，符号表，变量解析，闭包分析，动态类型检查与类型错误报告。</p>
+      <div class="module-chapters">作用域 · 符号表 · 闭包分析</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">05</div>
+      <div class="module-tag" style="color:#fbbf24;border-color:rgba(251,191,36,.3)">Ch11–14</div>
+      <div class="module-name">解释执行</div>
+      <p class="module-desc">Visitor 模式树遍历解释器，Environment 链，函数对象与闭包捕获，class/this/super 面向对象。</p>
+      <div class="module-chapters">Visitor · Environment · 闭包 · OOP</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">06</div>
+      <div class="module-tag" style="color:#f97316;border-color:rgba(249,115,22,.3)">Ch15–16</div>
+      <div class="module-name">错误处理</div>
+      <p class="module-desc">try/catch/throw 异常传播，错误同步与恢复，友好错误信息，行号定位。</p>
+      <div class="module-chapters">异常传播 · 错误恢复 · 行号定位</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">07</div>
+      <div class="module-tag" style="color:#fb923c;border-color:rgba(251,146,60,.3)">Ch17–19</div>
+      <div class="module-name">标准库</div>
+      <p class="module-desc">内置函数（print/clock/len/type），list/map 集合类型，迭代器模式，字符串处理与格式化。</p>
+      <div class="module-chapters">内置函数 · 集合 · 字符串</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">08</div>
+      <div class="module-tag" style="color:#ef4444;border-color:rgba(239,68,68,.3)">Ch20–24</div>
+      <div class="module-name">字节码 VM</div>
+      <p class="module-desc">18 条 OpCode 指令集，字节码编译器（表达式+语句），栈式虚拟机，CallFrame 函数调用帧。</p>
+      <div class="module-chapters">OpCode · Chunk · 栈式 VM · CallFrame</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">09</div>
+      <div class="module-tag" style="color:#a78bfa;border-color:rgba(167,139,250,.3)">Ch25–26</div>
+      <div class="module-name">运行时</div>
+      <p class="module-desc">标记清除 GC，可达性分析，循环引用，三色标记。REPL 实现：多行检测，错误恢复。</p>
+      <div class="module-chapters">标记清除 GC · 三色标记 · REPL</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">10</div>
+      <div class="module-tag" style="color:#10b981;border-color:rgba(16,185,129,.3)">Ch27–30</div>
+      <div class="module-name">综合实战</div>
+      <p class="module-desc">完整语言演示，树遍历 vs VM 性能对比，常量折叠，扩展方向：静态类型、JIT、协程。</p>
+      <div class="module-chapters">性能测试 · 扩展方向 · 学习路线</div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="feature-card">
+    <div class="feature-icon">🔤</div>
+    <div class="feature-name">手写 Lexer + Parser</div>
+    <p class="feature-desc">不依赖任何解析器生成工具，从字符流到 Token 流，再到 AST，全程手写。同时对比 ANTLR4 方案，理解工具背后的原理。</p>
+    <div class="feature-tags"><span class="ftag">状态机</span><span class="ftag">递归下降</span><span class="ftag">Pratt 解析</span><span class="ftag">ANTLR4</span></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🔄</div>
+    <div class="feature-name">两条执行路径</div>
+    <p class="feature-desc">先实现树遍历解释器（直接遍历 AST 执行），再实现字节码编译器 + 栈式 VM。通过性能对比，深刻理解两种方案的权衡。</p>
+    <div class="feature-tags"><span class="ftag">树遍历</span><span class="ftag">字节码</span><span class="ftag">栈式 VM</span><span class="ftag">性能对比</span></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🗑️</div>
+    <div class="feature-name">垃圾回收</div>
+    <p class="feature-desc">从零实现标记清除 GC：可达性分析，循环引用处理，三色标记算法。理解 JVM/V8 GC 的底层原理。</p>
+    <div class="feature-tags"><span class="ftag">标记清除</span><span class="ftag">可达性分析</span><span class="ftag">三色标记</span><span class="ftag">循环引用</span></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">📦</div>
+    <div class="feature-name">闭包与面向对象</div>
+    <p class="feature-desc">函数对象、Upvalue 捕获、高阶函数，class 定义、this 绑定、单继承、super 调用。完整实现现代脚本语言的核心特性。</p>
+    <div class="feature-tags"><span class="ftag">闭包</span><span class="ftag">Upvalue</span><span class="ftag">class</span><span class="ftag">继承</span></div>
+  </div>
+</section>
+
+<section class="stack" id="stack">
+  <div class="section-eyebrow">技术栈</div>
+  <h2 class="section-title">现代 Java，全程手写</h2>
+  <p class="section-sub">使用 Java 21 新特性（sealed interface、record、pattern matching）实现语言核心，ANTLR4 作为对比工具。</p>
+  <div class="stack-grid">
+    <div class="stack-item"><div class="stack-name">Java 21</div><div class="stack-desc">sealed interface, record, pattern matching</div></div>
+    <div class="stack-item"><div class="stack-name">ANTLR4</div><div class="stack-desc">词法/语法分析对比工具</div></div>
+    <div class="stack-item"><div class="stack-name">Maven</div><div class="stack-desc">多模块构建，每章独立子模块</div></div>
+    <div class="stack-item"><div class="stack-name">JUnit 5</div><div class="stack-desc">每章内置单元测试</div></div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">JIM<em>LANG</em></div>
+    <div style="font-size:.82rem;color:var(--fg3);margin-top:8px">Jim Isn't a Mainstream Language — 从零构建脚本语言</div>
+  </div>
+  <div class="footer-links">
+    <a href="#modules">课程模块</a>
+    <a href="#features">核心技术</a>
+    <a href="https://github.com/dafei1288/jimlang">GitHub</a>
+  </div>
+  <a class="footer-back" href="/">← 返回课程主页</a>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+</script>
+
+<style>#sx-back{position:fixed;left:18px;top:16px;z-index:99999;display:flex;align-items:center;gap:8px;
+background:rgba(6,13,26,.82);border:1px solid rgba(0,180,216,.3);border-radius:999px;
+padding:6px 16px 6px 12px;text-decoration:none;color:#A8B8CC;
+font:12px/1 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.5px;
+backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+#sx-back:hover{border-color:rgba(255,140,66,.6);color:#fff}
+#sx-back img{width:15px;height:15px;display:block}</style>
+<a id="sx-back" href="/"><img src="/images/logo.png" alt="">← 熵减智算</a>
+</body>
+</html>

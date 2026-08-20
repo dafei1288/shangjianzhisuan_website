@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPC 实战课 — 用 AI Agent 打造一人公司</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0a0f;
+    --surface:#12121a;
+    --surface2:#1a1a26;
+    --border:#2a2a3a;
+    --text:#e8e8f0;
+    --text-dim:#8888a0;
+    --accent:#6c5ce7;
+    --accent2:#a29bfe;
+    --accent-glow:rgba(108,92,231,.25);
+    --green:#00d2a0;
+    --orange:#ff9f43;
+    --pink:#fd79a8;
+  }
+  html{scroll-behavior:smooth;font-size:16px}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;
+  }
+  a{color:var(--accent2);text-decoration:none;transition:color .2s}
+  a:hover{color:var(--text)}
+
+  /* Nav */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(10,10,15,.85);backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 clamp(1rem,4vw,3rem);height:64px;
+  }
+  nav .logo{font-weight:800;font-size:1.2rem;letter-spacing:-.02em}
+  nav .logo span{color:var(--accent)}
+  nav .nav-links{display:flex;gap:2rem;font-size:.9rem}
+  nav .nav-links a{color:var(--text-dim)}
+  nav .nav-links a:hover{color:var(--text)}
+
+  /* Hero */
+  .hero{
+    min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;
+    padding:6rem 1.5rem 4rem;position:relative;
+  }
+  .hero::before{
+    content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);
+    width:800px;height:800px;
+    background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);
+    pointer-events:none;z-index:0;
+  }
+  .hero *{position:relative;z-index:1}
+  .hero .badge{
+    display:inline-flex;align-items:center;gap:.5rem;
+    background:var(--surface2);border:1px solid var(--border);
+    border-radius:999px;padding:.4rem 1.2rem;font-size:.85rem;
+    color:var(--accent2);margin-bottom:2rem;
+  }
+  .hero .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .hero h1{
+    font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;
+    line-height:1.1;letter-spacing:-.03em;margin-bottom:1.5rem;
+  }
+  .hero h1 .gradient{
+    background:linear-gradient(135deg,var(--accent),var(--pink),var(--orange));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  .hero .sub{font-size:clamp(1.1rem,2vw,1.4rem);color:var(--text-dim);max-width:640px;margin-bottom:3rem}
+  .hero .cta-group{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+  .btn{
+    display:inline-flex;align-items:center;gap:.5rem;
+    padding:.85rem 2rem;border-radius:12px;font-weight:600;
+    font-size:1rem;cursor:pointer;transition:all .25s;border:none;
+  }
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 0 30px var(--accent-glow)}
+  .btn-primary:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 0 50px var(--accent-glow)}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent2)}
+
+  .hero .stats{
+    display:flex;gap:3rem;margin-top:4rem;
+    border-top:1px solid var(--border);padding-top:2rem;
+  }
+  .hero .stats .stat{text-align:center}
+  .hero .stats .stat .num{font-size:2rem;font-weight:800;color:var(--accent2)}
+  .hero .stats .stat .label{font-size:.85rem;color:var(--text-dim)}
+
+  /* Section */
+  section{padding:6rem clamp(1rem,4vw,3rem)}
+  section .section-tag{
+    font-size:.8rem;text-transform:uppercase;letter-spacing:.15em;
+    color:var(--accent2);margin-bottom:.5rem;
+  }
+  section h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:1rem;letter-spacing:-.02em}
+  section .section-desc{color:var(--text-dim);max-width:600px;margin-bottom:3rem;font-size:1.05rem}
+
+  .container{max-width:1200px;margin:0 auto}
+
+  /* Tools */
+  .tools-grid{display:grid;grid-template-columns:1fr 60px 1fr;gap:0;align-items:stretch}
+  .tool-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:20px;padding:2.5rem;
+  }
+  .tool-card .tool-icon{
+    width:56px;height:56px;border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.5rem;margin-bottom:1.5rem;
+  }
+  .tool-card .tool-icon.clip{background:rgba(108,92,231,.15)}
+  .tool-card .tool-icon.claw{background:rgba(0,210,160,.15)}
+  .tool-card h3{font-size:1.4rem;font-weight:700;margin-bottom:.5rem}
+  .tool-card .tool-sub{color:var(--text-dim);font-size:.9rem;margin-bottom:1.5rem}
+  .tool-card ul{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+  .tool-card ul li{display:flex;align-items:flex-start;gap:.5rem;font-size:.95rem;color:var(--text-dim)}
+  .tool-card ul li::before{content:'›';color:var(--accent2);font-weight:700;margin-top:1px}
+  .tools-vs{
+    display:flex;align-items:center;justify-content:center;
+    font-size:1rem;font-weight:800;color:var(--text-dim);
+  }
+
+  /* Modules */
+  .modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem}
+  .module{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;padding:2rem;transition:border-color .3s;
+  }
+  .module:hover{border-color:var(--accent)}
+  .module .module-num{
+    font-size:.75rem;font-weight:700;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;
+  }
+  .module h3{font-size:1.15rem;font-weight:700;margin-bottom:.5rem}
+  .module .module-desc{font-size:.9rem;color:var(--text-dim);margin-bottom:1rem}
+  .module .lessons{display:flex;flex-direction:column;gap:.4rem}
+  .module .lessons span{
+    font-size:.85rem;color:var(--text-dim);
+    padding:.3rem .6rem;background:var(--surface2);border-radius:6px;
+  }
+
+  /* Highlights */
+  .highlights{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem}
+  .highlight{text-align:center;padding:2rem}
+  .highlight .hl-icon{
+    font-size:2.5rem;margin-bottom:1rem;
+    width:72px;height:72px;border-radius:20px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--surface2);
+  }
+  .highlight h3{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+  .highlight p{font-size:.9rem;color:var(--text-dim)}
+
+  /* Audience */
+  .audience-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
+  .audience{
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:2rem;display:flex;flex-direction:column;gap:.8rem;
+  }
+  .audience .avatar{font-size:2rem}
+  .audience h3{font-size:1.05rem;font-weight:600}
+  .audience p{font-size:.9rem;color:var(--text-dim)}
+
+  /* CTA */
+  .cta-section{
+    text-align:center;position:relative;
+  }
+  .cta-section::before{
+    content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:600px;height:400px;
+    background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);
+    pointer-events:none;z-index:0;
+  }
+  .cta-section *{position:relative;z-index:1}
+  .cta-section h2{font-size:clamp(2rem,4vw,3rem)}
+  .cta-section .cta-sub{font-size:1.1rem;color:var(--text-dim);margin-bottom:2.5rem}
+
+  .pricing{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+  .price-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:20px;
+    padding:2.5rem;text-align:left;min-width:300px;flex:1;max-width:380px;
+  }
+  .price-card.featured{border-color:var(--accent);box-shadow:0 0 40px var(--accent-glow)}
+  .price-card .price-tag{font-size:.8rem;color:var(--accent2);font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+  .price-card .price{font-size:2.5rem;font-weight:800;margin:.5rem 0}
+  .price-card .price-desc{font-size:.85rem;color:var(--text-dim);margin-bottom:1.5rem}
+  .price-card ul{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin-bottom:2rem}
+  .price-card ul li{display:flex;align-items:center;gap:.5rem;font-size:.9rem}
+  .price-card ul li .check{color:var(--green)}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);padding:3rem clamp(1rem,4vw,3rem);
+    text-align:center;color:var(--text-dim);font-size:.85rem;
+  }
+
+  /* Responsive */
+  @media(max-width:768px){
+    .tools-grid{grid-template-columns:1fr;gap:1rem}
+    .tools-vs{padding:1rem 0}
+    .hero .stats{flex-direction:column;gap:1.5rem}
+    nav .nav-links{display:none}
+    .pricing{flex-direction:column;align-items:center}
+  }
+
+  /* Animate on scroll */
+  .fade-up{opacity:0;transform:translateY(30px);transition:all .6s ease}
+  .fade-up.visible{opacity:1;transform:translateY(0)}
+nav{padding-left:170px!important}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">OPC<span>.</span>Course</div>
+  <div class="nav-links">
+    <a href="#tools">工具</a>
+    <a href="#modules">大纲</a>
+    <a href="#highlights">亮点</a>
+    <a href="#audience">适合谁</a>
+    <a href="#pricing">报名</a>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="badge"><span class="dot"></span> 2026 全新课程 · 现已开放报名</div>
+  <h1>一个人，一支<br><span class="gradient">AI Agent 团队</span><br>跑通一家公司</h1>
+  <p class="sub">用 Paperclip 或 OpenClaw，从零搭建你的 AI 驱动一人公司。17 节实战课，6 大篇章，手把手带你构建市场、客服、运营、技术四个核心部门的 Agent 团队。</p>
+  <div class="cta-group">
+    <a href="#pricing" class="btn btn-primary">立即报名 →</a>
+    <a href="#modules" class="btn btn-ghost">查看大纲</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="num">17</div><div class="label">实战课时</div></div>
+    <div class="stat"><div class="num">50h</div><div class="label">课程内容</div></div>
+    <div class="stat"><div class="num">4</div><div class="label">部门 Agent 团队</div></div>
+    <div class="stat"><div class="num">2</div><div class="label">主流框架全覆盖</div></div>
+  </div>
+</section>
+
+<!-- TARGET AUDIENCE -->
+<section style="padding:120px 80px;background:rgba(168,85,247,.02)">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-eyebrow">这门课适合谁？</div>
+    <h2 class="section-title">找到与你相似的学员</h2>
+    <p class="section-sub">不同背景的学员，都能从这门课中获得价值</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px">
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">查看 README.md</div>
+        <div style="font-size:.85rem;color:var(--fg3)">了解完整用户画像</div>
+      </div>
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">3 个典型学员</div>
+        <div style="font-size:.85rem;color:var(--fg3)">不同背景都能获益</div>
+      </div>
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">学习路径</div>
+        <div style="font-size:.85rem;color:var(--fg3)">清晰的进阶路线</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:48px">
+      <a class="btn-primary" href="README.md" style="display:inline-flex">查看完整用户画像</a>
+    </div>
+  </div>
+</section>
+<style>.persona-card:hover{border-color:rgba(168,85,247,.25)!important;transform:translateY(-4px)}</style>
+
+<section class="modules" id="modules">  <div class="section-header">    <div class="section-eyebrow">课程模块</div>    <h2 class="section-title">六大模块，从零到一</h2>    <p class="section-sub">每个模块独立成体系，循序渐进掌握核心能力</p>  </div></section>
+
+<!-- ========== TOOLS ========== -->
+<section id="tools">
+  <div class="container">
+    <div class="section-tag">工具体系</div>
+    <h2>选 Paperclip 还是 OpenClaw？</h2>
+    <p class="section-desc">同生态位的两个顶级框架，课程两个都教。你选一个跟到底。</p>
+
+    <div class="tools-grid fade-up">
+      <div class="tool-card">
+        <div class="tool-icon clip">🏛️</div>
+        <h3>Paperclip</h3>
+        <div class="tool-sub">AI 劳动力的人类控制面板</div>
+        <ul>
+          <li>可视化 Dashboard 管理 agent 团队</li>
+          <li>组织架构：部门、角色、汇报关系</li>
+          <li>目标体系：公司 → 部门 → 个人</li>
+          <li>预算管理：token 消耗实时监控</li>
+          <li>审批流：关键操作人工审核</li>
+          <li>技术栈：Node.js + React</li>
+        </ul>
+      </div>
+      <div class="tools-vs">VS</div>
+      <div class="tool-card">
+        <div class="tool-icon claw">⚡</div>
+        <h3>OpenClaw</h3>
+        <div class="tool-sub">本地优先的 AI Agent 网关</div>
+        <ul>
+          <li>Gateway 架构：50+ 消息平台对接</li>
+          <li>Skill 系统：灵活组合 agent 能力</li>
+          <li>记忆系统：短期 + 长期记忆</li>
+          <li>本地安全：沙箱执行与权限控制</li>
+          <li>全模型支持：OpenAI / Claude / 本地</li>
+          <li>完全本地运行，数据不出机器</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MODULES ========== -->
+<section id="modules">
+  <div class="container">
+    <div class="section-tag">课程大纲</div>
+    <h2>6 篇章 · 17 课 · 从认知到实战</h2>
+    <p class="section-desc">每节课先讲业务问题（为什么），再给 OpenClaw 和 Paperclip 两种实现（怎么做）。</p>
+
+    <div class="modules fade-up">
+      <div class="module">
+        <div class="module-num">第一篇 · 认知</div>
+        <h3>一人公司与 AI Agent</h3>
+        <div class="module-desc">理解 OPC 概念，完成工具选型</div>
+        <div class="lessons">
+          <span>L1 一人公司的时代背景</span>
+          <span>L2 工具选型 — Paperclip vs OpenClaw</span>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">第二篇 · 基础</div>
+        <h3>环境搭建与核心概念</h3>
+        <div class="module-desc">安装配置，理解 Agent 体系</div>
+        <div class="lessons">
+          <span>L3 环境搭建 [A/B 双轨]</span>
+          <span>L4 Agent 是什么 [A/B 双轨]</span>
+          <span>L5 Agent 能做什么 [A/B 双轨]</span>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">第三篇 · 实战</div>
+        <h3>搭建四大核心部门</h3>
+        <div class="module-desc">市场 / 客服 / 运营 / 技术</div>
+        <div class="lessons">
+          <span>L6 市场部 — 内容创作 Agent</span>
+          <span>L7 客服部 — 用户服务 Agent</span>
+          <span>L8 运营部 — 数据分析 Agent</span>
+          <span>L9 技术部 — 开发维护 Agent</span>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">第四篇 · 进阶</div>
+        <h3>编排与优化</h3>
+        <div class="module-desc">协作、记忆、成本、安全</div>
+        <div class="lessons">
+          <span>L10 多 Agent 协作</span>
+          <span>L11 记忆与知识管理</span>
+          <span>L12 成本控制</span>
+          <span>L13 安全与合规</span>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">第五篇 · 商业</div>
+        <h3>让一人公司运转</h3>
+        <div class="module-desc">商业模式、启动路径、规模化</div>
+        <div class="lessons">
+          <span>L14 商业模式设计</span>
+          <span>L15 从 0 到 1 的启动路径</span>
+          <span>L16 规模化与边界</span>
+        </div>
+      </div>
+      <div class="module">
+        <div class="module-num">第六篇 · 毕业</div>
+        <h3>搭建你的一人公司</h3>
+        <div class="module-desc">真实业务场景，运行 7 天</div>
+        <div class="lessons">
+          <span>L17 毕业项目 — 完整 OPC 搭建</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HIGHLIGHTS ========== -->
+<section id="highlights">
+  <div class="container">
+    <div class="section-tag">课程亮点</div>
+    <h2>不只是学工具，是学怎么用 AI 开公司</h2>
+    <p class="section-desc">与传统 AI 课程的本质区别：我们不教你怎么调 API，教你怎么当老板。</p>
+
+    <div class="highlights fade-up">
+      <div class="highlight">
+        <div class="hl-icon">🏢</div>
+        <h3>像搭公司一样搭 Agent</h3>
+        <p>不是零散的 agent 脚本，而是有组织架构、有汇报关系、有目标的虚拟团队</p>
+      </div>
+      <div class="highlight">
+        <div class="hl-icon">🔀</div>
+        <h3>双框架覆盖</h3>
+        <p>Paperclip 和 OpenClaw 都教，同一个业务场景两种实现，理解更深入</p>
+      </div>
+      <div class="highlight">
+        <div class="hl-icon">💰</div>
+        <h3>商业视角</h3>
+        <p>不只是技术课，还有商业模式设计、成本测算、从 0 到 1 的完整路径</p>
+      </div>
+      <div class="highlight">
+        <div class="hl-icon">🛠️</div>
+        <h3>配置即代码</h3>
+        <p>所有 agent 配置、workflow 模板都可以直接拿去用，不是伪代码</p>
+      </div>
+      <div class="highlight">
+        <div class="hl-icon">🎯</div>
+        <h3>毕业即交付</h3>
+        <p>毕业项目搭建真实 OPC，运行 7 天验证，带数据答辩</p>
+      </div>
+      <div class="highlight">
+        <div class="hl-icon">🔒</div>
+        <h3>安全与合规</h3>
+        <p>权限控制、数据隐私、审计日志——生产级安全实践</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== AUDIENCE ========== -->
+<section id="audience">
+  <div class="container">
+    <div class="section-tag">适合谁</div>
+    <h2>如果你是以下任何一种人</h2>
+    <p class="section-desc">有 JS/TS 基础，对 AI 有基本了解，想用技术杠杆放大个人产出。</p>
+
+    <div class="audience-grid fade-up">
+      <div class="audience">
+        <div class="avatar">👨‍💻</div>
+        <h3>独立开发者</h3>
+        <p>想用 AI agent 处理运营、客服、内容，把精力集中在产品上</p>
+      </div>
+      <div class="audience">
+        <div class="avatar">✍️</div>
+        <h3>内容创业者</h3>
+        <p>想用 agent 团队规模化内容产出，一个人做十个人的活</p>
+      </div>
+      <div class="audience">
+        <div class="avatar">🧑‍💼</div>
+        <h3>自由职业者</h3>
+        <p>想把重复性工作交给 AI，承接更多项目而不增加工时</p>
+      </div>
+      <div class="audience">
+        <div class="avatar">🔬</div>
+        <h3>AI 实践者</h3>
+        <p>不再满足于写 demo，想把 AI agent 真正跑成一套业务系统</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CTA / PRICING ========== -->
+<section id="pricing" class="cta-section">
+  <div class="container">
+    <div class="section-tag">开始学习</div>
+    <h2>一个人，也能跑一家公司</h2>
+    <p class="cta-sub">17 节课，6 大篇章，从认知到落地。支持 OpenClaw 和 Paperclip 双轨学习。</p>
+
+    <div class="pricing fade-up">
+      <div class="price-card">
+        <div class="price-tag">基础版</div>
+        <div class="price">¥ 299</div>
+        <div class="price-desc">全部课程内容 + 模板库</div>
+        <ul>
+          <li><span class="check">✓</span> 17 节课完整视频</li>
+          <li><span class="check">✓</span> OpenClaw + Paperclip 双轨</li>
+          <li><span class="check">✓</span> 配置模板库（附录 C）</li>
+          <li><span class="check">✓</span> 课程 PPT 与代码</li>
+          <li><span class="check">✓</span> 社群交流（ indefinitely ）</li>
+        </ul>
+        <a href="#" class="btn btn-ghost" style="width:100%;justify-content:center">立即加入</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-tag">完整版 · 推荐</div>
+        <div class="price">¥ 599</div>
+        <div class="price-desc">基础版 + 毕业项目 1v1 点评</div>
+        <ul>
+          <li><span class="check">✓</span> 基础版全部内容</li>
+          <li><span class="check">✓</span> 毕业项目 1v1 点评</li>
+          <li><span class="check">✓</span> Agent 配置 Review</li>
+          <li><span class="check">✓</span> 独家 OPC 商业模型拆解</li>
+          <li><span class="check">✓</span> 3 次线上答疑</li>
+          <li><span class="check">✓</span> 永久回看 + 更新</li>
+        </ul>
+        <a href="#" class="btn btn-primary" style="width:100%;justify-content:center">立即报名 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="container">
+    <p>OPC Course &copy; 2026 · 用 AI Agent 打造一人公司</p>
+    <p style="margin-top:.5rem">基于 <a href="https://github.com/paperclipai/paperclip" target="_blank">Paperclip</a> &amp; <a href="https://openclaw-ai.net" target="_blank">OpenClaw</a> 构建</p>
+  </div>
+</footer>
+
+<script>
+// Simple scroll animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) }})
+}, { threshold: 0.15 })
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el))
+</script>
+
+<style>#sx-back{position:fixed;left:18px;top:16px;z-index:99999;display:flex;align-items:center;gap:8px;
+background:rgba(6,13,26,.82);border:1px solid rgba(0,180,216,.3);border-radius:999px;
+padding:6px 16px 6px 12px;text-decoration:none;color:#A8B8CC;
+font:12px/1 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.5px;
+backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+#sx-back:hover{border-color:rgba(255,140,66,.6);color:#fff}
+#sx-back img{width:15px;height:15px;display:block}</style>
+<a id="sx-back" href="/"><img src="/images/logo.png" alt="">← 熵减智算</a>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jim Agent From Scratch — 课程文档</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css">
+  <style>
+    :root {
+      --theme-color: #00d4ff;
+      --sidebar-width: 280px;
+      --base-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --base-font-size: 15px;
+      --base-color: #e2e8f0;
+      --base-background-color: #050510;
+      --sidebar-background: #0a0a1a;
+      --sidebar-border: 1px solid rgba(255,255,255,.06);
+      --heading-font-family: 'Inter', system-ui, sans-serif;
+      --heading-color: #e2e8f0;
+      --link-color: #00d4ff;
+      --link-color--hover: #fff;
+      --code-inline-background: rgba(0,212,255,.08);
+      --code-inline-color: #00d4ff;
+      --code-font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      --code-font-size: 13px;
+      --blockquote-border-color: #00d4ff;
+      --notice-border-color: #8b5cf6;
+      --sidebar-nav-link-color: #94a3b8;
+      --sidebar-nav-link-color--hover: #fff;
+      --sidebar-nav-link-color--active: #00d4ff;
+      --sidebar-nav-link-font-weight--active: 600;
+      --cover-background-color: #050510;
+      --cover-color: #e2e8f0;
+      --cover-heading-font-family: 'Space Grotesk', system-ui, sans-serif;
+      --cover-heading-color: #00d4ff;
+    }
+    body { background: var(--base-background-color); }
+    .sidebar { padding-top: 1.5rem; }
+    .sidebar > h1 { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1rem; padding: 0 1.5rem; }
+    .sidebar > h1 a { color: #fff; }
+    .sidebar ul { padding-left: 0; }
+    .sidebar ul ul { padding-left: 1rem; }
+    .sidebar li { margin: .3rem 0; }
+    .sidebar li > p { font-weight: 600; font-size: .75rem; color: #64748b; letter-spacing: .04em;
+      text-transform: uppercase; padding: .5rem 1.5rem .2rem; margin: 0; }
+    .sidebar a { font-size: .88rem; padding: .25rem 1.5rem; border-radius: 6px; transition: all .2s; }
+    .content { padding-top: 2rem; }
+    .markdown-section h1 { border-bottom: 1px solid rgba(255,255,255,.06); padding-bottom: .75rem; }
+    .markdown-section h2 { margin-top: 2.5rem; }
+    .markdown-section code { border-radius: 4px; }
+    .markdown-section pre { background: #0a0a1a; border: 1px solid rgba(255,255,255,.06); border-radius: 10px; }
+    .markdown-section pre > code { background: transparent; }
+    .markdown-section table { border-collapse: collapse; }
+    .markdown-section th { background: rgba(0,212,255,.05); }
+    .markdown-section th, .markdown-section td { border: 1px solid rgba(255,255,255,.06); padding: .5rem 1rem; }
+    /* Cover page */
+    .cover.show { background: linear-gradient(135deg, #050510 0%, #0a0a1a 50%, #0f0f2a 100%) !important; }
+    .cover .cover-main > p:last-child a { border: 1px solid var(--theme-color); background: transparent; color: var(--theme-color); }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      name: 'Jim Agent',
+      coverpage: true,
+      loadSidebar: '_sidebar.md',
+      subMaxLevel: 3,
+      auto2top: true,
+      alias: {
+        '/.*/_sidebar.md': '_sidebar.md',
+      },
+      search: {
+        placeholder: '搜索课程内容',
+        noData: '没有找到结果',
+        depth: 4,
+      },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+</body>
+</html>

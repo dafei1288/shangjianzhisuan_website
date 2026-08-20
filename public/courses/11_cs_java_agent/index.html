@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从0做 Java AI Agent — 30章实战，3 大企业级项目</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#060d0a;--bg2:#0a1410;
+  --fg:#e8eaf0;--fg2:#8890a8;--fg3:#404860;
+  --border:rgba(255,255,255,.07);
+  --accent:#10b981;--accent2:#3b82f6;--accent3:#34d399;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'Outfit',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --nav-h:64px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-b);background:var(--bg);color:var(--fg);overflow-x:hidden;line-height:1.6}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 48px 0 172px;transition:background .4s}
+nav.scrolled{background:rgba(6,13,10,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-d);font-size:1.5rem;letter-spacing:.08em;color:var(--fg);text-decoration:none}
+.nav-logo em{color:var(--accent);font-style:normal}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-size:.82rem;color:var(--fg2);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-m);transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{font-size:.82rem;font-weight:600;color:#fff;background:var(--accent);border:none;padding:8px 20px;border-radius:100px;cursor:pointer;transition:all .2s;text-decoration:none}
+.nav-cta:hover{background:#34d399;transform:translateY(-1px)}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:var(--nav-h) 80px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 20% 50%,rgba(16,185,129,.07) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(59,130,246,.05) 0%,transparent 50%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 20%,transparent 80%)}
+.hero-visual{position:absolute;right:80px;top:50%;transform:translateY(-50%);width:460px;opacity:0;animation:fadeUp .8s .6s forwards}
+.agent-diagram{background:#0a1410;border:1px solid rgba(16,185,129,.2);border-radius:12px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 60px rgba(16,185,129,.05);padding:28px;font-family:var(--font-m);font-size:.78rem}
+.agent-title{color:var(--fg3);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px}
+.agent-layer{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:8px;border:1px solid transparent;transition:all .3s}
+.agent-layer:hover{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.04)}
+.agent-layer-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.agent-layer-name{color:var(--fg);font-weight:500;flex:1}
+.agent-layer-tag{font-size:.65rem;color:var(--fg3);letter-spacing:.08em}
+.agent-arrow{text-align:center;color:var(--fg3);font-size:.7rem;margin:2px 0;opacity:.5}
+.hero-eyebrow{font-family:var(--font-m);font-size:.78rem;color:var(--accent);letter-spacing:.2em;text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeUp .8s .1s forwards}
+.hero-title{font-family:var(--font-d);font-size:clamp(3.5rem,8vw,7rem);line-height:.92;letter-spacing:.02em;margin-bottom:24px;opacity:0;animation:fadeUp .8s .25s forwards;max-width:640px}
+.hero-title .hl{color:var(--accent)}
+.hero-sub{font-size:1.05rem;color:var(--fg2);font-weight:300;max-width:500px;margin-bottom:48px;opacity:0;animation:fadeUp .8s .4s forwards;line-height:1.75}
+.hero-actions{display:flex;gap:16px;align-items:center;opacity:0;animation:fadeUp .8s .55s forwards}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:100px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .3s;border:none;text-decoration:none;background:var(--accent);color:#fff}
+.btn-primary:hover{background:#34d399;transform:translateY(-2px);box-shadow:0 20px 40px rgba(16,185,129,.25)}
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:100px;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .3s;border:1px solid var(--border);text-decoration:none;color:var(--fg);background:rgba(255,255,255,.04)}
+.btn-secondary:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:48px;margin-top:64px;opacity:0;animation:fadeUp .8s .7s forwards}
+.stat-num{font-family:var(--font-d);font-size:2.5rem;color:var(--accent);line-height:1}
+.stat-label{font-family:var(--font-m);font-size:.7rem;color:var(--fg3);letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.modules{padding:120px 80px;position:relative}
+.section-eyebrow{font-family:var(--font-m);font-size:.72rem;color:var(--accent);letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+.section-title{font-family:var(--font-d);font-size:clamp(2.5rem,5vw,4rem);letter-spacing:.02em;margin-bottom:16px}
+.section-sub{font-size:1rem;color:var(--fg2);font-weight:300;max-width:560px;margin-bottom:64px;line-height:1.75}
+.modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.module-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s;position:relative;overflow:hidden}
+.module-card:hover{border-color:rgba(16,185,129,.25);transform:translateY(-4px);background:rgba(16,185,129,.03)}
+.module-num{font-family:var(--font-d);font-size:3.5rem;line-height:1;opacity:.07;position:absolute;top:16px;right:20px}
+.module-tag{font-family:var(--font-m);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;border-radius:100px;border:1px solid;margin-bottom:20px;display:inline-block}
+.module-name{font-family:var(--font-d);font-size:1.6rem;letter-spacing:.02em;margin-bottom:12px}
+.module-desc{font-size:.88rem;color:var(--fg2);line-height:1.7}
+.module-chapters{font-family:var(--font-m);font-size:.7rem;color:var(--fg3);margin-top:16px;letter-spacing:.06em}
+.projects{padding:0 80px 120px}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.project-card{background:linear-gradient(180deg,rgba(16,185,129,.06) 0%,rgba(255,255,255,.02) 100%);border:1px solid rgba(16,185,129,.2);border-radius:20px;padding:36px;position:relative;overflow:hidden;transition:all .3s}
+.project-card:hover{border-color:rgba(16,185,129,.4);transform:translateY(-6px)}
+.project-icon{font-size:2.4rem;margin-bottom:20px}
+.project-name{font-family:var(--font-d);font-size:1.8rem;letter-spacing:.02em;margin-bottom:12px;color:var(--accent)}
+.project-desc{font-size:.9rem;color:var(--fg2);line-height:1.75;margin-bottom:20px}
+.project-tags{display:flex;flex-wrap:wrap;gap:8px}
+.ptag{font-family:var(--font-m);font-size:.68rem;padding:4px 10px;border-radius:6px;background:rgba(16,185,129,.1);color:var(--accent);border:1px solid rgba(16,185,129,.2)}
+.stack{padding:0 80px 120px}
+.stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.stack-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;transition:all .3s}
+.stack-item:hover{border-color:rgba(16,185,129,.2);transform:translateY(-3px)}
+.stack-name{font-family:var(--font-d);font-size:1.4rem;letter-spacing:.04em;margin-bottom:6px}
+.stack-desc{font-size:.8rem;color:var(--fg3)}
+footer{padding:80px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:var(--font-d);font-size:1.8rem;letter-spacing:.06em}
+.footer-logo em{color:var(--accent);font-style:normal}
+.footer-links{display:flex;gap:32px}
+.footer-links a{font-size:.85rem;color:var(--fg3);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--fg)}
+.footer-back{font-size:.82rem;color:var(--fg3);text-decoration:none;font-family:var(--font-m);transition:color .2s}
+.footer-back:hover{color:var(--accent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<nav id="nav">
+  <a class="nav-logo" href="#">JIM<em>AGENT</em></a>
+  <div class="nav-links">
+    <a href="#modules">模块</a>
+    <a href="#projects">实战项目</a>
+    <a href="#stack">技术栈</a>
+    <a class="nav-cta" href="/">← 返回主页</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-visual">
+    <div class="agent-diagram">
+      <div class="agent-title">Java AI Agent 技术栈</div>
+      <div class="agent-layer"><div class="agent-layer-dot" style="background:#10b981"></div><div class="agent-layer-name">大模型层</div><div class="agent-layer-tag">DeepSeek · 通义 · GPT</div></div>
+      <div class="agent-arrow">↓</div>
+      <div class="agent-layer"><div class="agent-layer-dot" style="background:#3b82f6"></div><div class="agent-layer-name">AI 框架层</div><div class="agent-layer-tag">Spring AI · LangChain4j</div></div>
+      <div class="agent-arrow">↓</div>
+      <div class="agent-layer"><div class="agent-layer-dot" style="background:#34d399"></div><div class="agent-layer-name">Function Calling</div><div class="agent-layer-tag">@Tool · ReAct · 工具链</div></div>
+      <div class="agent-arrow">↓</div>
+      <div class="agent-layer"><div class="agent-layer-dot" style="background:#60a5fa"></div><div class="agent-layer-name">RAG 检索</div><div class="agent-layer-tag">PgVector · Embedding · Reranker</div></div>
+      <div class="agent-arrow">↓</div>
+      <div class="agent-layer"><div class="agent-layer-dot" style="background:#a78bfa"></div><div class="agent-layer-name">多 Agent 编排</div><div class="agent-layer-tag">LangGraph4j · 状态机</div></div>
+      <div class="agent-arrow">↓</div>
+      <div class="agent-layer"><div class="agent-layer-dot" style="background:#fbbf24"></div><div class="agent-layer-name">Spring Boot 工程</div><div class="agent-layer-tag">Docker · Redis · 监控</div></div>
+    </div>
+  </div>
+  <div class="hero-eyebrow">Java 实战课程 · 30 章 · 3 项目</div>
+  <h1 class="hero-title">从0做<br><span class="hl">Java AI Agent</span></h1>
+  <p class="hero-sub">基于 Spring AI 和 LangChain4j，构建 3 个可直接写进简历的企业级 Agent：NL2SQL、合同审查、研报生成。不讲 Java 基础，直接进工程实战。</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#modules">查看课程模块</a>
+    <a class="btn-secondary" href="docs/">阅读教案</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">章节</div></div>
+    <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">模块</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">企业级项目</div></div>
+    <div class="stat-item"><div class="stat-num">Java 17</div><div class="stat-label">技术栈</div></div>
+  </div>
+</section>
+
+<section class="modules" id="modules">
+  <div class="section-eyebrow">课程模块</div>
+  <h2 class="section-title">9 大模块，从原理到工程化</h2>
+  <p class="section-sub">从 AI Agent 概论出发，逐步深入 Spring AI、LangChain4j、RAG、多 Agent 协作，最终落地 3 大企业级项目。</p>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-num">01</div>
+      <div class="module-tag" style="color:#10b981;border-color:rgba(16,185,129,.3)">Ch01–03</div>
+      <div class="module-name">AI Agent 概论</div>
+      <p class="module-desc">Agent vs Chatbot、LLM 原理速览、Java AI 生态对比（Spring AI vs LangChain4j）、技术选型与环境搭建。</p>
+      <div class="module-chapters">导论 · LLM · 生态</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">02</div>
+      <div class="module-tag" style="color:#3b82f6;border-color:rgba(59,130,246,.3)">Ch04–07</div>
+      <div class="module-name">Spring AI 核心</div>
+      <p class="module-desc">ChatClient、Function Calling、ChatMemory、Advisor 链、结构化输出、SSE 流式响应。</p>
+      <div class="module-chapters">ChatClient · @Tool · Memory · Advisor</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">03</div>
+      <div class="module-tag" style="color:#34d399;border-color:rgba(52,211,153,.3)">Ch08–11</div>
+      <div class="module-name">LangChain4j 实战</div>
+      <p class="module-desc">AiServices 声明式接口、@Tool 工具调用、EmbeddingStore、ChatMemoryProvider 多用户隔离。</p>
+      <div class="module-chapters">AiServices · @Tool · RAG · Memory</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">04</div>
+      <div class="module-tag" style="color:#60a5fa;border-color:rgba(96,165,250,.3)">Ch12–15</div>
+      <div class="module-name">RAG 深度实战</div>
+      <p class="module-desc">PgVector / Chroma / Milvus 选型、文档分块策略、混合检索、Reranker、HyDE、多租户隔离。</p>
+      <div class="module-chapters">向量库 · 分块 · 混合检索 · 工程化</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">05</div>
+      <div class="module-tag" style="color:#a78bfa;border-color:rgba(167,139,250,.3)">Ch16–18</div>
+      <div class="module-name">多 Agent 协作</div>
+      <p class="module-desc">ReAct / Plan-and-Execute / Reflection 架构模式、多 Agent 编排、LangGraph4j 状态机实战。</p>
+      <div class="module-chapters">ReAct · 编排 · LangGraph4j</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">06</div>
+      <div class="module-tag" style="color:#fbbf24;border-color:rgba(251,191,36,.3)">Ch19–21</div>
+      <div class="module-name">项目一 · NL2SQL</div>
+      <p class="module-desc">自然语言 → SQL → 图表 → 数据洞察。Schema 向量化、Few-shot 示例库、SQL 注入防护、ECharts 可视化。</p>
+      <div class="module-chapters">架构 · Function Calling · 可视化</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">07</div>
+      <div class="module-tag" style="color:#f472b6;border-color:rgba(244,114,182,.3)">Ch22–24</div>
+      <div class="module-name">项目二 · 合同审查</div>
+      <p class="module-desc">PDF/Word 解析（Apache Tika）、条款结构化、RAG 规则检索、风险等级评估、Markdown/PDF 报告导出。</p>
+      <div class="module-chapters">文档解析 · 规则检索 · 风险标注</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">08</div>
+      <div class="module-tag" style="color:#10b981;border-color:rgba(16,185,129,.3)">Ch25–27</div>
+      <div class="module-name">项目三 · 研报生成</div>
+      <p class="module-desc">多文档融合、信息提取、数据洞察、图表生成、大纲+内容+校对多 Agent 协作，长文本编排。</p>
+      <div class="module-chapters">多文档 · 图表 · 多 Agent 协作</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">09</div>
+      <div class="module-tag" style="color:#3b82f6;border-color:rgba(59,130,246,.3)">Ch28–30</div>
+      <div class="module-name">工程化与部署</div>
+      <p class="module-desc">Token 成本控制、模型路由、Prometheus + Grafana 监控、docker-compose 编排、CI/CD、上线 checklist。</p>
+      <div class="module-chapters">优化 · 监控 · 部署</div>
+    </div>
+  </div>
+</section>
+
+<section class="projects" id="projects">
+  <div class="section-eyebrow">实战项目</div>
+  <h2 class="section-title">3 大企业级项目，做完写进简历</h2>
+  <p class="section-sub">每个项目都是完整 Spring Boot 应用，含前后端、数据库、Docker 部署。覆盖数据分析、法务、金融三大领域。</p>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-icon">🗄️</div>
+      <div class="project-name">NL2SQL Agent</div>
+      <p class="project-desc">自然语言查询数据库：用户输入「上月东区销售额同比怎么算？」，Agent 自动生成 SQL、查询、生成图表、给出洞察。</p>
+      <div class="project-tags">
+        <span class="ptag">Function Calling</span>
+        <span class="ptag">Schema 向量化</span>
+        <span class="ptag">SQL 注入防护</span>
+        <span class="ptag">ECharts</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">📄</div>
+      <div class="project-name">合同审查 Agent</div>
+      <p class="project-desc">上传合同 PDF/Word，Agent 解析条款、检索规则库、标注风险等级、生成审查报告，含引用溯源。</p>
+      <div class="project-tags">
+        <span class="ptag">Apache Tika</span>
+        <span class="ptag">RAG 检索</span>
+        <span class="ptag">风险标注</span>
+        <span class="ptag">引用溯源</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">📊</div>
+      <div class="project-name">研报生成 Agent</div>
+      <p class="project-desc">输入多份原始资料，多个 Agent 协作完成：大纲生成、内容填充、数据洞察、图表、校对，输出完整研报。</p>
+      <div class="project-tags">
+        <span class="ptag">多 Agent 编排</span>
+        <span class="ptag">LangGraph4j</span>
+        <span class="ptag">长文本生成</span>
+        <span class="ptag">图表生成</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stack" id="stack">
+  <div class="section-eyebrow">技术栈</div>
+  <h2 class="section-title">主流框架，国产优先</h2>
+  <p class="section-sub">Spring AI + LangChain4j 双框架覆盖，DeepSeek / 通义千问国产模型优先，PgVector 向量库开箱即用。</p>
+  <div class="stack-grid">
+    <div class="stack-item"><div class="stack-name">Spring AI</div><div class="stack-desc">1.0 · ChatClient/Advisor</div></div>
+    <div class="stack-item"><div class="stack-name">LangChain4j</div><div class="stack-desc">1.0 · AiServices/@Tool</div></div>
+    <div class="stack-item"><div class="stack-name">PgVector</div><div class="stack-desc">PostgreSQL 向量扩展</div></div>
+    <div class="stack-item"><div class="stack-name">DeepSeek</div><div class="stack-desc">国产主力大模型</div></div>
+    <div class="stack-item"><div class="stack-name">通义千问</div><div class="stack-desc">阿里 DashScope</div></div>
+    <div class="stack-item"><div class="stack-name">LangGraph4j</div><div class="stack-desc">多 Agent 状态机</div></div>
+    <div class="stack-item"><div class="stack-name">Redis</div><div class="stack-desc">缓存与会话管理</div></div>
+    <div class="stack-item"><div class="stack-name">Docker</div><div class="stack-desc">docker-compose 编排</div></div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">JIM<em>AGENT</em></div>
+    <div style="font-size:.82rem;color:var(--fg3);margin-top:8px">Jim Isn't a Magic Agent — 拆解到可调试的工程粒度</div>
+  </div>
+  <div class="footer-links">
+    <a href="#modules">课程模块</a>
+    <a href="#projects">实战项目</a>
+    <a href="docs/">阅读教案</a>
+  </div>
+  <a class="footer-back" href="/">← 返回课程主页</a>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+</script>
+
+<style>#sx-back{position:fixed;left:18px;top:16px;z-index:99999;display:flex;align-items:center;gap:8px;
+background:rgba(6,13,26,.82);border:1px solid rgba(0,180,216,.3);border-radius:999px;
+padding:6px 16px 6px 12px;text-decoration:none;color:#A8B8CC;
+font:12px/1 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.5px;
+backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+#sx-back:hover{border-color:rgba(255,140,66,.6);color:#fff}
+#sx-back img{width:15px;height:15px;display:block}</style>
+<a id="sx-back" href="/"><img src="/images/logo.png" alt="">← 熵减智算</a>
+</body>
+</html>

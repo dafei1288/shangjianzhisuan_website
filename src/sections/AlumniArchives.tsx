@@ -1,0 +1,194 @@
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import gsap from 'gsap';
+import Parallax from '../components/Parallax';
+import { researchConfig, courseLinksByImage } from '../config';
+
+export default function AlumniArchives() {
+  const navigate = useNavigate();
+  const gridRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const items = itemRefs.current.filter(Boolean) as HTMLDivElement[];
+
+    items.forEach((item) => {
+      gsap.set(item, { opacity: 0, y: 30 });
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = items.indexOf(entry.target as HTMLDivElement);
+            gsap.to(entry.target, {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              delay: (idx % 4) * 0.1,
+              ease: 'power2.out',
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    items.forEach((item) => observer.observe(item));
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (!researchConfig.sectionLabel && researchConfig.projects.length === 0) {
+    return null;
+  }
+
+  return (
+    <section
+      id="alumni"
+      style={{
+        padding: '150px 5vw',
+        background: '#060D1A',
+        position: 'relative',
+        zIndex: 2,
+      }}
+    >
+      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        {researchConfig.sectionLabel && (
+          <div
+            className="mb-6 flex items-baseline justify-between"
+          >
+            <span
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 12,
+                fontWeight: 300,
+                letterSpacing: '3px',
+                textTransform: 'uppercase',
+                color: '#A8B8CC',
+                opacity: 0.6,
+              }}
+            >
+              {researchConfig.sectionLabel}
+            </span>
+            <a
+              href="/courses"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/courses');
+                window.scrollTo(0, 0);
+              }}
+              className="nav-link"
+              style={{ letterSpacing: '1px' }}
+            >
+              详情 →
+            </a>
+          </div>
+        )}
+        <div
+          className="mb-16"
+          style={{
+            width: '100%',
+            height: 1,
+            background: 'rgba(0, 180, 216, 0.12)',
+          }}
+        />
+
+        <div
+          ref={gridRef}
+          className="grid grid-cols-2 md:grid-cols-4"
+          style={{ gap: 0 }}
+        >
+          {researchConfig.projects.map((project, i) => (
+            <div
+              key={`${project.title}-${i}`}
+              ref={(el) => { itemRefs.current[i] = el; }}
+              className="group cursor-pointer"
+              onClick={() => {
+                const href = courseLinksByImage[project.image];
+                if (href) window.open(href, '_blank', 'noopener,noreferrer');
+              }}
+              style={{
+                borderBottom: '1px solid rgba(0, 180, 216, 0.1)',
+                borderRight: (i + 1) % 4 !== 0 ? '1px solid rgba(0, 180, 216, 0.1)' : 'none',
+                padding: '24px 20px',
+              }}
+            >
+              <div
+                className="relative overflow-hidden mb-4"
+                style={{ aspectRatio: '4/3' }}
+              >
+                {project.image && (
+                  <Parallax
+                    speed={0.18}
+                    style={{ height: '118%', marginTop: '-9%' }}
+                  >
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-all duration-700"
+                      style={{
+                        opacity: 0.65,
+                        filter: 'grayscale(30%)',
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.target as HTMLImageElement).style.opacity = '1';
+                        (e.target as HTMLImageElement).style.filter = 'grayscale(0%)';
+                        (e.target as HTMLImageElement).style.transform = 'scale(1.04)';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.target as HTMLImageElement).style.opacity = '0.65';
+                        (e.target as HTMLImageElement).style.filter = 'grayscale(30%)';
+                        (e.target as HTMLImageElement).style.transform = 'scale(1)';
+                      }}
+                      loading="lazy"
+                    />
+                  </Parallax>
+                )}
+              </div>
+              <h4
+                style={{
+                  fontFamily: "'EB Garamond', serif",
+                  fontWeight: 400,
+                  fontSize: 18,
+                  color: '#ffffff',
+                  margin: '0 0 6px 0',
+                  lineHeight: 1.3,
+                }}
+              >
+                {project.title}
+              </h4>
+              <div
+                className="flex items-center justify-between"
+              >
+                <span
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 200,
+                    fontSize: 12,
+                    color: '#A8B8CC',
+                    opacity: 0.6,
+                  }}
+                >
+                  {project.discipline}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'Fira Code', monospace",
+                    fontWeight: 400,
+                    fontSize: 11,
+                    color: '#A8B8CC',
+                    opacity: 0.4,
+                  }}
+                >
+                  {project.year}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

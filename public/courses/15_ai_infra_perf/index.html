@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Infra 性能工程实战 — 28 章 · 从指标到优化</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050510;--bg2:#0a0a1a;--bg3:#10101f;
+  --surface:rgba(15,15,35,.6);--surface-hover:rgba(20,20,50,.8);
+  --border:rgba(255,255,255,.06);--border-hover:rgba(132,204,22,.25);
+  --fg:#e2e8f0;--fg2:#94a3b8;--fg3:#64748b;
+  --primary:#84cc16;--primary-dark:#65a30d;--secondary:#22d3ee;--accent:#fbbf24;
+  --radius:16px;--radius-sm:10px;
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--bg);color:var(--fg);line-height:1.7;overflow-x:hidden}
+a{color:var(--primary);text-decoration:none;transition:color .2s}
+a:hover{color:#fff}
+code,pre{font-family:var(--font-mono)}
+
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.grid-bg{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(132,204,22,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(132,204,22,.02) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 60% 50% at 50% 30%,black,transparent)}
+
+.orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none}
+.orb-1{width:600px;height:600px;top:-200px;left:-100px;background:rgba(132,204,22,.12)}
+.orb-2{width:500px;height:500px;bottom:-100px;right:-100px;background:rgba(34,211,238,.08)}
+.orb-3{width:400px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(251,191,36,.05)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(5,5,16,.8);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);padding:0 2rem}
+nav .inner{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+nav .logo{font-family:var(--font-display);font-weight:700;font-size:1.05rem;color:#fff;
+  display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
+nav .logo .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));font-size:.85rem}
+nav .links{display:flex;gap:2rem}
+nav .links a{color:var(--fg3);font-size:.875rem;font-weight:500;transition:color .2s;letter-spacing:.01em}
+nav .links a:hover{color:#fff}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:7rem 2rem 5rem;position:relative}
+.hero-content{position:relative;z-index:1;max-width:860px}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;
+  border-radius:100px;font-size:.8rem;font-weight:500;color:var(--primary);
+  background:rgba(132,204,22,.08);border:1px solid rgba(132,204,22,.2);margin-bottom:2rem;letter-spacing:.04em}
+.hero .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--primary);
+  animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.5rem,6vw,4.2rem);font-weight:700;
+  line-height:1.1;margin-bottom:1.5rem;letter-spacing:-.03em}
+.hero h1 .gradient{background:linear-gradient(135deg,#fff 0%,var(--primary) 40%,var(--secondary) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .subtitle{font-size:1.15rem;color:var(--fg2);max-width:640px;margin:0 auto 2.5rem;line-height:1.8}
+
+.cta-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:var(--radius-sm);
+  font-size:.95rem;font-weight:600;cursor:pointer;border:none;transition:all .25s;font-family:var(--font-body)}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#04121a;
+  box-shadow:0 0 30px rgba(132,204,22,.2),0 0 60px rgba(34,211,238,.1)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(132,204,22,.3),0 0 80px rgba(34,211,238,.15)}
+.btn-secondary{background:var(--surface);color:var(--fg);
+  border:1px solid var(--border);backdrop-filter:blur(10px)}
+.btn-secondary:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3.5rem;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat .val{font-family:var(--font-display);font-size:2.2rem;font-weight:700;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stat .lbl{font-size:.8rem;color:var(--fg3);margin-top:2px;letter-spacing:.02em}
+
+section{padding:6rem 2rem;max-width:1200px;margin:auto;position:relative;z-index:1}
+.section-header{text-align:center;margin-bottom:4rem}
+.section-header .tag{display:inline-block;padding:4px 14px;border-radius:100px;font-size:.75rem;
+  font-weight:600;color:var(--primary);background:rgba(132,204,22,.08);border:1px solid rgba(132,204,22,.15);
+  letter-spacing:.06em;margin-bottom:1rem}
+.section-header h2{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,2.4rem);
+  font-weight:700;letter-spacing:-.02em;margin-bottom:.75rem}
+.section-header p{color:var(--fg2);font-size:1.05rem;max-width:600px;margin:0 auto}
+
+.bento{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+.bento-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:2rem;position:relative;overflow:hidden;transition:all .3s;backdrop-filter:blur(10px)}
+.bento-card:hover{border-color:var(--border-hover);transform:translateY(-3px);
+  box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.bento-card .icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;background:rgba(132,204,22,.1);color:var(--primary);font-size:1.3rem;margin-bottom:1.25rem}
+.bento-card h3{font-family:var(--font-display);font-size:1.25rem;font-weight:600;margin-bottom:.75rem}
+.bento-card p{color:var(--fg2);font-size:.95rem;line-height:1.7}
+.bento-card.wide{grid-column:span 2}
+
+.modules{display:grid;gap:1.5rem}
+.module-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:2rem;backdrop-filter:blur(10px);transition:all .3s}
+.module-card:hover{border-color:var(--border-hover);transform:translateX(8px)}
+.module-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.25rem}
+.module-num{font-family:var(--font-display);font-size:2rem;font-weight:700;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;min-width:60px}
+.module-info h3{font-family:var(--font-display);font-size:1.3rem;font-weight:600;margin-bottom:.25rem}
+.module-info .chapters{font-size:.85rem;color:var(--fg3);font-family:var(--font-mono)}
+.module-topics{display:flex;flex-wrap:wrap;gap:.5rem}
+.topic-tag{padding:4px 12px;border-radius:6px;font-size:.8rem;background:rgba(132,204,22,.08);
+  color:var(--primary);border:1px solid rgba(132,204,22,.15);font-family:var(--font-mono)}
+
+.tech-stack{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-top:2rem}
+.tech-badge{padding:8px 18px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:500;
+  background:var(--surface);border:1px solid var(--border);color:var(--fg2);
+  font-family:var(--font-mono);transition:all .2s}
+.tech-badge:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-2px)}
+
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.25rem}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.75rem;transition:all .3s}
+.project-card:hover{border-color:var(--border-hover);transform:translateY(-3px)}
+.project-card .pnum{font-family:var(--font-display);font-size:1rem;font-weight:700;
+  color:var(--accent);letter-spacing:.05em;margin-bottom:.5rem}
+.project-card h4{font-family:var(--font-display);font-size:1.15rem;font-weight:600;margin-bottom:.6rem}
+.project-card p{color:var(--fg2);font-size:.9rem}
+
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:4rem 2rem 2rem;text-align:center}
+.footer-content{max-width:1200px;margin:auto}
+.footer-cta{margin-bottom:3rem}
+.footer-cta h3{font-family:var(--font-display);font-size:1.8rem;font-weight:700;margin-bottom:1rem}
+.footer-cta p{color:var(--fg2);margin-bottom:2rem}
+.footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:2rem;flex-wrap:wrap}
+.footer-links a{color:var(--fg3);font-size:.9rem}
+.footer-copy{color:var(--fg3);font-size:.85rem;padding-top:2rem;border-top:1px solid var(--border)}
+
+@media(max-width:768px){
+  .bento{grid-template-columns:1fr}
+  .bento-card.wide{grid-column:span 1}
+  .hero-stats{gap:2rem}
+  nav .links{display:none}
+}
+nav{padding-left:170px!important}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<nav>
+  <div class="inner">
+    <a href="/" class="logo">
+      <div class="icon">⚡</div>
+      <span>PerfTrack</span>
+    </a>
+    <div class="links">
+      <a href="#modules">课程大纲</a>
+      <a href="#features">核心特色</a>
+      <a href="#projects">综合项目</a>
+      <a href="docs/index.html">在线文档</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span>28 章完整流程 · Python / PyTorch / CUDA / Triton / NCCL</span>
+    </div>
+    <h1>AI Infra<br><span class="gradient">性能工程实战</span></h1>
+    <p class="subtitle">
+      从 Latency/MFU 指标出发，深入 GPU 架构、CUDA 算子、分布式训练与推理系统。
+      按照「建立指标 → 发现瓶颈 → 实施优化 → 验证收益」的工程闭环，完成 8 个可运行综合项目。
+    </p>
+    <div class="cta-group">
+      <a href="docs/index.html" class="btn btn-primary">
+        开始学习
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="docs/module0/ch00.md" class="btn btn-secondary">
+        查看 Ch00 课程地图
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="val">28</div>
+        <div class="lbl">章节</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val">7</div>
+        <div class="lbl">阶段</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val">8</div>
+        <div class="lbl">综合项目</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val">2</div>
+        <div class="lbl">方向（训练+推理）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="section-header">
+    <div class="tag">核心特色</div>
+    <h2>为什么选择这门课程</h2>
+    <p>不是零散介绍工具，而是按照工程流程，建立完整的性能优化能力</p>
+  </div>
+  <div class="bento">
+    <div class="bento-card">
+      <div class="icon">🔄</div>
+      <h3>指标到优化完整闭环</h3>
+      <p>按「建立指标 → 发现瓶颈 → 实施优化 → 验证收益」流程学习，每一步都可量化、可验证。</p>
+    </div>
+    <div class="bento-card">
+      <div class="icon">🔬</div>
+      <h3>原理与代码实操并重</h3>
+      <p>从 GPU、CUDA、分布式通信原理出发，配合 PyTorch、Triton、NCCL 代码实验理解底层机制。</p>
+    </div>
+    <div class="bento-card">
+      <div class="icon">🧠</div>
+      <h3>训练与推理双覆盖</h3>
+      <p>既讲分布式训练、FSDP 与通信优化，也讲 KV Cache、Batching、推测解码与 PD 分离。</p>
+    </div>
+    <div class="bento-card">
+      <div class="icon">🎯</div>
+      <h3>面向真实工程问题</h3>
+      <p>训练性能分析、瓶颈定位、方案设计与优化验证能力，而非记忆 API。</p>
+    </div>
+    <div class="bento-card wide">
+      <div class="icon">💻</div>
+      <h3>可运行 Demo + 无 GPU 可学</h3>
+      <p>每章独立可运行脚本；关键实验提供 CPU 模拟路径（内存访问模拟、Roofline 建模、调度器模拟），有 GPU 则深度跑真实 Profiler/算子。</p>
+    </div>
+  </div>
+</section>
+
+<section id="modules">
+  <div class="section-header">
+    <div class="tag">课程大纲</div>
+    <h2>7 个阶段，28 章内容</h2>
+    <p>循序渐进，从指标到优化，完整覆盖 AI 系统性能工程</p>
+  </div>
+  <div class="modules">
+    <div class="module-card">
+      <div class="module-header">
+        <div class="module-num">0</div>
+        <div class="module-info">
+          <h3>性能工程方法论</h3>
+          <div class="chapters">Ch00-Ch03 · 4 章</div>
+        </div>
+      </div>
+      <div class="module-topics">
+        <span class="topic-tag">岗位路线</span>
+        <span class="topic-tag">优化闭环</span>
+        <span class="topic-tag">Latency/Throughput/QPS</span>
+        <span class="topic-tag">MFU/Goodput/Roofline</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-header">
+        <div class="module-num">1</div>
+        <div class="module-info">
+          <h3>GPU 硬件与系统</h3>
+          <div class="chapters">Ch04-Ch07 · 4 章</div>
+        </div>
+      </div>
+      <div class="module-topics">
+        <span class="topic-tag">SM/SP/SIMT</span>
+        <span class="topic-tag">显存层次</span>
+        <span class="topic-tag">Tensor Core</span>
+        <span class="topic-tag">NVLink/RDMA</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-header">
+        <div class="module-num">2</div>
+        <div class="module-info">
+          <h3>CUDA 与算子优化</h3>
+          <div class="chapters">Ch08-Ch12 · 5 章</div>
+        </div>
+      </div>
+      <div class="module-topics">
+        <span class="topic-tag">线程模型</span>
+        <span class="topic-tag">Coalescing</span>
+        <span class="topic-tag">Profiler/Nsight</span>
+        <span class="topic-tag">Kernel Fusion</span>
+        <span class="topic-tag">Triton</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-header">
+        <div class="module-num">3</div>
+        <div class="module-info">
+          <h3>分布式训练</h3>
+          <div class="chapters">Ch13-Ch17 · 5 章</div>
+        </div>
+      </div>
+      <div class="module-topics">
+        <span class="topic-tag">DP/TP/PP</span>
+        <span class="topic-tag">集合通信</span>
+        <span class="topic-tag">NCCL</span>
+        <span class="topic-tag">FSDP/ZeRO</span>
+        <span class="topic-tag">通信瓶颈</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-header">
+        <div class="module-num">4</div>
+        <div class="module-info">
+          <h3>Compiler 与 Runtime</h3>
+          <div class="chapters">Ch18-Ch20 · 3 章</div>
+        </div>
+      </div>
+      <div class="module-topics">
+        <span class="topic-tag">Profiler 全链路</span>
+        <span class="topic-tag">torch.compile</span>
+        <span class="topic-tag">CUDA Graph</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-header">
+        <div class="module-num">5</div>
+        <div class="module-info">
+          <h3>大模型推理系统</h3>
+          <div class="chapters">Ch21-Ch26 · 6 章</div>
+        </div>
+      </div>
+      <div class="module-topics">
+        <span class="topic-tag">Continuous Batching</span>
+        <span class="topic-tag">KV Cache</span>
+        <span class="topic-tag">Paged Attention</span>
+        <span class="topic-tag">推测解码</span>
+        <span class="topic-tag">PD 分离</span>
+        <span class="topic-tag">MoE</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-header">
+        <div class="module-num">6</div>
+        <div class="module-info">
+          <h3>综合实战</h3>
+          <div class="chapters">Ch27 · 1 章</div>
+        </div>
+      </div>
+      <div class="module-topics">
+        <span class="topic-tag">端到端压测</span>
+        <span class="topic-tag">瓶颈定位</span>
+        <span class="topic-tag">优化验证</span>
+        <span class="topic-tag">技术报告</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-header">
+    <div class="tag">八个综合项目</div>
+    <h2>把知识点串成完整工程闭环</h2>
+    <p>每个项目都是阶段知识的实战总装，可独立完成、可写进简历</p>
+  </div>
+  <div class="projects">
+    <div class="project-card"><div class="pnum">PROJECT 01</div><h4>性能基线与指标看板</h4><p>指标计算库 + 可视化看板，建立 AI 系统性能基线。</p></div>
+    <div class="project-card"><div class="pnum">PROJECT 02</div><h4>Profiler 定位训练瓶颈</h4><p>用 PyTorch Profiler 输出分析报告与优化清单。</p></div>
+    <div class="project-card"><div class="pnum">PROJECT 03</div><h4>CUDA 内存访问实验</h4><p>Coalescing/Kernel 优化前后数据对比实验。</p></div>
+    <div class="project-card"><div class="pnum">PROJECT 04</div><h4>Triton 融合算子</h4><p>实现并优化融合算子（含 Flash Attention 思想）。</p></div>
+    <div class="project-card"><div class="pnum">PROJECT 05</div><h4>分布式通信分析</h4><p>通信耗时拆解 + 拓扑对比实验。</p></div>
+    <div class="project-card"><div class="pnum">PROJECT 06</div><h4>FSDP 显存优化</h4><p>显存曲线对比 + FSDP 训练实验。</p></div>
+    <div class="project-card"><div class="pnum">PROJECT 07</div><h4>KV Cache + Batching 服务</h4><p>可运行推理服务 + 吞吐对比。</p></div>
+    <div class="project-card"><div class="pnum">PROJECT 08</div><h4>端到端压测与优化</h4><p>压测报告 + 优化验证 + 技术报告。</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <div class="tag">技术栈</div>
+    <h2>使用的技术与工具</h2>
+  </div>
+  <div class="tech-stack">
+    <span class="tech-badge">Python 3.10+</span>
+    <span class="tech-badge">PyTorch 2.x</span>
+    <span class="tech-badge">torch.compile</span>
+    <span class="tech-badge">CUDA C/C++</span>
+    <span class="tech-badge">Triton DSL</span>
+    <span class="tech-badge">NCCL</span>
+    <span class="tech-badge">torch.distributed</span>
+    <span class="tech-badge">FSDP</span>
+    <span class="tech-badge">Nsight Systems</span>
+    <span class="tech-badge">Nsight Compute</span>
+    <span class="tech-badge">nvidia-smi</span>
+    <span class="tech-badge">Roofline Model</span>
+    <span class="tech-badge">KV Cache</span>
+    <span class="tech-badge">Paged Attention</span>
+    <span class="tech-badge">Continuous Batching</span>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-cta">
+      <h3>准备好开始了吗？</h3>
+      <p>从 Ch00 课程地图开始，建立你的 AI 系统性能优化能力</p>
+      <a href="docs/index.html" class="btn btn-primary">
+        开始学习
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="footer-links">
+      <a href="/">所有课程</a>
+      <a href="docs/index.html">在线文档</a>
+      <a href="#modules">课程大纲</a>
+      <a href="#projects">综合项目</a>
+    </div>
+    <div class="footer-copy">
+      © 2025 PerfTrack · 从指标到优化，不依赖黑盒
+    </div>
+  </div>
+</footer>
+
+
+<style>#sx-back{position:fixed;left:18px;top:16px;z-index:99999;display:flex;align-items:center;gap:8px;
+background:rgba(6,13,26,.82);border:1px solid rgba(0,180,216,.3);border-radius:999px;
+padding:6px 16px 6px 12px;text-decoration:none;color:#A8B8CC;
+font:12px/1 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.5px;
+backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+#sx-back:hover{border-color:rgba(255,140,66,.6);color:#fff}
+#sx-back img{width:15px;height:15px;display:block}</style>
+<a id="sx-back" href="/"><img src="/images/logo.png" alt="">← 熵减智算</a>
+</body>
+</html>

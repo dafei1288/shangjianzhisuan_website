@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从零写数据库 JimSQL — 30章实战，亲手构建关系型数据库</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080a0f;--bg2:#0d1018;
+  --fg:#e8eaf0;--fg2:#8890a8;--fg3:#404860;
+  --border:rgba(255,255,255,.07);
+  --accent:#ef4444;--accent2:#f97316;--accent3:#fbbf24;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'Outfit',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --nav-h:64px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-b);background:var(--bg);color:var(--fg);overflow-x:hidden;line-height:1.6}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 48px 0 172px;transition:background .4s}
+nav.scrolled{background:rgba(8,10,15,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-d);font-size:1.5rem;letter-spacing:.08em;color:var(--fg);text-decoration:none}
+.nav-logo em{color:var(--accent);font-style:normal}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-size:.82rem;color:var(--fg2);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-m);transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{font-size:.82rem;font-weight:600;color:#fff;background:var(--accent);border:none;padding:8px 20px;border-radius:100px;cursor:pointer;transition:all .2s;text-decoration:none}
+.nav-cta:hover{background:#f87171;transform:translateY(-1px)}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:var(--nav-h) 80px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 20% 50%,rgba(239,68,68,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(249,115,22,.04) 0%,transparent 50%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 20%,transparent 80%)}
+.hero-visual{position:absolute;right:80px;top:50%;transform:translateY(-50%);width:460px;opacity:0;animation:fadeUp .8s .6s forwards}
+.db-diagram{background:#0d1018;border:1px solid rgba(239,68,68,.2);border-radius:12px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 60px rgba(239,68,68,.05);padding:28px;font-family:var(--font-m);font-size:.78rem}
+.db-title{color:var(--fg3);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px}
+.db-layer{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:8px;border:1px solid transparent;transition:all .3s}
+.db-layer:hover{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.04)}
+.db-layer-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.db-layer-name{color:var(--fg);font-weight:500;flex:1}
+.db-layer-tag{font-size:.65rem;color:var(--fg3);letter-spacing:.08em}
+.db-arrow{text-align:center;color:var(--fg3);font-size:.7rem;margin:2px 0;opacity:.5}
+.hero-eyebrow{font-family:var(--font-m);font-size:.78rem;color:var(--accent);letter-spacing:.2em;text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeUp .8s .1s forwards}
+.hero-title{font-family:var(--font-d);font-size:clamp(3.5rem,8vw,7rem);line-height:.92;letter-spacing:.02em;margin-bottom:24px;opacity:0;animation:fadeUp .8s .25s forwards;max-width:640px}
+.hero-title .hl{color:var(--accent)}
+.hero-sub{font-size:1.05rem;color:var(--fg2);font-weight:300;max-width:500px;margin-bottom:48px;opacity:0;animation:fadeUp .8s .4s forwards;line-height:1.75}
+.hero-actions{display:flex;gap:16px;align-items:center;opacity:0;animation:fadeUp .8s .55s forwards}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:100px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .3s;border:none;text-decoration:none;background:var(--accent);color:#fff}
+.btn-primary:hover{background:#f87171;transform:translateY(-2px);box-shadow:0 20px 40px rgba(239,68,68,.25)}
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:100px;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .3s;border:1px solid var(--border);text-decoration:none;color:var(--fg);background:rgba(255,255,255,.04)}
+.btn-secondary:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:48px;margin-top:64px;opacity:0;animation:fadeUp .8s .7s forwards}
+.stat-num{font-family:var(--font-d);font-size:2.5rem;color:var(--accent);line-height:1}
+.stat-label{font-family:var(--font-m);font-size:.7rem;color:var(--fg3);letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.modules{padding:120px 80px;position:relative}
+.section-eyebrow{font-family:var(--font-m);font-size:.72rem;color:var(--accent);letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+.section-title{font-family:var(--font-d);font-size:clamp(2.5rem,5vw,4rem);letter-spacing:.02em;margin-bottom:16px}
+.section-sub{font-size:1rem;color:var(--fg2);font-weight:300;max-width:560px;margin-bottom:64px;line-height:1.75}
+.modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.module-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s;position:relative;overflow:hidden}
+.module-card:hover{border-color:rgba(239,68,68,.25);transform:translateY(-4px);background:rgba(239,68,68,.03)}
+.module-num{font-family:var(--font-d);font-size:3.5rem;line-height:1;opacity:.07;position:absolute;top:16px;right:20px}
+.module-tag{font-family:var(--font-m);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:4px 12px;border-radius:100px;border:1px solid;margin-bottom:20px;display:inline-block}
+.module-name{font-family:var(--font-d);font-size:1.6rem;letter-spacing:.02em;margin-bottom:12px}
+.module-desc{font-size:.88rem;color:var(--fg2);line-height:1.7}
+.module-chapters{font-family:var(--font-m);font-size:.7rem;color:var(--fg3);margin-top:16px;letter-spacing:.06em}
+.features{padding:0 80px 120px;display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.feature-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:20px;padding:40px;position:relative;overflow:hidden;transition:all .3s}
+.feature-card:hover{border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.02)}
+.feature-icon{font-size:2rem;margin-bottom:20px}
+.feature-name{font-family:var(--font-d);font-size:1.8rem;letter-spacing:.02em;margin-bottom:12px}
+.feature-desc{font-size:.92rem;color:var(--fg2);line-height:1.75}
+.feature-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.ftag{font-family:var(--font-m);font-size:.68rem;padding:4px 10px;border-radius:6px;background:rgba(239,68,68,.08);color:var(--accent);border:1px solid rgba(239,68,68,.15)}
+.stack{padding:0 80px 120px}
+.stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.stack-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;transition:all .3s}
+.stack-item:hover{border-color:rgba(239,68,68,.2);transform:translateY(-3px)}
+.stack-name{font-family:var(--font-d);font-size:1.4rem;letter-spacing:.04em;margin-bottom:6px}
+.stack-desc{font-size:.8rem;color:var(--fg3)}
+footer{padding:80px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:var(--font-d);font-size:1.8rem;letter-spacing:.06em}
+.footer-logo em{color:var(--accent);font-style:normal}
+.footer-links{display:flex;gap:32px}
+.footer-links a{font-size:.85rem;color:var(--fg3);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--fg)}
+.footer-back{font-size:.82rem;color:var(--fg3);text-decoration:none;font-family:var(--font-m);transition:color .2s}
+.footer-back:hover{color:var(--accent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<nav id="nav">
+  <a class="nav-logo" href="#">JIM<em>SQL</em></a>
+  <div class="nav-links">
+    <a href="#modules">模块</a>
+    <a href="#features">核心技术</a>
+    <a href="#stack">技术栈</a>
+    <a class="nav-cta" href="/">← 返回主页</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-visual">
+    <div class="db-diagram">
+      <div class="db-title">JimSQL 架构层次</div>
+      <div class="db-layer"><div class="db-layer-dot" style="background:#ef4444"></div><div class="db-layer-name">SQL 接口层</div><div class="db-layer-tag">Parser · Binder</div></div>
+      <div class="db-arrow">↓</div>
+      <div class="db-layer"><div class="db-layer-dot" style="background:#f97316"></div><div class="db-layer-name">查询优化器</div><div class="db-layer-tag">RBO · CBO · EXPLAIN</div></div>
+      <div class="db-arrow">↓</div>
+      <div class="db-layer"><div class="db-layer-dot" style="background:#fbbf24"></div><div class="db-layer-name">执行引擎</div><div class="db-layer-tag">Volcano · Filter · Join</div></div>
+      <div class="db-arrow">↓</div>
+      <div class="db-layer"><div class="db-layer-dot" style="background:#a3e635"></div><div class="db-layer-name">索引层</div><div class="db-layer-tag">B+ Tree · 范围查询</div></div>
+      <div class="db-arrow">↓</div>
+      <div class="db-layer"><div class="db-layer-dot" style="background:#34d399"></div><div class="db-layer-name">事务 / 并发控制</div><div class="db-layer-tag">2PL · MVCC · 死锁检测</div></div>
+      <div class="db-arrow">↓</div>
+      <div class="db-layer"><div class="db-layer-dot" style="background:#60a5fa"></div><div class="db-layer-name">日志与恢复</div><div class="db-layer-tag">WAL · ARIES · Checkpoint</div></div>
+      <div class="db-arrow">↓</div>
+      <div class="db-layer"><div class="db-layer-dot" style="background:#a78bfa"></div><div class="db-layer-name">存储层</div><div class="db-layer-tag">HeapFile · BufferPool · LRU</div></div>
+    </div>
+  </div>
+  <div class="hero-eyebrow">Java 实战课程 · 30 章</div>
+  <h1 class="hero-title">从零写<br><span class="hl">数据库</span></h1>
+  <p class="hero-sub">以 JimSQL 开源项目为主线，亲手实现存储引擎、SQL 解析、执行引擎、B+ 树索引、MVCC 事务、WAL 日志。不调框架，不依赖黑盒。</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#modules">查看课程模块</a>
+    <a class="btn-secondary" href="https://github.com/dafei1288/jimsql">GitHub 源码</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">章节</div></div>
+    <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">模块</div></div>
+    <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">第三方依赖</div></div>
+    <div class="stat-item"><div class="stat-num">Java 17</div><div class="stat-label">技术栈</div></div>
+  </div>
+</section>
+</section>
+
+<!-- TARGET AUDIENCE -->
+<section style="padding:120px 80px;background:rgba(239,68,68,.02);position:relative">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-eyebrow">这门课适合谁？</div>
+    <h2 class="section-title">找到与你相似的学员</h2>
+    <p class="section-sub">不同背景的学员，都能从这门课中获得价值</p>
+    
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px">
+      <!-- Persona A -->
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">小李 - 科班生</div>
+        <div style="font-size:.85rem;color:var(--fg3);margin-bottom:16px;font-family:var(--font-m)">大三/大四 · 数据库课听不懂</div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>痛点</strong></div>
+          <p style="font-size:.82rem;color:var(--fg3);line-height:1.6">数据库原理课听不懂，PPT 全是理论，不知道怎么实现，面试被问"B+ 树为什么比 B 树好"答不上来</p>
+        </div>
+        <div>
+          <div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>学完后</strong></div>
+          <p style="font-size:.82rem;color:var(--accent);line-height:1.6">能白板画出 B+ 树插入流程、讲清楚 MVCC 原理，简历上有"从零实现数据库"，拿到字节基础架构 offer</p>
+        </div>
+      </div>
+      
+      <!-- Persona B -->
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">小王 - 后端工程师</div>
+        <div style="font-size:.85rem;color:var(--fg3);margin-bottom:16px;font-family:var(--font-m)">工作 2-3 年 · 想转基础架构</div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>痛点</strong></div>
+          <p style="font-size:.82rem;color:var(--fg3);line-height:1.6">天天用 MySQL 但只知道增删改查，出了慢查询不会优化，想转基础架构但不懂数据库内核</p>
+        </div>
+        <div>
+          <div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>学完后</strong></div>
+          <p style="font-size:.82rem;color:var(--accent);line-height:1.6">能看懂 PostgreSQL HeapPage/BufferPool 源码，能设计支持 10 万 QPS 的 KV 存储引擎，转岗到公司数据库团队</p>
+        </div>
+      </div>
+      
+      <!-- Persona C -->
+      <div class="persona-card" style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s">
+        <div style="font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:12px">老张 - 独立开发者</div>
+        <div style="font-size:.85rem;color:var(--fg3);margin-bottom:16px;font-family:var(--font-m)">做 SaaS 产品 · 想加数据库功能</div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>痛点</strong></div>
+          <p style="font-size:.82rem;color:var(--fg3);line-height:1.6">想给产品加"自然语言查数据"功能，但不知道怎么解析 SQL、怎么执行查询</p>
+        </div>
+        <div>
+          <div style="font-size:.8rem;color:var(--fg2);margin-bottom:8px"><strong>学完后</strong></div>
+          <p style="font-size:.82rem;color:var(--accent);line-height:1.6">给 SaaS 产品加上"自然语言查数据"功能，理解 SQL 解析→执行→优化全流程，续费率提升 30%</p>
+        </div>
+      </div>
+    </div>
+    
+    <div style="text-align:center;margin-top:48px">
+      <a class="btn-primary" href="/" style="display:inline-flex">查看完整学习路径</a>
+    </div>
+  </div>
+</section>
+<style>.persona-card:hover{border-color:rgba(239,68,68,.25)!important;transform:translateY(-4px)}</style>
+
+<section class="modules" id="modules">
+<section class="modules" id="modules">
+  <div class="section-eyebrow">课程模块</div>
+  <h2 class="section-title">9 大模块，覆盖数据库全栈</h2>
+  <p class="section-sub">从磁盘存储到查询优化，每个模块独立成章，循序渐进，每章配套可运行 Demo 和单元测试。</p>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-num">01</div>
+      <div class="module-tag" style="color:#ef4444;border-color:rgba(239,68,68,.3)">Ch01–02</div>
+      <div class="module-name">破冰篇</div>
+      <p class="module-desc">数据库是什么、不是什么。ACID 承诺，一条 SQL 的完整旅程，JimSQL 架构导览。</p>
+      <div class="module-chapters">环境搭建 · 第一个 SELECT</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">02</div>
+      <div class="module-tag" style="color:#f97316;border-color:rgba(249,115,22,.3)">Ch03–06</div>
+      <div class="module-name">存储层</div>
+      <p class="module-desc">Tuple/Schema 物理表示，HeapPage 槽位图，BufferPool LRU 置换，Volcano 迭代器模型。</p>
+      <div class="module-chapters">HeapFile · BufferPool · SeqScan</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">03</div>
+      <div class="module-tag" style="color:#fbbf24;border-color:rgba(251,191,36,.3)">Ch07–09</div>
+      <div class="module-name">SQL 解析</div>
+      <p class="module-desc">手写词法分析器，递归下降 Parser，AST 设计，Binder 语义绑定与类型推导。</p>
+      <div class="module-chapters">Lexer · Parser · Binder</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">04</div>
+      <div class="module-tag" style="color:#a3e635;border-color:rgba(163,230,53,.3)">Ch10–14</div>
+      <div class="module-name">执行引擎</div>
+      <p class="module-desc">关系代数算子树，Filter/Projection，哈希聚合，NLJ/Hash Join/Sort-Merge Join，外部排序。</p>
+      <div class="module-chapters">Volcano · Join · ORDER BY</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">05</div>
+      <div class="module-tag" style="color:#34d399;border-color:rgba(52,211,153,.3)">Ch15–19</div>
+      <div class="module-name">索引</div>
+      <p class="module-desc">B+ 树原理与完整实现：节点序列化、插入分裂、删除合并、叶子链表、范围查询。</p>
+      <div class="module-chapters">B+ Tree · IndexScan · 二级索引</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">06</div>
+      <div class="module-tag" style="color:#60a5fa;border-color:rgba(96,165,250,.3)">Ch20–22</div>
+      <div class="module-name">事务与并发</div>
+      <p class="module-desc">隔离级别，S/X Lock，两阶段锁（2PL），死锁检测，MVCC 版本链与 Read View。</p>
+      <div class="module-chapters">2PL · MVCC · 死锁检测</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">07</div>
+      <div class="module-tag" style="color:#a78bfa;border-color:rgba(167,139,250,.3)">Ch23–25</div>
+      <div class="module-name">日志与恢复</div>
+      <p class="module-desc">WAL 原则，LogRecord 格式，顺序写入，ARIES 三阶段崩溃恢复（Analysis/Redo/Undo）。</p>
+      <div class="module-chapters">WAL · ARIES · Checkpoint</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">08</div>
+      <div class="module-tag" style="color:#f472b6;border-color:rgba(244,114,182,.3)">Ch26–27</div>
+      <div class="module-name">查询优化</div>
+      <p class="module-desc">RBO（谓词下推/列裁剪）vs CBO（代价模型），直方图，Join 顺序，EXPLAIN 实现。</p>
+      <div class="module-chapters">RBO · CBO · 统计信息</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">09</div>
+      <div class="module-tag" style="color:#ef4444;border-color:rgba(239,68,68,.3)">Ch28–30</div>
+      <div class="module-name">综合实战</div>
+      <p class="module-desc">订单系统场景演示，性能测试与瓶颈分析，扩展方向：列存储、LSM Tree、分布式。</p>
+      <div class="module-chapters">性能测试 · 扩展方向 · 学习路线</div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="feature-card">
+    <div class="feature-icon">🌳</div>
+    <div class="feature-name">B+ 树索引</div>
+    <p class="feature-desc">从原理到完整实现：节点序列化、插入分裂、删除合并、叶子链表双向遍历、范围查询。理解为什么 MySQL 选择 B+ 树而不是 B 树或哈希。</p>
+    <div class="feature-tags"><span class="ftag">节点分裂</span><span class="ftag">叶子链表</span><span class="ftag">范围查询</span><span class="ftag">二级索引</span></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🔒</div>
+    <div class="feature-name">MVCC 并发控制</div>
+    <p class="feature-desc">版本链、Read View、可见性判断。对比锁机制与 MVCC 的适用场景，理解 MySQL InnoDB 的并发控制原理。</p>
+    <div class="feature-tags"><span class="ftag">版本链</span><span class="ftag">Read View</span><span class="ftag">隔离级别</span><span class="ftag">2PL</span></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">📝</div>
+    <div class="feature-name">WAL + ARIES 恢复</div>
+    <p class="feature-desc">Write-Ahead Logging 原则，LogRecord 格式设计，顺序写入与 fsync。ARIES 三阶段崩溃恢复：Analysis、Redo、Undo。</p>
+    <div class="feature-tags"><span class="ftag">WAL</span><span class="ftag">ARIES</span><span class="ftag">Checkpoint</span><span class="ftag">崩溃恢复</span></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">⚡</div>
+    <div class="feature-name">Volcano 执行引擎</div>
+    <p class="feature-desc">关系代数算子树，open/next/close 迭代器模型。实现 Filter、Projection、Aggregate、Join、Sort 全套算子，理解现代数据库执行框架。</p>
+    <div class="feature-tags"><span class="ftag">算子树</span><span class="ftag">Hash Join</span><span class="ftag">外部排序</span><span class="ftag">聚合</span></div>
+  </div>
+</section>
+
+<section class="stack" id="stack">
+  <div class="section-eyebrow">技术栈</div>
+  <h2 class="section-title">极简依赖，全部手写</h2>
+  <p class="section-sub">课程核心实现零第三方依赖，所有数据结构和算法亲手实现，真正理解每一行代码的意义。</p>
+  <div class="stack-grid">
+    <div class="stack-item"><div class="stack-name">Java 17</div><div class="stack-desc">主语言，sealed interface, record</div></div>
+    <div class="stack-item"><div class="stack-name">Maven</div><div class="stack-desc">多模块构建，每章独立子模块</div></div>
+    <div class="stack-item"><div class="stack-name">JUnit 5</div><div class="stack-desc">每章内置单元测试</div></div>
+    <div class="stack-item"><div class="stack-name">0 依赖</div><div class="stack-desc">核心实现无第三方库</div></div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">JIM<em>SQL</em></div>
+    <div style="font-size:.82rem;color:var(--fg3);margin-top:8px">Jim Isn't MySQL — 从零构建关系型数据库</div>
+  </div>
+  <div class="footer-links">
+    <a href="#modules">课程模块</a>
+    <a href="#features">核心技术</a>
+    <a href="https://github.com/dafei1288/jimsql">GitHub</a>
+  </div>
+  <a class="footer-back" href="/">← 返回课程主页</a>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+</script>
+
+<style>#sx-back{position:fixed;left:18px;top:16px;z-index:99999;display:flex;align-items:center;gap:8px;
+background:rgba(6,13,26,.82);border:1px solid rgba(0,180,216,.3);border-radius:999px;
+padding:6px 16px 6px 12px;text-decoration:none;color:#A8B8CC;
+font:12px/1 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.5px;
+backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+#sx-back:hover{border-color:rgba(255,140,66,.6);color:#fff}
+#sx-back img{width:15px;height:15px;display:block}</style>
+<a id="sx-back" href="/"><img src="/images/logo.png" alt="">← 熵减智算</a>
+</body>
+</html>

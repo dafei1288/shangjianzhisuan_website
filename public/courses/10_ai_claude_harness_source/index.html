@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 架构解析 — 30章深度剖析工业级 Agent 引擎</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#06060d;--bg2:#0a0a18;
+  --fg:#e8eaf0;--fg2:#8890a8;--fg3:#404860;
+  --border:rgba(255,255,255,.07);
+  --accent:#f59e0b;--accent2:#fbbf24;--accent3:#fcd34d;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'Outfit',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --nav-h:64px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-b);background:var(--bg);color:var(--fg);overflow-x:hidden;line-height:1.6}
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 48px 0 172px;transition:background .4s,backdrop-filter .4s}
+nav.scrolled{background:rgba(6,6,13,.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-d);font-size:1.5rem;letter-spacing:.08em;color:var(--fg);text-decoration:none}
+.nav-logo em{color:var(--accent);font-style:normal}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:var(--nav-h) 48px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(245,158,11,.08) 0%,transparent 60%)}
+.hero-eyebrow{font-family:var(--font-m);font-size:.78rem;color:var(--accent);letter-spacing:.22em;text-transform:uppercase;margin-bottom:28px}
+.hero-title{font-family:var(--font-d);font-size:clamp(3rem,10vw,8rem);line-height:.9;letter-spacing:.02em;margin-bottom:24px}
+.hero-title .ghost{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.2)}
+.hero-sub{font-size:clamp(.95rem,1.8vw,1.2rem);color:var(--fg2);font-weight:300;max-width:560px;margin:0 auto 48px}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:100px;font-size:.9rem;font-weight:600;background:var(--accent);color:#06060d;text-decoration:none;transition:all .3s;border:none}
+.hero-cta:hover{transform:translateY(-3px);background:var(--accent2);box-shadow:0 20px 40px rgba(245,158,11,.25)}
+.prereq{font-family:var(--font-m);font-size:.75rem;color:var(--fg3);margin-top:24px}
+.prereq a{color:var(--accent2)}
+.modules{max-width:1100px;margin:0 auto;padding:80px 48px}
+.module{margin-bottom:64px}
+.module-title{font-family:var(--font-d);font-size:2rem;letter-spacing:.04em;margin-bottom:8px;color:var(--accent)}
+.module-desc{color:var(--fg2);font-size:.95rem;margin-bottom:24px;max-width:600px}
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.chapter-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:20px 24px;transition:all .3s}
+.chapter-card:hover{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.2);transform:translateY(-2px)}
+.chapter-num{font-family:var(--font-m);font-size:.72rem;color:var(--accent);letter-spacing:.12em;margin-bottom:8px}
+.chapter-name{font-size:1.05rem;font-weight:600;margin-bottom:6px}
+.chapter-detail{font-size:.82rem;color:var(--fg2);line-height:1.5}
+.stats{max-width:1100px;margin:0 auto;padding:0 48px 80px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:28px 24px;text-align:center}
+.stat-v{font-family:var(--font-d);font-size:2.5rem;color:var(--accent);letter-spacing:.02em}
+.stat-l{font-family:var(--font-m);font-size:.72rem;color:var(--fg3);letter-spacing:.12em;text-transform:uppercase;margin-top:6px}
+.tech-section{max-width:1100px;margin:0 auto;padding:0 48px 80px}
+.tech-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tech-tag{font-family:var(--font-m);font-size:.75rem;padding:6px 14px;border-radius:6px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.15);color:var(--accent2)}
+footer{background:#04040a;border-top:1px solid var(--border);padding:48px;text-align:center;font-size:.85rem;color:var(--fg3)}
+@media(max-width:768px){
+  nav{padding:0 24px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .chapter-grid{grid-template-columns:1fr}
+  .modules{padding:60px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="nav-logo" href="#hero">CLAUDE<em>.</em>ARCH</a>
+  <div style="display:flex;gap:16px;align-items:center">
+    <a href="#modules" style="color:var(--fg2);text-decoration:none;font-size:.85rem">课程大纲</a>
+    <a href="#tech" style="color:var(--fg2);text-decoration:none;font-size:.85rem">技术栈</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">// 08 课程进阶篇 · 逐模块解析架构实现</div>
+  <h1 class="hero-title">Claude Code<br><span class="ghost">架构解析</span></h1>
+  <p class="hero-sub">基于 2026 年 3·31 源码泄露事件公开的架构信息，逐模块解析 Claude Code CLI 的工业级 Agent 系统设计。教学级架构重建，对照「概念 → 工业实现」。</p>
+  <a class="hero-cta" href="#modules">开始学习 →</a>
+  <div class="prereq">📌 前置课程：<a href="/courses/08_ai_claude_harness/index.html">08  Claude Harness 深度解析</a>（必修）</div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-v">30</div><div class="stat-l">章节</div></div>
+  <div class="stat"><div class="stat-v">6</div><div class="stat-l">模块</div></div>
+  <div class="stat"><div class="stat-v">13+</div><div class="stat-l">工具体系</div></div>
+  <div class="stat"><div class="stat-v">TS</div><div class="stat-l">TypeScript</div></div>
+</div>
+
+<div class="modules" id="modules">
+  <div class="module">
+    <div class="module-title">Module 1: 源码考古与工程地图</div>
+    <div class="module-desc">回顾泄露事件始末，建立对生产级 Agent 系统的全局认知。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch01</div><div class="chapter-name">泄露事件复盘</div><div class="chapter-detail">.map 文件如何让 Harness 裸奔、Bun 构建流水线竞态、课程地图</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch02</div><div class="chapter-name">工程地图</div><div class="chapter-detail">模块依赖拓扑、核心 vs 辅助模块、架构阅读路线图</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch03</div><div class="chapter-name">构建系统</div><div class="chapter-detail">Bun + TypeScript 编译链路、模块解析、生产构建与安全</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch04</div><div class="chapter-name">类型体系索引</div><div class="chapter-detail">Harness 核心 TypeScript 类型层级，建立源码阅读词汇表</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch05</div><div class="chapter-name">REPL 入口精读</div><div class="chapter-detail">main.tsx 4,683 行启动流程，Provider 初始化与模式路由</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 2: Agent Loop 架构详解</div>
+    <div class="module-desc">08 讲了概念，10 带你逐层解析 query.ts 的两层状态机设计。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch06</div><div class="chapter-name">外层 Agent Loop 状态机</div><div class="chapter-detail">状态定义、转移条件、中断/恢复、错误分类与差异化重试</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch07</div><div class="chapter-name">内层 queryLoop</div><div class="chapter-detail">SSE 流式解析、AsyncGenerator 桥接、工具调用增量 JSON 累积</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch08</div><div class="chapter-name">QueryEngine 生命周期</div><div class="chapter-detail">查询创建→轮询→取消→超时，SDK 层的完整状态流</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch09</div><div class="chapter-name">Message Bus</div><div class="chapter-detail">发布/订阅模式、消息类型体系、背压处理、错误隔离</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch10</div><div class="chapter-name">会话持久化</div><div class="chapter-detail">Session JSON 序列化、对话分支树、断点续传 resume</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 3: 工具系统架构解析</div>
+    <div class="module-desc">08 定义了 Tool Protocol，10 带你解析 13+ 个生产级工具的架构实现。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch11</div><div class="chapter-name">Tool 接口 · buildTool 工厂</div><div class="chapter-detail">JSON Schema 参数约束、执行管线、参数验证与审批流程</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch12</div><div class="chapter-name">ToolRegistry</div><div class="chapter-detail">注册/发现/冲突解决、优先级链 builtin>skill>mcp</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch13</div><div class="chapter-name">文件操作三件套</div><div class="chapter-detail">Read 分块/Write 原子/Edit 精确匹配，路径安全与编码检测</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch14</div><div class="chapter-name">Bash 沙箱</div><div class="chapter-detail">子进程管理、SIGTERM→SIGKILL 优雅终止、输出截断</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch15</div><div class="chapter-name">高级工具</div><div class="chapter-detail">Agent 嵌套、Task 状态机、WebSearch/WebFetch</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 4: 扩展机制架构解析</div>
+    <div class="module-desc">08 教了怎么写，10 带你解析 Claude Code 的扩展机制架构。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch16</div><div class="chapter-name">Skills 加载器</div><div class="chapter-detail">Frontmatter 解析、技能索引树、chokidar 热加载</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch17</div><div class="chapter-name">Hooks 事件引擎</div><div class="chapter-detail">事件体系、subprocess 执行管线、matcher 模式匹配</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch18</div><div class="chapter-name">MCP Client</div><div class="chapter-detail">JSON-RPC + stdio/SSE 双传输、多 Server 管理</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch19</div><div class="chapter-name">Memory 三层存储</div><div class="chapter-detail">短期缓冲→中期 LLM 压缩→长期 MEMORY.md 索引</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch20</div><div class="chapter-name">CLAUDE.md 指令管线</div><div class="chapter-detail">全局→项目→子目录三层注入、冲突合并</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 5: 多 Agent 协作架构</div>
+    <div class="module-desc">08 讲了概念，10 带你解析 Swarm 框架的架构设计。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch21</div><div class="chapter-name">Sub-Agent 调度</div><div class="chapter-detail">完整嵌套调用链、上下文隔离、深度限制防递归</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch22</div><div class="chapter-name">Swarm 框架</div><div class="chapter-detail">Leader/Teammate 模型、文件邮箱通信、任务分解</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch23</div><div class="chapter-name">三种执行模式</div><div class="chapter-detail">进程/tmux/iTerm2 隔离的代码实现与权衡</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch24</div><div class="chapter-name">Worktree 隔离</div><div class="chapter-detail">Git Worktree 创建/合并/清理、并发冲突处理</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch25</div><div class="chapter-name">Verification Agent</div><div class="chapter-detail">双因子校验：逻辑规则+AI 校验、纵深防御</div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">Module 6: 隐藏特性与工程深度</div>
+    <div class="module-desc">公开的工程化策略 + 工业级工程细节 + 全课程架构对比总结。</div>
+    <div class="chapter-grid">
+      <div class="chapter-card"><div class="chapter-num">Ch26</div><div class="chapter-name">未公开工具与隐藏 Flag</div><div class="chapter-detail">Feature Toggle、环境变量开关、A/B 测试框架</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch27</div><div class="chapter-name">命令注入防御</div><div class="chapter-detail">四层纵深过滤：转义→黑名单→白名单→审批</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch28</div><div class="chapter-name">Prompt 工程内部</div><div class="chapter-detail">6 层 System Prompt 拼装、模板引擎、版本管理</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch29</div><div class="chapter-name">可观测性</div><div class="chapter-detail">结构化日志、AsyncLocalStorage Trace、Metrics 采集</div></div>
+      <div class="chapter-card"><div class="chapter-num">Ch30</div><div class="chapter-name">架构对比总结</div><div class="chapter-detail">工业级 vs 教学级 10 大差异、设计模式萃取、学习路径</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="tech-section" id="tech">
+  <div class="module-title" style="margin-bottom:16px">技术栈</div>
+  <div class="tech-grid">
+    <span class="tech-tag">TypeScript 5.0+</span>
+    <span class="tech-tag">Bun Runtime</span>
+    <span class="tech-tag">React/Ink TUI</span>
+    <span class="tech-tag">Anthropic API</span>
+    <span class="tech-tag">JSON-RPC 2.0</span>
+    <span class="tech-tag">MCP Protocol</span>
+    <span class="tech-tag">Git Worktree</span>
+    <span class="tech-tag">AsyncGenerator</span>
+    <span class="tech-tag">tmux</span>
+    <span class="tech-tag">SSE Streaming</span>
+    <span class="tech-tag">chokidar</span>
+  </div>
+</div>
+
+<footer>
+  <p>Claude Code 源码解读 · 30 章逐行拆解 · 08 课程进阶篇 · Jim's Courses © 2026</p>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, {passive:true});
+</script>
+
+<style>#sx-back{position:fixed;left:18px;top:16px;z-index:99999;display:flex;align-items:center;gap:8px;
+background:rgba(6,13,26,.82);border:1px solid rgba(0,180,216,.3);border-radius:999px;
+padding:6px 16px 6px 12px;text-decoration:none;color:#A8B8CC;
+font:12px/1 'JetBrains Mono','PingFang SC',monospace;letter-spacing:.5px;
+backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+#sx-back:hover{border-color:rgba(255,140,66,.6);color:#fff}
+#sx-back img{width:15px;height:15px;display:block}</style>
+<a id="sx-back" href="/"><img src="/images/logo.png" alt="">← 熵减智算</a>
+</body>
+</html>
