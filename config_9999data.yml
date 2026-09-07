@@ -1,0 +1,25 @@
+# ============================================================
+# 站点可配置项（域名 / 页脚版权 / 备案号）
+# 修改后需重新构建：npm run build
+# ============================================================
+
+# 站点主域名（分享卡片 og:url / og:image / twitter:image 用），
+# 需包含协议，结尾不要带斜杠，例如：https://www.example.com
+#
+# ★ 多域名部署：同一份代码要分别部署到多个域名时，
+#   用环境变量覆盖即可，无需改本文件：
+#     node scripts/build-domain.mjs https://www.example.com
+#   等价于 SITE_URL=<url> npm run build。每次构建只产出
+#   一个域名的 dist/（robots.txt / sitemap.xml / og 标签 / 分享页
+#   全部写入该域名），构建完把 dist/ 部署到对应域名。
+site_url: "https://www.9999data.com/"
+
+# 页脚版权声明（{year} 会自动替换为当前年份）
+copyright: "© {year} 熵减智算 Entropy-Reduced Computing. 保留所有权利。"
+
+# ICP 备案号（留空则不显示；个人备案填个人姓名缩写或主体名）
+icp:
+  number: ""            # 例如 "京ICP备2024123456号-1"
+  url: ""   # 备案链接，默认工信部备案系统
+  police_number: ""     # 公安备案号（可选，例如 "津公网安备 120xxxxxxxxx号"）
+  police_url: ""        # 公安备案链接（可选）
