@@ -1,0 +1,55 @@
+# robots.txt — 站点爬虫规则
+# %SITE_URL% 由 vite 插件在构建时替换为 config.yml 的 site_url
+#
+# 策略：全站欢迎收录（含 AI / 生成式引擎爬虫，GEO 目标 ——
+# 让 GPT / Perplexity / Claude 等 AI 引擎能读到并引用本站内容）。
+
+User-agent: *
+Allow: /
+
+# —— 主流搜索引擎 ——
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+# —— AI / 生成式引擎爬虫（GEO：显式放行，欢迎抓取与引用）——
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# 站点地图（SPA 路由，欢迎收录）
+Sitemap: %SITE_URL%/sitemap.xml

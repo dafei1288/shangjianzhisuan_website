@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天鹭 TIANLU — 一行剧本，一部大片</title>
+<meta name="description" content="天鹭：从剧本到成片的一站式 AI 短剧创作流水线。剧本、分镜、关键帧、视频、配音、成片，一条龙；爆款反推，一键复刻；面向 Agent 的开放 API。">
+<link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
+<!-- web font（可选增强，离线自动降级到系统宋体/黑体） -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- 胶片颗粒叠加层 -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <video class="hero-video" autoplay muted loop playsinline
+         poster="assets/poster-banner.png" aria-hidden="true">
+    <source src="assets/hero-egret.mp4" type="video/mp4">
+  </video>
+  <div class="hero-scrim" aria-hidden="true"></div>
+  <div class="letterbox letterbox-top" aria-hidden="true"></div>
+  <div class="letterbox letterbox-bottom" aria-hidden="true"></div>
+
+  <nav class="nav">
+    <img class="nav-logo" src="assets/logo-horizontal.svg" alt="天鹭 TIANLU">
+    <div class="nav-links">
+      <a href="#pipeline">创作流水线</a>
+      <a href="#recipe">爆款反推</a>
+      <a href="#api">开放 API</a>
+    </div>
+  </nav>
+
+  <div class="hero-inner">
+    <p class="hero-eyebrow">TIANLU PICTURES · AI 短剧创作 SaaS</p>
+    <h1 class="hero-title">一行剧本，<br>一部大片。</h1>
+    <div class="hero-rule" aria-hidden="true"></div>
+    <p class="hero-sub">剧本 · 分镜 · 关键帧 · 视频 · 配音 · 成片 —— 一条龙的 AI 创作流水线。<br>你负责落笔，天鹭负责让它成为电影。</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#api">开始创作</a>
+      <a class="btn btn-ghost" href="#api">接入开放 API</a>
+    </div>
+  </div>
+
+  <p class="hero-foot" aria-hidden="true">以文生影 · 落笔成戏</p>
+</header>
+
+<main>
+
+<!-- ═══════════ 流水线 ═══════════ -->
+<section class="section" id="pipeline">
+  <p class="sec-eyebrow">PIPELINE</p>
+  <h2 class="sec-title reveal">一条龙的创作流水线</h2>
+  <p class="sec-lede reveal">六个环节，一气呵成。每一步都可人工介入，也可以全部交给 AI。</p>
+
+  <div class="filmstrip reveal">
+    <div class="sprockets sprockets-top" aria-hidden="true"></div>
+    <ol class="steps">
+      <li class="step"><span class="step-no">壹</span><h3>剧本生成</h3><p>一个点子，展开成起承转合。</p></li>
+      <li class="step"><span class="step-no">贰</span><h3>分镜拆解</h3><p>镜头语言，自动落格。</p></li>
+      <li class="step"><span class="step-no">叁</span><h3>关键帧</h3><p>每一格画面，先定影调。</p></li>
+      <li class="step"><span class="step-no">肆</span><h3>视频生成</h3><p>静帧起笔，运镜成片。</p></li>
+      <li class="step"><span class="step-no">伍</span><h3>AI 配音</h3><p>声线入戏，旁白就位。</p></li>
+      <li class="step"><span class="step-no">陆</span><h3>成片导出</h3><p>字幕音乐，一镜到底。</p></li>
+    </ol>
+    <div class="sprockets sprockets-bottom" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ═══════════ 爆款反推 ═══════════ -->
+<section class="section section-alt" id="recipe">
+  <p class="sec-eyebrow">REVERSE ENGINEERING</p>
+  <h2 class="sec-title reveal">爆款，是可以拆解的</h2>
+  <p class="sec-lede reveal">把一条爆款视频交给天鹭，AI 拆出它的配方——节奏、结构、钩子、影调——再用你的故事一键复刻。</p>
+
+  <div class="recipe-grid">
+    <div class="recipe-card reveal">
+      <span class="recipe-seal">析</span>
+      <h3>上传爆款</h3>
+      <p>丢进任意一条爆款短剧链接或文件，<code>analyze_hit</code> 逐帧读懂它为什么火。</p>
+    </div>
+    <div class="recipe-card reveal">
+      <span class="recipe-seal">方</span>
+      <h3>AI 拆配方</h3>
+      <p>黄金三秒钩子、情绪曲线、反转节点、BGM 落点——全部结构化为一纸配方。</p>
+    </div>
+    <div class="recipe-card reveal">
+      <span class="recipe-seal">刻</span>
+      <h3>一键复刻</h3>
+      <p><code>create_from_recipe</code> 换上你的题材与角色，流水线直接产出新片。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 开放 API ═══════════ -->
+<section class="section" id="api">
+  <p class="sec-eyebrow">OPEN API</p>
+  <h2 class="sec-title reveal">为 Agent 而生的开放接口</h2>
+  <p class="sec-lede reveal">一把 <code>X-API-Key</code>，一组 MCP 工具，一条 webhook 回调——让任何 Agent 都能调度一座制片厂。</p>
+
+  <div class="code-frame reveal">
+    <div class="code-titlebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="code-filename">create_film.sh</span></div>
+<pre class="code"><span class="c"># 发起一条成片任务：剧本进</span>
+curl -X POST https://api.tianlu.example.com/v1/tasks \
+  -H <span class="s">"X-API-Key: $TIANLU_API_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -H <span class="s">"X-Callback-Url: https://your-agent.dev/webhook"</span> \
+  -d <span class="s">'{
+    "type": "film",
+    "script": "深夜，外卖员敲响了最后一扇门……",
+    "style": "cinematic-noir"
+  }'</span>
+
+<span class="c"># → 202 Accepted  {"task_id": "tl_8f3k…"}</span>
+<span class="c"># 分镜、关键帧、渲染完成后，webhook 主动回调你的 Agent</span></pre>
+  </div>
+
+  <ul class="api-points">
+    <li class="reveal"><strong>MCP 工具</strong><span>create_task / get_task / list_projects / chat 成片会话，Agent 即插即用。</span></li>
+    <li class="reveal"><strong>Webhook 回调</strong><span>长任务异步化：提交即返回，完成时带着成片地址找上门。</span></li>
+    <li class="reveal"><strong>任务全链路</strong><span>image · video · storyboard · film 四种任务类型，覆盖整条流水线。</span></li>
+  </ul>
+</section>
+
+</main>
+
+<!-- ═══════════ 页脚 ═══════════ -->
+<footer class="footer">
+  <img class="footer-logo" src="assets/logo-icon.svg" alt="天鹭">
+  <p class="footer-slogan">让每一段故事，都成为一部电影。</p>
+  <div class="footer-links">
+    <a href="#top">回到片头</a>
+    <a href="../">熵减智算首页</a>
+    <a href="mailto:dafei1288@sina.com">dafei1288@sina.com</a>
+    <a href="https://github.com/dafei1288/" target="_blank" rel="noopener">GitHub：dafei1288</a>
+  </div>
+  <p class="footer-legal">© 2026 熵减智算 Entropy-Reduced Computing. 保留所有权利。</p>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>

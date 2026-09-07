@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import AmberCascades from './AmberCascades';
 import Parallax from '../components/Parallax';
 import Footer from './Footer';
-import { siteConfig, jimclawConfig } from '../config';
+import { useConfigs, useLang } from '../i18n';
 
 function SectionHead({ label }: { label: string }) {
   return (
@@ -33,6 +33,8 @@ function SectionHead({ label }: { label: string }) {
 
 export default function JimclawPage() {
   const navigate = useNavigate();
+  const { siteConfig, jimclawConfig, pageLabels } = useConfigs();
+  const { withLang } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const featureRefs = useRef<(HTMLDivElement | null)[]>([]);
   const revealRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -104,11 +106,11 @@ export default function JimclawPage() {
       >
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="text-white no-underline flex items-center"
           style={{ gap: 12 }}
         >
-          <img src="/images/logo.png" alt="熵减智算 Logo" style={{ width: 34, height: 'auto', display: 'block' }} />
+          <img src="/images/logo.png" alt={pageLabels.nav.logoAlt} style={{ width: 34, height: 'auto', display: 'block' }} />
           <span
             style={{
               fontFamily: "'GeistMono', 'PingFang SC', 'Microsoft YaHei', monospace",
@@ -122,10 +124,10 @@ export default function JimclawPage() {
         </a>
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="nav-link"
         >
-          返回首页
+          {pageLabels.nav.backHome}
         </a>
       </nav>
 
@@ -207,7 +209,7 @@ export default function JimclawPage() {
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
-                  GitHub 仓库 →
+                  {pageLabels.common.githubRepo}
                 </a>
                 {jimclawConfig.badges.map((b) => (
                   <span
@@ -233,7 +235,7 @@ export default function JimclawPage() {
         {/* Features — same section rhythm as home */}
         <section style={{ padding: '0 5vw 150px', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="核心特性" />
+            <SectionHead label={pageLabels.common.featuresLabel} />
             <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 1, background: 'rgba(0, 180, 216, 0.1)' }}>
               {jimclawConfig.features.map((f, i) => (
                 <div
@@ -277,7 +279,7 @@ export default function JimclawPage() {
         {/* Team roles */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="拟人化团队" />
+            <SectionHead label={pageLabels.jimclaw.team} />
             <div ref={(el) => { revealRefs.current[1] = el; }} className="grid grid-cols-1 md:grid-cols-4" style={{ gap: 1, background: 'rgba(0, 180, 216, 0.1)' }}>
               {jimclawConfig.roles.map((r) => (
                 <div key={r.name} style={{ background: '#060D1A', padding: '32px 28px' }}>
@@ -326,7 +328,7 @@ export default function JimclawPage() {
         {/* Workflow — mirrors CinematicVision title/desc split */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="工作流" />
+            <SectionHead label={pageLabels.jimclaw.workflow} />
             <div ref={(el) => { revealRefs.current[2] = el; }}>
               <div className="flex flex-col md:flex-row md:items-start" style={{ gap: 60, marginBottom: 48 }}>
                 <Parallax speed={0.16} style={{ flex: '0 0 50%' }}>
@@ -342,7 +344,7 @@ export default function JimclawPage() {
                       textWrap: 'balance',
                     }}
                   >
-                    编写 → 运行 → 修复，直到部署
+                    {pageLabels.jimclaw.workflowTitle}
                   </h2>
                 </Parallax>
                 <Parallax speed={0.07} style={{ flex: '1 1 50%' }}>
@@ -357,10 +359,7 @@ export default function JimclawPage() {
                       textWrap: 'pretty',
                     }}
                   >
-                    QA 路由规则：通过则 <code style={{ fontFamily: "'GeistMono', monospace", color: '#FF8C42' }}>deploy</code>；
-                    重试超限则 <code style={{ fontFamily: "'GeistMono', monospace", color: '#FF8C42' }}>post_mortem</code> 复盘；
-                    重试 ≥ 2 且未仲裁则触发 <code style={{ fontFamily: "'GeistMono', monospace", color: '#FF8C42' }}>architect_mediation</code>；
-                    其余回到 coder 继续重试。每一步都有结构化纪要与审计事件，可回放、可溯源。
+                    {pageLabels.jimclaw.workflowDesc}
                   </p>
                 </Parallax>
               </div>
@@ -372,7 +371,7 @@ export default function JimclawPage() {
         {/* Tech stack */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="技术栈" />
+            <SectionHead label={pageLabels.jimclaw.techStack} />
             <div ref={(el) => { revealRefs.current[3] = el; }}>
               {jimclawConfig.techStack.map((t, i) => (
                 <div
@@ -414,11 +413,11 @@ export default function JimclawPage() {
         {/* Quick start */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="快速开始" />
+            <SectionHead label={pageLabels.jimclaw.quickstart} />
             <div ref={(el) => { revealRefs.current[4] = el; }}>
               <div className="flex flex-col md:flex-row" style={{ gap: 60 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>① 配置环境</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimclaw[0]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimclawConfig.quickstart.env}</pre>
@@ -426,7 +425,7 @@ export default function JimclawPage() {
               </div>
               <div className="flex flex-col md:flex-row" style={{ gap: 60, marginTop: 80 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>② 运行任务</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimclaw[1]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimclawConfig.quickstart.run}</pre>
@@ -434,7 +433,7 @@ export default function JimclawPage() {
               </div>
               <div className="flex flex-col md:flex-row" style={{ gap: 60, marginTop: 80 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>③ 模型与重试配置</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimclaw[2]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimclawConfig.quickstart.config}</pre>
@@ -450,10 +449,10 @@ export default function JimclawPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
             <a
               href="/"
-              onClick={(e) => { e.preventDefault(); navigate('/'); }}
+              onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
               className="nav-link"
             >
-              ← 返回熵减智算首页
+              {pageLabels.common.backToIndex}
             </a>
             <a
               href={jimclawConfig.githubUrl}
@@ -462,7 +461,7 @@ export default function JimclawPage() {
               className="nav-link"
               style={{ color: '#FF8C42' }}
             >
-              在 GitHub 上 Star / Fork →
+              {pageLabels.common.starFork}
             </a>
           </div>
         </div>

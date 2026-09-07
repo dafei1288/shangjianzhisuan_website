@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#CA8A04"/>
+      <stop offset="100%" stop-color="#A16207"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#FAF6EF"/>
+  <rect x="24" y="24" width="1152" height="582" rx="22" fill="none" stroke="#E7DFD2" stroke-width="1.5"/>
+
+  <!-- left title -->
+  <g font-family="'JetBrains Mono','Microsoft YaHei',monospace">
+    <rect x="70" y="140" width="270" height="34" rx="17" fill="#FFF1E6" stroke="#F5C9A8"/>
+    <circle cx="92" cy="157" r="4" fill="#EA580C"/>
+    <text x="106" y="162" font-size="13" fill="#EA580C" letter-spacing="2">MODULE 3 · WORKBENCH</text>
+  </g>
+  <text x="70" y="248" font-family="Georgia,'Noto Serif SC','Microsoft YaHei',serif" font-size="56" font-weight="900" fill="#1C1917">D6 · 成台</text>
+  <rect x="70" y="264" width="150" height="6" rx="3" fill="#CA8A04" opacity=".45"/>
+  <text x="70" y="312" font-family="'Microsoft YaHei','PingFang SC',sans-serif" font-size="17" fill="#57534E">组装你的个人 AI 工作台——</text>
+  <text x="70" y="340" font-family="'Microsoft YaHei','PingFang SC',sans-serif" font-size="17" fill="#57534E">主页可打开，入口齐全</text>
+  <text x="70" y="566" font-family="'JetBrains Mono',monospace" font-size="11" fill="#A8A29E" letter-spacing="2">6 天 AI 工作台实战营 · COURSE 16</text>
+
+  <!-- right: browser window mockup -->
+  <g transform="translate(470,78)">
+    <rect width="660" height="478" rx="18" fill="#FFFFFF" stroke="#E7DFD2"/>
+    <!-- title bar -->
+    <circle cx="24" cy="19" r="5" fill="#E7DFD2"/>
+    <circle cx="44" cy="19" r="5" fill="#F5C9A8"/>
+    <circle cx="64" cy="19" r="5" fill="#EA580C"/>
+    <rect x="90" y="9" width="540" height="20" rx="10" fill="#FAF6EF"/>
+    <text x="104" y="23" font-family="'JetBrains Mono',monospace" font-size="11" fill="#A8A29E">file:///workbench/index.html — 我的 AI 工作台</text>
+
+    <!-- 今日任务 -->
+    <g transform="translate(20,50)" font-family="'Microsoft YaHei','PingFang SC',sans-serif">
+      <rect width="312" height="128" rx="14" fill="#FDFBF7" stroke="#EFE8DC"/>
+      <text x="14" y="26" font-size="13.5" font-weight="700" fill="#1C1917">📋 今日任务</text>
+      <rect x="14" y="40" width="10" height="10" rx="2" fill="none" stroke="#DCD2BF"/>
+      <rect x="32" y="42" width="200" height="7" rx="3.5" fill="#EDE6D8"/>
+      <rect x="14" y="64" width="10" height="10" rx="2" fill="none" stroke="#DCD2BF"/>
+      <rect x="32" y="66" width="168" height="7" rx="3.5" fill="#EDE6D8"/>
+      <rect x="14" y="88" width="10" height="10" rx="2" fill="#EA580C"/>
+      <text x="19" y="97" text-anchor="middle" font-size="9" fill="#FFFFFF">✓</text>
+      <rect x="32" y="90" width="220" height="7" rx="3.5" fill="#F5C9A8"/>
+    </g>
+
+    <!-- 我的助手 -->
+    <g transform="translate(348,50)" font-family="'Microsoft YaHei','PingFang SC',sans-serif">
+      <rect width="292" height="128" rx="14" fill="#FDFBF7" stroke="#EFE8DC"/>
+      <text x="14" y="26" font-size="13.5" font-weight="700" fill="#1C1917">🤖 我的助手</text>
+      <g font-size="11" fill="#57534E">
+        <rect x="14" y="40" width="82" height="26" rx="13" fill="#FFFFFF" stroke="#E7DFD2"/>
+        <text x="55" y="57" text-anchor="middle">🤖 纪要</text>
+        <rect x="104" y="40" width="82" height="26" rx="13" fill="#FFFFFF" stroke="#E7DFD2"/>
+        <text x="145" y="57" text-anchor="middle">🗂️ 归档</text>
+        <rect x="194" y="40" width="82" height="26" rx="13" fill="#FFFFFF" stroke="#E7DFD2"/>
+        <text x="235" y="57" text-anchor="middle">📊 数据</text>
+      </g>
+      <rect x="14" y="80" width="264" height="7" rx="3.5" fill="#EDE6D8"/>
+      <rect x="14" y="96" width="200" height="7" rx="3.5" fill="#EDE6D8"/>
+    </g>
+
+    <!-- 快速入口 -->
+    <g transform="translate(20,194)" font-family="'Microsoft YaHei','PingFang SC',sans-serif">
+      <rect width="312" height="104" rx="14" fill="#FDFBF7" stroke="#EFE8DC"/>
+      <text x="14" y="26" font-size="13.5" font-weight="700" fill="#1C1917">🚀 快速入口</text>
+      <g font-size="11" fill="#57534E">
+        <rect x="14" y="40" width="138" height="24" rx="8" fill="#FFFFFF" stroke="#E7DFD2"/>
+        <text x="83" y="56" text-anchor="middle">📥 收件箱</text>
+        <rect x="160" y="40" width="138" height="24" rx="8" fill="#FFFFFF" stroke="#E7DFD2"/>
+        <text x="229" y="56" text-anchor="middle">✍️ 模板包</text>
+        <rect x="14" y="72" width="138" height="24" rx="8" fill="#FFFFFF" stroke="#E7DFD2"/>
+        <text x="83" y="88" text-anchor="middle">🔍 全局搜索</text>
+        <rect x="160" y="72" width="138" height="24" rx="8" fill="#FFFFFF" stroke="#E7DFD2"/>
+        <text x="229" y="88" text-anchor="middle">📇 资料包</text>
+      </g>
+    </g>
+
+    <!-- 本周节奏 -->
+    <g transform="translate(348,194)" font-family="'Microsoft YaHei','PingFang SC',sans-serif">
+      <rect width="292" height="104" rx="14" fill="#FDFBF7" stroke="#EFE8DC"/>
+      <text x="14" y="26" font-size="13.5" font-weight="700" fill="#1C1917">📅 本周节奏</text>
+      <line x1="38" y1="60" x2="258" y2="60" stroke="#EDE6D8" stroke-width="3"/>
+      <g font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700">
+        <circle cx="38" cy="60" r="11" fill="#EA580C"/><text x="38" y="64" text-anchor="middle" fill="#FFFFFF">1</text>
+        <circle cx="82" cy="60" r="11" fill="#EA580C"/><text x="82" y="64" text-anchor="middle" fill="#FFFFFF">2</text>
+        <circle cx="126" cy="60" r="11" fill="#EA580C"/><text x="126" y="64" text-anchor="middle" fill="#FFFFFF">3</text>
+        <circle cx="170" cy="60" r="11" fill="#EA580C"/><text x="170" y="64" text-anchor="middle" fill="#FFFFFF">4</text>
+        <circle cx="214" cy="60" r="11" fill="#EA580C"/><text x="214" y="64" text-anchor="middle" fill="#FFFFFF">5</text>
+        <circle cx="258" cy="60" r="11" fill="url(#gold)"/><text x="258" y="64" text-anchor="middle" fill="#FFFFFF">6</text>
+      </g>
+      <text x="14" y="92" font-size="11" fill="#A8A29E">D1–D5 交付物已累积 · D6 今天点亮</text>
+    </g>
+
+    <!-- 五站工作流 -->
+    <g transform="translate(20,314)" font-family="'Microsoft YaHei','PingFang SC',sans-serif">
+      <rect width="620" height="88" rx="14" fill="#FFF1E6" stroke="#F5C9A8"/>
+      <text x="14" y="26" font-size="13.5" font-weight="700" fill="#9A3412">🔄 五站工作流</text>
+      <g font-size="12" font-weight="700" fill="#1C1917">
+        <rect x="14" y="40" width="96" height="34" rx="17" fill="#FFFFFF" stroke="#F5C9A8"/>
+        <text x="62" y="61" text-anchor="middle">① 进站</text>
+        <text x="122" y="62" text-anchor="middle" fill="#DCD2BF" font-size="14">→</text>
+        <rect x="134" y="40" width="96" height="34" rx="17" fill="#FFFFFF" stroke="#F5C9A8"/>
+        <text x="182" y="61" text-anchor="middle">② 调取</text>
+        <text x="242" y="62" text-anchor="middle" fill="#DCD2BF" font-size="14">→</text>
+        <rect x="254" y="40" width="96" height="34" rx="17" fill="#FFFFFF" stroke="#F5C9A8"/>
+        <text x="302" y="61" text-anchor="middle">③ 处理</text>
+        <text x="362" y="62" text-anchor="middle" fill="#DCD2BF" font-size="14">→</text>
+        <rect x="374" y="40" width="96" height="34" rx="17" fill="#FFFFFF" stroke="#F5C9A8"/>
+        <text x="422" y="61" text-anchor="middle">④ 验收</text>
+        <text x="482" y="62" text-anchor="middle" fill="#DCD2BF" font-size="14">→</text>
+        <rect x="494" y="40" width="96" height="34" rx="17" fill="#FFFFFF" stroke="#F5C9A8"/>
+        <text x="542" y="61" text-anchor="middle">⑤ 归档</text>
+      </g>
+    </g>
+
+    <!-- 台规 strip -->
+    <g transform="translate(20,418)">
+      <rect width="620" height="38" rx="12" fill="#F5F2EC"/>
+      <text x="310" y="25" text-anchor="middle" font-family="'Microsoft YaHei','PingFang SC',sans-serif" font-size="12.5" fill="#78716C">📜 台规：AI 出力，人拍板 —— 验收与决策不外包</text>
+    </g>
+  </g>
+</svg>

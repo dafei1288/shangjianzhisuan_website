@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import Parallax from '../components/Parallax';
-import { architectureConfig } from '../config';
+import { useConfigs } from '../i18n';
 
 export default function CinematicVision() {
+  const { architectureConfig } = useConfigs();
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);

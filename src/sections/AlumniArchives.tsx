@@ -2,9 +2,11 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import Parallax from '../components/Parallax';
-import { researchConfig, courseLinksByImage } from '../config';
+import { useConfigs, useLang } from '../i18n';
 
 export default function AlumniArchives() {
+  const { researchConfig, courseLinksByImage, pageLabels } = useConfigs();
+  const { withLang } = useLang();
   const navigate = useNavigate();
   const gridRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -76,13 +78,13 @@ export default function AlumniArchives() {
               href="/courses"
               onClick={(e) => {
                 e.preventDefault();
-                navigate('/courses');
+                navigate(withLang('/courses'));
                 window.scrollTo(0, 0);
               }}
               className="nav-link"
               style={{ letterSpacing: '1px' }}
             >
-              详情 →
+              {pageLabels.common.moreLabel}
             </a>
           </div>
         )}

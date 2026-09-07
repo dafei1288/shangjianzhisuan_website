@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- 中文页面（含中英 hreflang 互链） -->
+  <url>
+    <loc>%SITE_URL%/</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/jimsql</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/jimsql"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/jimsql"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/jimsql"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/jimlang</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/jimlang"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/jimlang"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/jimlang"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/jimclaw</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/jimclaw"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/jimclaw"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/jimclaw"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/jimmymed</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/jimmymed"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/jimmymed"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/jimmymed"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/pi-agent-hud</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/pi-agent-hud"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/pi-agent-hud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/pi-agent-hud"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/dsh-hud</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/dsh-hud"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/dsh-hud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/dsh-hud"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/courses</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/courses"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/courses"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/courses"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/media</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/media"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/media"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/media"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/capability/distributed-architecture</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/capability/distributed-architecture"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/capability/distributed-architecture"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/capability/distributed-architecture"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/capability/agentic-systems</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/capability/agentic-systems"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/capability/agentic-systems"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/capability/agentic-systems"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/capability/business-intelligence</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/capability/business-intelligence"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/capability/business-intelligence"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/capability/business-intelligence"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/capability/tech-advisory</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/capability/tech-advisory"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/capability/tech-advisory"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/capability/tech-advisory"/>
+  </url>
+
+  <!-- 英文页面 -->
+  <url>
+    <loc>%SITE_URL%/en</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/jimsql</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/jimsql"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/jimsql"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/jimsql"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/jimlang</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/jimlang"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/jimlang"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/jimlang"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/jimclaw</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/jimclaw"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/jimclaw"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/jimclaw"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/jimmymed</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/jimmymed"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/jimmymed"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/jimmymed"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/pi-agent-hud</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/pi-agent-hud"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/pi-agent-hud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/pi-agent-hud"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/dsh-hud</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/dsh-hud"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/dsh-hud"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/dsh-hud"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/courses</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/courses"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/courses"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/courses"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/media</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/media"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/media"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/media"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/capability/distributed-architecture</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/capability/distributed-architecture"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/capability/distributed-architecture"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/capability/distributed-architecture"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/capability/agentic-systems</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/capability/agentic-systems"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/capability/agentic-systems"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/capability/agentic-systems"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/capability/business-intelligence</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/capability/business-intelligence"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/capability/business-intelligence"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/capability/business-intelligence"/>
+  </url>
+  <url>
+    <loc>%SITE_URL%/en/capability/tech-advisory</loc>
+    <lastmod>%BUILD_DATE%</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/capability/tech-advisory"/>
+    <xhtml:link rel="alternate" hreflang="en" href="%SITE_URL%/en/capability/tech-advisory"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="%SITE_URL%/capability/tech-advisory"/>
+  </url>
+
+  <!-- 课程静态页（中文；独立于 SPA 的静态 HTML，位于 /courses/<dir>/） -->
+  <url><loc>%SITE_URL%/courses/01_ai_coding_agent/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/02_ai_codex_cli/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/03_business_quant_trading/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/04_business_opc/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/05_cs_database/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/06_cs_lang/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/07_ai_llm/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/08_ai_claude_harness/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/09_ai_content_workflow/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/10_ai_claude_harness_source/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/11_cs_java_agent/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/13_kid_ai_codex_for_kids/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/14_ai_pi_agent/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/15_ai_infra_perf/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/courses/16_ai_workbench_camp/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>%SITE_URL%/tianlu/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>%SITE_URL%/ootd/</loc><lastmod>%BUILD_DATE%</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+</urlset>

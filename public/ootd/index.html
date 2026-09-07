@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anime OOTD — 每一套穿搭，都是一部电影</title>
+<meta name="description" content="Anime OOTD：AI 生成的动漫角色穿搭灵感站。一个角色，一套完整造型，五语言全球发行。AI 试衣间让你亲自上身。">
+<link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
+<style>
+  :root{
+    --ink:#070B1A; --indigo:#141B3D; --line:#2A3565;
+    --paper:#F5EFE6; --amber:#FFC98A; --coral:#FF7E5F; --rose:#F95D8F; --cyan:#7FD8E8;
+    --serif:Georgia,'Times New Roman','Songti SC','Noto Serif SC',serif;
+    --sans:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--paper);font-family:var(--sans);overflow-x:hidden;line-height:1.7}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- 胶片颗粒 ---------- */
+  .grain{position:fixed;inset:-100px;z-index:60;pointer-events:none;opacity:.07;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain 1.2s steps(4) infinite}
+  @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-40px,30px)}50%{transform:translate(30px,-45px)}75%{transform:translate(-25px,-20px)}100%{transform:translate(0,0)}}
+
+  /* ---------- 电影黑边 ---------- */
+  .bar{position:fixed;left:0;right:0;height:34px;background:#000;z-index:70;display:flex;align-items:center;justify-content:space-between;
+    padding:0 22px;font-size:10px;letter-spacing:.35em;color:#5B6799;text-transform:uppercase}
+  .bar.top{top:0}.bar.bottom{bottom:0}
+  .bar .dot{color:var(--coral)}
+
+  /* ---------- 通用 ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+  .kicker{font-size:12px;letter-spacing:.5em;text-transform:uppercase;color:var(--cyan);margin-bottom:22px}
+  .scene-num{font-family:var(--serif);font-style:italic;color:var(--amber);font-size:15px;letter-spacing:.2em}
+  h1,h2{font-family:var(--serif);font-weight:400;line-height:1.25}
+  .reveal{opacity:0;transform:translateY(36px);transition:opacity 1s ease,transform 1s ease}
+  .reveal.on{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.grain{animation:none}.hero-img,.wind-wrap{animation:none!important}.wind-wrap{display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+  .hero-img{position:absolute;inset:-4%;background:url('assets/keyart-hero.png') center/cover no-repeat;
+    animation:kenburns 26s ease-in-out infinite alternate}
+  @keyframes kenburns{from{transform:scale(1) translateX(0)}to{transform:scale(1.08) translateX(-1.5%)}}
+  .hero-scrim{position:absolute;inset:0;background:
+    linear-gradient(100deg,rgba(7,11,26,.92) 0%,rgba(7,11,26,.55) 38%,rgba(7,11,26,0) 65%),
+    linear-gradient(to top,var(--ink) 0%,rgba(7,11,26,0) 26%),
+    linear-gradient(to bottom,rgba(0,0,0,.7) 0%,rgba(0,0,0,0) 18%)}
+  /* ---------- 风：头发 / 裙摆局部摆动（复制图层 + 软遮罩） ---------- */
+  .wind-wrap{position:absolute;inset:-4%;pointer-events:none;
+    animation:kenburns 26s ease-in-out infinite alternate}
+  .wind-layer{position:absolute;inset:0;background:url('assets/keyart-hero.png') center/cover no-repeat}
+  .wind-hair{-webkit-mask-image:radial-gradient(ellipse 17% 15% at 73% 13%,#000 0 55%,transparent 78%);
+    mask-image:radial-gradient(ellipse 17% 15% at 73% 13%,#000 0 55%,transparent 78%);
+    transform-origin:70% 9%;animation:hairSway 3.6s ease-in-out infinite alternate}
+  .wind-skirt{-webkit-mask-image:radial-gradient(ellipse 16% 14% at 73.5% 61%,#000 0 55%,transparent 78%);
+    mask-image:radial-gradient(ellipse 16% 14% at 73.5% 61%,#000 0 55%,transparent 78%);
+    transform-origin:70% 54%;animation:skirtSway 2.8s ease-in-out infinite alternate}
+  @keyframes hairSway{from{transform:translateX(-5px) skewX(-2.2deg)}to{transform:translateX(10px) skewX(3.4deg)}}
+  @keyframes skirtSway{from{transform:translateX(-3px) skewX(-1.4deg)}to{transform:translateX(7px) skewX(2.6deg)}}
+
+  .flare{position:absolute;top:18%;left:52%;width:520px;height:2px;z-index:2;
+    background:linear-gradient(90deg,transparent,rgba(127,216,232,.7),rgba(255,201,138,.9),transparent);
+    filter:blur(1px);transform:rotate(-4deg);pointer-events:none}
+  .hero-inner{position:relative;z-index:3;padding:140px 0 120px}
+  .hero h1{font-size:clamp(42px,6.4vw,84px);letter-spacing:.06em;margin:0 0 26px}
+  .hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--amber),var(--coral) 55%,var(--rose));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .sub{max-width:520px;color:#C9CFE6;font-size:16px;margin-bottom:44px}
+  .cta-row{display:flex;gap:18px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 34px;border-radius:999px;font-size:14px;letter-spacing:.18em;transition:.35s}
+  .btn-solid{background:linear-gradient(100deg,var(--amber),var(--coral));color:#1A0E08;font-weight:600}
+  .btn-solid:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,126,95,.35)}
+  .btn-ghost{border:1px solid var(--line);color:var(--paper)}
+  .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  .hero-meta{position:absolute;bottom:64px;left:0;right:0;z-index:3}
+  .hero-meta .wrap{display:flex;gap:42px;flex-wrap:wrap;font-size:11px;letter-spacing:.3em;color:#8B94BC;text-transform:uppercase}
+  .hero-meta b{color:var(--paper);font-weight:600}
+  .logo-row{display:flex;align-items:center;gap:16px;margin-bottom:38px}
+  .logo-row img{width:52px;height:52px}
+  .logo-row span{font-family:var(--serif);font-size:19px;letter-spacing:.32em}
+
+  /* ---------- 天空动效：流星 / 飞鸟 / 樱瓣 ---------- */
+  .sky{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
+  .meteor{position:absolute;width:170px;height:2px;border-radius:2px;opacity:0;
+    background:linear-gradient(90deg,#fff,rgba(127,216,232,.45) 40%,transparent);
+    filter:drop-shadow(0 0 6px rgba(190,225,255,.9))}
+  .bird{position:absolute;width:36px;opacity:0}
+  .bird svg{display:block;transform-origin:50% 60%;animation:flapY .42s ease-in-out infinite alternate}
+  @keyframes flapY{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+  .petal{position:absolute;top:-24px;border-radius:80% 8% 80% 8%;
+    background:radial-gradient(circle at 32% 30%,#FFD9E8,#F95D8F 70%);
+    opacity:.85;animation-name:fall;animation-timing-function:linear;animation-iteration-count:infinite}
+  @keyframes fall{from{transform:translate3d(0,-4vh,0) rotate(0)}to{transform:translate3d(var(--sway,60px),106vh,0) rotate(680deg)}}
+
+  /* ---------- 标题字母 + 火柴人 ---------- */
+  .hero h1{position:relative}
+  .ch{display:inline-block;transition:color .5s}
+  .ch.tickled{background:none;-webkit-text-fill-color:currentColor;animation:flip .7s ease}
+  @keyframes flip{from{transform:rotateX(0)}to{transform:rotateX(360deg)}}
+  .stickman{position:absolute;width:30px;height:38px;z-index:6;pointer-events:none;will-change:transform}
+  .stickman line,.stickman circle{stroke:#F5EFE6;stroke-width:2.6;stroke-linecap:round;fill:none}
+  .stickman .la,.stickman .ra{transform-origin:15px 14px}
+  .stickman .ll,.stickman .rl{transform-origin:15px 22px}
+  .stickman.move .la{animation:swingA .28s ease-in-out infinite alternate}
+  .stickman.move .ra{animation:swingB .28s ease-in-out infinite alternate}
+  .stickman.move .ll{animation:swingB .3s ease-in-out infinite alternate}
+  .stickman.move .rl{animation:swingA .3s ease-in-out infinite alternate}
+  @keyframes swingA{from{transform:rotate(-32deg)}to{transform:rotate(32deg)}}
+  @keyframes swingB{from{transform:rotate(30deg)}to{transform:rotate(-30deg)}}
+
+  /* ---------- 章节 ---------- */
+  section{padding:130px 0;position:relative}
+  .scene-head{display:flex;align-items:baseline;gap:26px;margin-bottom:64px}
+  .scene-head h2{font-size:clamp(30px,3.6vw,46px);letter-spacing:.08em}
+  .scene-head::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+
+  /* SCENE 01 概念 */
+  .concept{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
+  .concept p{color:#C9CFE6;margin-bottom:20px}
+  .concept p strong{color:var(--paper)}
+  .still{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 30px 80px rgba(0,0,0,.55)}
+  .still::before,.still::after{content:"";position:absolute;left:0;right:0;height:26px;background:#000;z-index:2}
+  .still::before{top:0}.still::after{bottom:0}
+  .still img{width:100%;height:100%;object-fit:cover;transform:scale(1.02)}
+  .still figcaption{position:absolute;bottom:34px;left:0;right:0;z-index:3;text-align:center;
+    font-size:11px;letter-spacing:.4em;color:#8B94BC;text-transform:uppercase}
+
+  /* SCENE 02 能力（片尾字幕式卡片） */
+  .credits{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .credit{background:linear-gradient(160deg,var(--indigo),#0B1026);padding:52px 44px;transition:.4s;position:relative}
+  .credit:hover{background:linear-gradient(160deg,#1B2350,#0E1430)}
+  .credit .role{font-size:11px;letter-spacing:.45em;color:var(--cyan);text-transform:uppercase;margin-bottom:16px}
+  .credit h3{font-family:var(--serif);font-size:24px;letter-spacing:.06em;margin-bottom:14px}
+  .credit p{font-size:14px;color:#AEB6D6}
+  .credit .no{position:absolute;top:26px;right:32px;font-family:var(--serif);font-style:italic;color:#3A4675;font-size:15px}
+
+  /* SCENE 03 试衣间 */
+  .tryon{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center}
+  .tryon .still{border-radius:50% / 6%}
+  .tryon ul{list-style:none;margin-top:26px}
+  .tryon li{padding:14px 0;border-bottom:1px solid var(--line);font-size:15px;color:#C9CFE6;display:flex;gap:14px}
+  .tryon li::before{content:"◆";color:var(--coral);font-size:10px;line-height:2.4}
+  .tryon li b{color:var(--paper)}
+
+  /* 胶片参数 */
+  .specs{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .spec{background:#0B1026;padding:34px 28px}
+  .spec .k{font-size:10px;letter-spacing:.35em;color:#8B94BC;text-transform:uppercase;margin-bottom:12px}
+  .spec .v{font-family:var(--serif);font-size:19px;color:var(--amber);letter-spacing:.04em}
+  .spec .d{font-size:12px;color:#8B94BC;margin-top:8px}
+
+  /* FINAL */
+  .finale{text-align:center;padding:170px 0 190px;position:relative;overflow:hidden}
+  .finale::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(60% 55% at 50% 62%,rgba(255,126,95,.14),transparent 70%),
+    radial-gradient(40% 40% at 50% 30%,rgba(127,216,232,.10),transparent 70%)}
+  .finale h2{font-size:clamp(34px,4.6vw,60px);letter-spacing:.1em;margin-bottom:22px;position:relative}
+  .finale p{color:#AEB6D6;margin-bottom:48px;position:relative}
+  .finale img{width:74px;margin:0 auto 34px;position:relative}
+
+  footer{border-top:1px solid var(--line);padding:40px 0 90px;font-size:12px;color:#5B6799;letter-spacing:.12em}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  footer a:hover{color:var(--cyan)}
+
+  @media(max-width:900px){
+    .concept,.tryon{grid-template-columns:1fr;gap:44px}
+    .credits{grid-template-columns:1fr}
+    .specs{grid-template-columns:repeat(2,1fr)}
+    .bar{display:none}
+    .hero-meta{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="bar top"><span>Anime OOTD</span><span><span class="dot">●</span>&nbsp; Now Showing</span><span>ootd.9999data.com</span></div>
+<div class="bar bottom"><span>An AI Fashion Film</span><span>24 FPS · 2.39 : 1</span><span>© 2026 熵减智算</span></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-img"></div>
+  <div class="wind-wrap"><div class="wind-layer wind-hair"></div></div>
+  <div class="wind-wrap"><div class="wind-layer wind-skirt"></div></div>
+  <div class="hero-scrim"></div>
+  <div class="flare"></div>
+  <div class="sky" id="sky">
+    <div class="bird"><svg viewBox="0 0 34 16"><path d="M2 12 Q9 3 17 11 Q25 3 32 12" fill="none" stroke="#F5EFE6" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+  </div>
+  <div class="wrap hero-inner">
+    <div class="logo-row reveal"><img src="assets/logo-mark.svg" alt="Anime OOTD logo"><span>ANIME OOTD</span></div>
+    <p class="kicker reveal">AI 生成 · 动漫穿搭灵感站</p>
+    <h1 class="reveal">每一套穿搭，<br>都是<em>一部电影</em>。</h1>
+    <p class="sub reveal">Anime OOTD 用 AI 为动漫角色设计完整造型——上衣、下装、鞋履与配饰，
+      一次生成五种语言，全球同步上映。你还可以走进 AI 试衣间，把电影穿在身上。</p>
+    <div class="cta-row reveal">
+      <a class="btn btn-solid" href="https://ootd.9999data.com/">进入主站&nbsp;&nbsp;→</a>
+      <a class="btn btn-ghost" href="https://ootd.9999data.com/tryon">AI 试衣间</a>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="wrap">
+      <span>语言&nbsp;<b>EN / 中 / 日 / 韩 / 西</b></span>
+      <span>出图&nbsp;<b>Seedream 4.5</b></span>
+      <span>更新&nbsp;<b>每日自动</b></span>
+      <span>成本&nbsp;<b>¥0.25 / 张</b></span>
+    </div>
+  </div>
+</header>
+
+<!-- SCENE 01 -->
+<section>
+  <div class="wrap">
+    <div class="scene-head reveal"><span class="scene-num">SCENE 01</span><h2>概念</h2></div>
+    <div class="concept">
+      <div class="reveal">
+        <p><strong>穿搭不是清单，是叙事。</strong>每张卡片都是一位角色的一天：
+          黄昏天台的风、便利店的灯光、雨后街道的反光——服装在场景里呼吸。</p>
+        <p>内容流水线全自动运转：选题 → 绘图提示词 → AI 出图 →
+          <strong>五语言</strong>标题、标签、描述与正文，像一家永不打烊的微型制片厂。</p>
+        <p>你不是在浏览图库，而是在翻阅一本本会动的造型杂志。</p>
+      </div>
+      <figure class="still reveal">
+        <img src="assets/keyart-poster.png" alt="Anime OOTD 主视觉：光柱中的角色">
+        <figcaption>Scene 01 · The Muse</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- SCENE 02 -->
+<section>
+  <div class="wrap">
+    <div class="scene-head reveal"><span class="scene-num">SCENE 02</span><h2>核心能力</h2></div>
+    <div class="credits">
+      <div class="credit reveal"><span class="no">№1</span>
+        <p class="role">Directed by</p><h3>AI 内容流水线</h3>
+        <p>选题、提示词、出图、文案全链路自动化。每张卡片 = 一个角色 + 一套完整穿搭，日更不停。</p></div>
+      <div class="credit reveal"><span class="no">№2</span>
+        <p class="role">Distributed in</p><h3>五语言全球发行</h3>
+        <p>EN / 中 / 日 / 韩 / 西 同步生成，hreflang + canonical + 301 归一，SEO 与 AI 引擎双友好。</p></div>
+      <div class="credit reveal"><span class="no">№3</span>
+        <p class="role">Starring you in</p><h3>AI 试衣间</h3>
+        <p>上传照片或选择角色，把卡片里的造型穿到自己身上。每日免费配额 + 成本熔断，安心试穿。</p></div>
+      <div class="credit reveal"><span class="no">№4</span>
+        <p class="role">Audience wishes</p><h3>许愿池</h3>
+        <p>想看的角色、风格、场景，写进许愿池。下一条内容，由观众编剧。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCENE 03 -->
+<section>
+  <div class="wrap">
+    <div class="scene-head reveal"><span class="scene-num">SCENE 03</span><h2>AI 试衣间</h2></div>
+    <div class="tryon">
+      <figure class="still reveal">
+        <img src="assets/keyart-tryon.png" alt="AI 试衣间：镜中的另一套造型">
+        <figcaption>Scene 03 · The Mirror</figcaption>
+      </figure>
+      <div class="reveal">
+        <p style="color:#C9CFE6">镜子里的你，穿着另一套人生。选择人物、场景、上装、下装与配饰，
+          多参考图合成把想象缝合成成品——像电影里的换装蒙太奇，只是主角是你。</p>
+        <ul>
+          <li><b>按图组合</b>：人物 + 场景 + 服装 + 配饰，最多 6 张参考图一次合成</li>
+          <li><b>双画风</b>：动漫 / 真人两种渲染，一键切换平行宇宙</li>
+          <li><b>配额与熔断</b>：每人每日 3 次免费，全局 ¥50/日成本熔断兜底</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 胶片参数 -->
+<section>
+  <div class="wrap">
+    <div class="scene-head reveal"><span class="scene-num">TECH SPECS</span><h2>胶片参数</h2></div>
+    <div class="specs reveal">
+      <div class="spec"><p class="k">Image Model</p><p class="v">Seedream 4.5</p><p class="d">doubao-seedream-4-5 · ~¥0.25/张</p></div>
+      <div class="spec"><p class="k">Copy Model</p><p class="v">DeepSeek V4</p><p class="d">标题 / 标签 / 正文 五语言生成</p></div>
+      <div class="spec"><p class="k">Stack</p><p class="v">Next.js 16</p><p class="d">React 19 · Tailwind v4 · SQLite</p></div>
+      <div class="spec"><p class="k">Delivery</p><p class="v">5 Languages</p><p class="d">hreflang · canonical · RSS · llms.txt</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINALE -->
+<section class="finale">
+  <div class="wrap">
+    <img class="reveal" src="assets/logo-mark.svg" alt="">
+    <p class="kicker reveal">Now Showing</p>
+    <h2 class="reveal">下一场电影，<br>由你的衣橱主演。</h2>
+    <p class="reveal">Anime OOTD — Every Outfit, A Film.</p>
+    <div class="cta-row reveal" style="justify-content:center">
+      <a class="btn btn-solid" href="https://ootd.9999data.com/">进入主站&nbsp;&nbsp;→</a>
+      <a class="btn btn-ghost" href="https://ootd.9999data.com/wish">去许愿池</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 熵减智算 ENTROPY-REDUCED COMPUTING</span>
+    <span><a href="https://ootd.9999data.com/">OOTD.9999DATA.COM</a></span>
+  </div>
+</footer>
+
+<script>
+  // 滚动渐入
+  const io = new IntersectionObserver((es) => {
+    es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // 轻微视差（尊重减少动态偏好）
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced) {
+    const layers = document.querySelectorAll('.hero-img, .wind-wrap');
+    addEventListener('scroll', () => {
+      const y = scrollY;
+      if (y < innerHeight) layers.forEach((l) => (l.style.translate = `0 ${y * 0.25}px`));
+    }, { passive: true });
+  }
+</script>
+<script>
+  // ===== 天空 + 标题剧场：流星 / 飞鸟 / 樱瓣 / 火柴人 =====
+  (function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const sky = document.getElementById('sky');
+    const h1 = document.querySelector('.hero h1');
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    /* 樱瓣：随风斜落 */
+    for (let i = 0; i < 12; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      const s = 8 + Math.random() * 9;
+      p.style.cssText = `left:${Math.random() * 100}%;width:${s}px;height:${s}px;` +
+        `--sway:${(Math.random() * 2 - 1) * 140}px;` +
+        `animation-duration:${9 + Math.random() * 8}s;animation-delay:${-Math.random() * 16}s`;
+      sky.appendChild(p);
+    }
+
+    /* 流星：随机划过 */
+    (function meteor() {
+      const m = document.createElement('div');
+      m.className = 'meteor';
+      m.style.left = 25 + Math.random() * 65 + '%';
+      m.style.top = 4 + Math.random() * 26 + '%';
+      sky.appendChild(m);
+      m.animate([
+        { transform: 'rotate(-30deg) translateX(0)', opacity: 0 },
+        { opacity: 1, offset: 0.12 },
+        { transform: 'rotate(-30deg) translateX(-52vw)', opacity: 0 },
+      ], { duration: 1100 + Math.random() * 500, easing: 'ease-out' }).onfinish = () => m.remove();
+      setTimeout(meteor, 3800 + Math.random() * 6500);
+    })();
+
+    /* 飞鸟：振翅横穿天空 */
+    const bird = document.querySelector('.bird');
+    setTimeout(function fly() {
+      bird.style.top = 10 + Math.random() * 22 + '%';
+      bird.style.right = '-60px';
+      bird.animate([
+        { transform: 'translateX(0) translateY(0)', opacity: 0 },
+        { opacity: 0.9, offset: 0.06 },
+        { transform: 'translateX(-55vw) translateY(-4vh)', offset: 0.5 },
+        { transform: 'translateX(-112vw) translateY(2vh)', opacity: 0 },
+      ], { duration: 9000 + Math.random() * 3000, easing: 'linear' })
+        .onfinish = () => setTimeout(fly, 9000 + Math.random() * 9000);
+    }, 2500);
+
+    /* 标题拆字（保留 <br> 与 <em> 渐变结构） */
+    (function spanify(node) {
+      [...node.childNodes].forEach((n) => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          for (const c of n.textContent) {
+            const s = document.createElement('span');
+            s.className = 'ch';
+            s.textContent = c;
+            frag.appendChild(s);
+          }
+          node.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') {
+          spanify(n);
+        }
+      });
+    })(h1);
+
+    const chars = [...h1.querySelectorAll('.ch')]
+      .filter((s) => s.textContent.trim() && !'，。'.includes(s.textContent));
+
+    /* 火柴人：在字上蹦跳，踩到的字翻转换色 */
+    const man = document.createElement('div');
+    man.className = 'stickman';
+    man.innerHTML =
+      '<svg viewBox="0 0 30 38"><circle cx="15" cy="6" r="4.2"/>' +
+      '<line x1="15" y1="10.5" x2="15" y2="22"/>' +
+      '<line class="la" x1="15" y1="14" x2="8" y2="20"/>' +
+      '<line class="ra" x1="15" y1="14" x2="22" y2="20"/>' +
+      '<line class="ll" x1="15" y1="22" x2="9" y2="33"/>' +
+      '<line class="rl" x1="15" y1="22" x2="21" y2="33"/></svg>';
+    h1.appendChild(man);
+
+    const palette = ['#FFC98A', '#FF7E5F', '#F95D8F', '#7FD8E8', '#F5EFE6'];
+    let ci = 0;
+    let cur = { x: 0, y: 0 };
+    const rectOf = (el) => {
+      const hr = h1.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      return { x: r.left - hr.left + r.width / 2 - 15, y: r.top - hr.top - 40 };
+    };
+    requestAnimationFrame(() => {
+      const t = rectOf(chars[0]);
+      cur = { x: t.x - 90, y: t.y };
+      man.style.left = cur.x + 'px';
+      man.style.top = cur.y + 'px';
+    });
+
+    const hop = (t, big) => new Promise((res) => {
+      const dx = t.x - cur.x;
+      const dy = t.y - cur.y;
+      man.classList.add('move');
+      man.animate([
+        { transform: 'translate(0,0)' },
+        { transform: `translate(${dx / 2}px,${dy + (big ? -92 : -52)}px)`, offset: 0.5 },
+        { transform: `translate(${dx}px,${dy}px)` },
+      ], { duration: big ? 680 : 440, easing: 'ease-in-out' }).onfinish = () => {
+        cur = { x: t.x, y: t.y };
+        man.style.left = cur.x + 'px';
+        man.style.top = cur.y + 'px';
+        man.classList.remove('move');
+        res();
+      };
+    });
+    const backflip = () => new Promise((res) => {
+      man.animate([
+        { transform: 'rotate(0)' },
+        { transform: 'rotate(-360deg)' },
+      ], { duration: 620, easing: 'cubic-bezier(.3,.7,.4,1)' }).onfinish = res;
+    });
+    const tickle = (el) => {
+      el.classList.remove('tickled');
+      void el.offsetWidth; // 重启动画
+      el.style.color = palette[ci++ % palette.length];
+      el.classList.add('tickled');
+    };
+
+    (async function dance() {
+      await wait(1600);
+      let i = 0;
+      for (;;) {
+        const big = i % 6 === 5;
+        await hop(rectOf(chars[i % chars.length]), big);
+        tickle(chars[i % chars.length]);
+        if (big) await backflip();
+        i++;
+        await wait(240 + Math.random() * 420);
+        if (i % chars.length === 0) await wait(3000); // 一轮跳完，谢幕片刻
+      }
+    })();
+  })();
+</script>
+</body>
+</html>

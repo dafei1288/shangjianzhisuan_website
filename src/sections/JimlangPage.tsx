@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import AmberCascades from './AmberCascades';
 import Parallax from '../components/Parallax';
 import Footer from './Footer';
-import { siteConfig, jimlangConfig } from '../config';
+import { useConfigs, useLang } from '../i18n';
 
 function SectionHead({ label }: { label: string }) {
   return (
@@ -33,6 +33,8 @@ function SectionHead({ label }: { label: string }) {
 
 export default function JimlangPage() {
   const navigate = useNavigate();
+  const { siteConfig, jimlangConfig, pageLabels } = useConfigs();
+  const { withLang } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const featureRefs = useRef<(HTMLDivElement | null)[]>([]);
   const revealRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -104,11 +106,11 @@ export default function JimlangPage() {
       >
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="text-white no-underline flex items-center"
           style={{ gap: 12 }}
         >
-          <img src="/images/logo.png" alt="熵减智算 Logo" style={{ width: 34, height: 'auto', display: 'block' }} />
+          <img src="/images/logo.png" alt={pageLabels.nav.logoAlt} style={{ width: 34, height: 'auto', display: 'block' }} />
           <span
             style={{
               fontFamily: "'GeistMono', 'PingFang SC', 'Microsoft YaHei', monospace",
@@ -122,10 +124,10 @@ export default function JimlangPage() {
         </a>
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="nav-link"
         >
-          返回首页
+          {pageLabels.nav.backHome}
         </a>
       </nav>
 
@@ -207,7 +209,7 @@ export default function JimlangPage() {
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
-                  GitHub 仓库 →
+                  {pageLabels.common.githubRepo}
                 </a>
                 {jimlangConfig.badges.map((b) => (
                   <span
@@ -233,7 +235,7 @@ export default function JimlangPage() {
         {/* Features — same section rhythm as home */}
         <section style={{ padding: '0 5vw 150px', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="语言特性" />
+            <SectionHead label={pageLabels.jimlang.features} />
             <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 1, background: 'rgba(0, 180, 216, 0.1)' }}>
               {jimlangConfig.features.map((f, i) => (
                 <div
@@ -277,11 +279,11 @@ export default function JimlangPage() {
         {/* Quick start */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="五分钟跑起来" />
+            <SectionHead label={pageLabels.common.quickstartLabel} />
             <div ref={(el) => { revealRefs.current[1] = el; }}>
               <div className="flex flex-col md:flex-row" style={{ gap: 60 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>① 引入依赖</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimlang[0]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimlangConfig.quickstart.maven}</pre>
@@ -289,7 +291,7 @@ export default function JimlangPage() {
               </div>
               <div className="flex flex-col md:flex-row" style={{ gap: 60, marginTop: 80 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>② 用 Shell 执行脚本</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimlang[1]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimlangConfig.quickstart.shell}</pre>
@@ -297,7 +299,7 @@ export default function JimlangPage() {
               </div>
               <div className="flex flex-col md:flex-row" style={{ gap: 60, marginTop: 80 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>③ 或走 JSR-223 引擎</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimlang[2]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimlangConfig.quickstart.jsr223}</pre>
@@ -305,7 +307,7 @@ export default function JimlangPage() {
               </div>
               <div className="flex flex-col md:flex-row" style={{ gap: 60, marginTop: 80 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>④ 命令行与 REPL</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimlang[3]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimlangConfig.quickstart.cli}</pre>
@@ -318,17 +320,17 @@ export default function JimlangPage() {
         {/* Language showcase */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="语言速览" />
+            <SectionHead label={pageLabels.jimlang.tour} />
             <div ref={(el) => { revealRefs.current[2] = el; }} className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 40 }}>
               <div>
                 <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 200, fontSize: 15, color: '#A8B8CC', margin: '0 0 12px 0', lineHeight: 1.8 }}>
-                  JSON / YAML 与文件读写，数据处理开箱即用。
+                  {pageLabels.jimlang.tourJson}
                 </p>
                 <pre style={codeStyle}>{jimlangConfig.examples.json}</pre>
               </div>
               <div>
                 <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 200, fontSize: 15, color: '#A8B8CC', margin: '0 0 12px 0', lineHeight: 1.8 }}>
-                  一行启动 Web 服务器，路由与响应助手内置。
+                  {pageLabels.jimlang.tourWeb}
                 </p>
                 <pre style={codeStyle}>{jimlangConfig.examples.web}</pre>
               </div>
@@ -339,7 +341,7 @@ export default function JimlangPage() {
         {/* Java interop — mirrors CinematicVision title/desc split */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="与 Java 互通" />
+            <SectionHead label={pageLabels.jimlang.interop} />
             <div ref={(el) => { revealRefs.current[3] = el; }}>
               <div className="flex flex-col md:flex-row md:items-start" style={{ gap: 60, marginBottom: 48 }}>
                 <Parallax speed={0.16} style={{ flex: '0 0 50%' }}>
@@ -355,7 +357,7 @@ export default function JimlangPage() {
                       textWrap: 'balance',
                     }}
                   >
-                    函数即值，上下文即桥梁
+                    {pageLabels.jimlang.interopTitle}
                   </h2>
                 </Parallax>
                 <Parallax speed={0.07} style={{ flex: '1 1 50%' }}>
@@ -370,9 +372,7 @@ export default function JimlangPage() {
                       textWrap: 'pretty',
                     }}
                   >
-                    内置函数与普通函数一样可以被赋值和调用；通过 <code style={{ fontFamily: "'GeistMono', monospace", color: '#FF8C42' }}>JimLangShell.eval(script, name, ctx)</code> 注入
-                    Map 上下文，标识符键自动成为脚本全局变量，特殊键用 <code style={{ fontFamily: "'GeistMono', monospace", color: '#FF8C42' }}>ctx["user-id"]</code> 访问——让
-                    JimLang 既能做嵌入脚本，也能做规则引擎。
+                    {pageLabels.jimlang.interopDesc}
                   </p>
                 </Parallax>
               </div>
@@ -390,10 +390,10 @@ export default function JimlangPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
             <a
               href="/"
-              onClick={(e) => { e.preventDefault(); navigate('/'); }}
+              onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
               className="nav-link"
             >
-              ← 返回熵减智算首页
+              {pageLabels.common.backToIndex}
             </a>
             <a
               href={jimlangConfig.githubUrl}
@@ -402,7 +402,7 @@ export default function JimlangPage() {
               className="nav-link"
               style={{ color: '#FF8C42' }}
             >
-              在 GitHub 上 Star / Fork →
+              {pageLabels.common.starFork}
             </a>
           </div>
         </div>

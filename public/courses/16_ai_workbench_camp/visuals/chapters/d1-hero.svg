@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="acc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#F97316"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#FAF6EF"/>
+  <rect x="24" y="24" width="1152" height="582" rx="22" fill="none" stroke="#E7DFD2" stroke-width="1.5"/>
+
+  <!-- left title -->
+  <g font-family="'JetBrains Mono','Microsoft YaHei',monospace">
+    <rect x="70" y="140" width="270" height="34" rx="17" fill="#FFF1E6" stroke="#F5C9A8"/>
+    <circle cx="92" cy="157" r="4" fill="#EA580C"/>
+    <text x="106" y="162" font-size="13" fill="#EA580C" letter-spacing="2">MODULE 1 · SECOND BRAIN</text>
+  </g>
+  <text x="70" y="248" font-family="Georgia,'Noto Serif SC','Microsoft YaHei',serif" font-size="56" font-weight="900" fill="#1C1917">D1 · 建脑</text>
+  <rect x="70" y="264" width="150" height="6" rx="3" fill="#CA8A04" opacity=".45"/>
+  <text x="70" y="312" font-family="'Microsoft YaHei','PingFang SC',sans-serif" font-size="17" fill="#57534E">从零搭建你的第二大脑——</text>
+  <text x="70" y="340" font-family="'Microsoft YaHei','PingFang SC',sans-serif" font-size="17" fill="#57534E">四层目录，每份资料各就各位</text>
+  <text x="70" y="566" font-family="'JetBrains Mono',monospace" font-size="11" fill="#A8A29E" letter-spacing="2">6 天 AI 工作台实战营 · COURSE 16</text>
+
+  <!-- right: four drawers -->
+  <g font-family="'Microsoft YaHei','PingFang SC',sans-serif">
+    <!-- 01 -->
+    <g transform="translate(500,88)">
+      <rect width="630" height="104" rx="16" fill="#FFFFFF" stroke="#E7DFD2"/>
+      <rect x="22" y="24" width="56" height="56" rx="14" fill="url(#acc)"/>
+      <text x="50" y="61" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFFFFF">01</text>
+      <text x="98" y="42" font-size="19" font-weight="700" fill="#1C1917">工作领域</text>
+      <text x="98" y="64" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#A8A29E" letter-spacing="1">AREAS</text>
+      <text x="98" y="88" font-size="13" fill="#57534E">按职责分：运营 / 销售 / 产品 / HR</text>
+      <text x="586" y="66" font-size="24" text-anchor="middle">🗂️</text>
+    </g>
+    <!-- 02 -->
+    <g transform="translate(500,206)">
+      <rect width="630" height="104" rx="16" fill="#FFFFFF" stroke="#E7DFD2"/>
+      <rect x="22" y="24" width="56" height="56" rx="14" fill="url(#acc)"/>
+      <text x="50" y="61" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFFFFF">02</text>
+      <text x="98" y="42" font-size="19" font-weight="700" fill="#1C1917">项目</text>
+      <text x="98" y="64" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#A8A29E" letter-spacing="1">PROJECTS</text>
+      <text x="98" y="88" font-size="13" fill="#57534E">进行中的事，一个项目一个文件夹</text>
+      <text x="586" y="66" font-size="24" text-anchor="middle">📁</text>
+    </g>
+    <!-- 03 -->
+    <g transform="translate(500,324)">
+      <rect width="630" height="104" rx="16" fill="#FFFFFF" stroke="#E7DFD2"/>
+      <rect x="22" y="24" width="56" height="56" rx="14" fill="url(#acc)"/>
+      <text x="50" y="61" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFFFFF">03</text>
+      <text x="98" y="42" font-size="19" font-weight="700" fill="#1C1917">素材</text>
+      <text x="98" y="64" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#A8A29E" letter-spacing="1">MATERIALS</text>
+      <text x="98" y="88" font-size="13" fill="#57534E">可复用的内容：金句、案例、模板、数据</text>
+      <text x="586" y="66" font-size="24" text-anchor="middle">✨</text>
+    </g>
+    <!-- 04 -->
+    <g transform="translate(500,442)">
+      <rect width="630" height="104" rx="16" fill="#FFFFFF" stroke="#E7DFD2"/>
+      <rect x="22" y="24" width="56" height="56" rx="14" fill="url(#acc)"/>
+      <text x="50" y="61" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFFFFF">04</text>
+      <text x="98" y="42" font-size="19" font-weight="700" fill="#1C1917">档案</text>
+      <text x="98" y="64" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#A8A29E" letter-spacing="1">ARCHIVE</text>
+      <text x="98" y="88" font-size="13" fill="#57534E">做完归档：复盘、合同、旧项目</text>
+      <text x="586" y="66" font-size="24" text-anchor="middle">🗄️</text>
+    </g>
+  </g>
+</svg>

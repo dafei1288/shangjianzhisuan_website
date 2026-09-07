@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import AmberCascades from './AmberCascades';
 import Parallax from '../components/Parallax';
 import Footer from './Footer';
-import { siteConfig, jimsqlConfig } from '../config';
+import { useConfigs, useLang } from '../i18n';
 
 function SectionHead({ label }: { label: string }) {
   return (
@@ -33,6 +33,8 @@ function SectionHead({ label }: { label: string }) {
 
 export default function JimsqlPage() {
   const navigate = useNavigate();
+  const { siteConfig, jimsqlConfig, pageLabels } = useConfigs();
+  const { withLang } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const featureRefs = useRef<(HTMLDivElement | null)[]>([]);
   const revealRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -104,11 +106,11 @@ export default function JimsqlPage() {
       >
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="text-white no-underline flex items-center"
           style={{ gap: 12 }}
         >
-          <img src="/images/logo.png" alt="熵减智算 Logo" style={{ width: 34, height: 'auto', display: 'block' }} />
+          <img src="/images/logo.png" alt={pageLabels.nav.logoAlt} style={{ width: 34, height: 'auto', display: 'block' }} />
           <span
             style={{
               fontFamily: "'GeistMono', 'PingFang SC', 'Microsoft YaHei', monospace",
@@ -122,10 +124,10 @@ export default function JimsqlPage() {
         </a>
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="nav-link"
         >
-          返回首页
+          {pageLabels.nav.backHome}
         </a>
       </nav>
 
@@ -207,7 +209,7 @@ export default function JimsqlPage() {
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
-                  GitHub 仓库 →
+                  {pageLabels.common.githubRepo}
                 </a>
                 {jimsqlConfig.badges.map((b) => (
                   <span
@@ -233,7 +235,7 @@ export default function JimsqlPage() {
         {/* Features — same section rhythm as home */}
         <section style={{ padding: '0 5vw 150px', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="核心特性" />
+            <SectionHead label={pageLabels.common.featuresLabel} />
             <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 1, background: 'rgba(0, 180, 216, 0.1)' }}>
               {jimsqlConfig.features.map((f, i) => (
                 <div
@@ -277,11 +279,11 @@ export default function JimsqlPage() {
         {/* Quick start */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="五分钟跑起来" />
+            <SectionHead label={pageLabels.common.quickstartLabel} />
             <div ref={(el) => { revealRefs.current[1] = el; }}>
               <div className="flex flex-col md:flex-row" style={{ gap: 60 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>① Docker 启动服务端</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimsql[0]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimsqlConfig.quickstart.docker}</pre>
@@ -289,7 +291,7 @@ export default function JimsqlPage() {
               </div>
               <div className="flex flex-col md:flex-row" style={{ gap: 60, marginTop: 80 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>② 引入 JDBC 驱动</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimsql[1]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimsqlConfig.quickstart.maven}</pre>
@@ -297,7 +299,7 @@ export default function JimsqlPage() {
               </div>
               <div className="flex flex-col md:flex-row" style={{ gap: 60, marginTop: 80 }}>
                 <Parallax speed={0.12} style={{ flex: '0 0 30%' }}>
-                  <h3 style={stepTitleStyle}>③ 像普通数据库一样查询</h3>
+                  <h3 style={stepTitleStyle}>{pageLabels.steps.jimsql[2]}</h3>
                 </Parallax>
                 <div style={{ flex: '1 1 70%' }}>
                   <pre style={codeStyle}>{jimsqlConfig.quickstart.java}</pre>
@@ -310,17 +312,17 @@ export default function JimsqlPage() {
         {/* SQL capability */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="SQL 能力" />
+            <SectionHead label={pageLabels.jimsql.sql} />
             <div ref={(el) => { revealRefs.current[2] = el; }} className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 40 }}>
               <div>
                 <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 200, fontSize: 15, color: '#A8B8CC', margin: '0 0 12px 0', lineHeight: 1.8 }}>
-                  WHERE 过滤：AND / OR / NOT、括号、比较运算、LIKE、IN、IS NULL，列名大小写不敏感。
+                  {pageLabels.jimsql.sqlWhere}
                 </p>
                 <pre style={codeStyle}>{jimsqlConfig.sqlExamples.where}</pre>
               </div>
               <div>
                 <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 200, fontSize: 15, color: '#A8B8CC', margin: '0 0 12px 0', lineHeight: 1.8 }}>
-                  聚合分析：COUNT / SUM / AVG / MIN / MAX，配合 GROUP BY 与 HAVING。
+                  {pageLabels.jimsql.sqlAggregate}
                 </p>
                 <pre style={codeStyle}>{jimsqlConfig.sqlExamples.aggregate}</pre>
               </div>
@@ -331,7 +333,7 @@ export default function JimsqlPage() {
         {/* AI native — mirrors CinematicVision title/desc split */}
         <section style={{ padding: '0 5vw 150px', background: '#060D1A', position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="AI 原生" />
+            <SectionHead label={pageLabels.jimsql.aiNative} />
             <div ref={(el) => { revealRefs.current[3] = el; }}>
               <div className="flex flex-col md:flex-row md:items-start" style={{ gap: 60, marginBottom: 48 }}>
                 <Parallax speed={0.16} style={{ flex: '0 0 50%' }}>
@@ -347,7 +349,7 @@ export default function JimsqlPage() {
                       textWrap: 'balance',
                     }}
                   >
-                    在 SQL 里直接调用大模型
+                    {pageLabels.jimsql.aiNativeTitle}
                   </h2>
                 </Parallax>
                 <Parallax speed={0.07} style={{ flex: '1 1 50%' }}>
@@ -362,10 +364,7 @@ export default function JimsqlPage() {
                       textWrap: 'pretty',
                     }}
                   >
-                    内置函数 <code style={{ fontFamily: "'GeistMono', monospace", color: '#FF8C42' }}>ask_llm(prompt[, overrides])</code> 由
-                    llm.csv 配置驱动，支持 openai / openai_compatible / openai_response / ollama 四种提供方；设置
-                    JIMSQL_LLM_DRYRUN=true 可空跑调试，日志自动掩码 api_key。同时提供 MCP（stdio）集成，让智能体直接把
-                    JimSql 当工具调用。
+                    {pageLabels.jimsql.aiNativeDesc}
                   </p>
                 </Parallax>
               </div>
@@ -380,10 +379,10 @@ export default function JimsqlPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
             <a
               href="/"
-              onClick={(e) => { e.preventDefault(); navigate('/'); }}
+              onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
               className="nav-link"
             >
-              ← 返回熵减智算首页
+              {pageLabels.common.backToIndex}
             </a>
             <a
               href={jimsqlConfig.githubUrl}
@@ -392,7 +391,7 @@ export default function JimsqlPage() {
               className="nav-link"
               style={{ color: '#FF8C42' }}
             >
-              在 GitHub 上 Star / Fork →
+              {pageLabels.common.starFork}
             </a>
           </div>
         </div>

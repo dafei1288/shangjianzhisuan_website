@@ -1,12 +1,13 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import AmberCascades from './AmberCascades';
-import { siteConfig, capabilityDetailConfig } from '../config';
-
-const SLUGS = Object.keys(capabilityDetailConfig.capabilities);
+import { useConfigs, useLang } from '../i18n';
 
 export default function CapabilityDetail() {
+  const { siteConfig, capabilityDetailConfig, pageLabels } = useConfigs();
+  const { withLang } = useLang();
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const SLUGS = Object.keys(capabilityDetailConfig.capabilities);
   const data = slug ? capabilityDetailConfig.capabilities[slug] : null;
 
   if (!data) {
@@ -48,13 +49,13 @@ export default function CapabilityDetail() {
       >
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="text-white no-underline flex items-center"
           style={{ gap: 12 }}
         >
           <img
             src="/images/logo.png"
-            alt="熵减智算 Logo"
+            alt={pageLabels.nav.logoAlt}
             style={{ width: 34, height: 'auto', display: 'block' }}
           />
           <span
@@ -71,7 +72,7 @@ export default function CapabilityDetail() {
         {capabilityDetailConfig.backLinkText && (
           <a
             href="/"
-            onClick={(e) => { e.preventDefault(); navigate('/'); }}
+            onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
             className="nav-link"
           >
             {capabilityDetailConfig.backLinkText}

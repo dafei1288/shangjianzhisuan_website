@@ -19,6 +19,8 @@ export const siteConfig: SiteConfig = {
 export interface NavLink {
   label: string;
   href: string;
+  /** 菜单下拉项的简短说明 */
+  description?: string;
   children?: NavLink[];
 }
 
@@ -36,21 +38,198 @@ export const navigationConfig: NavigationConfig = {
       label: "开源项目",
       href: "#",
       children: [
-        { label: "JimSql", href: "/jimsql" },
-        { label: "JimLang", href: "/jimlang" },
-        { label: "JimClaw", href: "/jimclaw" },
+        { label: "JimSql", href: "/jimsql", description: "文本数据库" },
+        { label: "JimLang", href: "/jimlang", description: "编程语言" },
+        { label: "JimClaw", href: "/jimclaw", description: "自主编程智能体" },
+        { label: "Jimmy_Med", href: "/jimmymed", description: "中文医疗大模型" },
+      ],
+    },
+    {
+      label: "智能体",
+      href: "#",
+      children: [
+        { label: "pi-agent-hud", href: "/pi-agent-hud", description: "终端 HUD 状态栏" },
+        { label: "dsh-hud", href: "/dsh-hud", description: "网页 HUD 状态栏" },
       ],
     },
     {
       label: "商业案例",
       href: "#",
       children: [
-        { label: "天鹭影视工作台", href: "/tianlu/tianlu-poster-guofeng.html" },
+        { label: "天鹭影视工作台", href: "/tianlu/index.html" },
+        { label: "天鹭试衣间", href: "/ootd/index.html" },
       ],
     },
+    { label: "自媒体", href: "/media" },
     { label: "联系我们", href: "#footer" },
   ],
   ctaText: "预约咨询",
+};
+
+// ============================================================
+// Page labels（散落在各页面 TSX 里的文案，供中英文切换）
+// ============================================================
+
+export interface PageLabels {
+  nav: { logoAlt: string; backHome: string; openMenu: string; closeMenu: string };
+  common: {
+    githubRepo: string;
+    starFork: string;
+    backToIndex: string;
+    viewOnHuggingFace: string;
+    featuresLabel: string;
+    quickstartLabel: string;
+    moreLabel: string;
+  };
+  jimsql: {
+    sql: string;
+    sqlWhere: string;
+    sqlAggregate: string;
+    aiNative: string;
+    aiNativeTitle: string;
+    aiNativeDesc: string;
+  };
+  jimlang: {
+    features: string;
+    tour: string;
+    tourJson: string;
+    tourWeb: string;
+    interop: string;
+    interopTitle: string;
+    interopDesc: string;
+  };
+  jimclaw: {
+    team: string;
+    workflow: string;
+    workflowTitle: string;
+    workflowDesc: string;
+    techStack: string;
+    quickstart: string;
+  };
+  jimmymed: {
+    qa: string;
+    qaTitle: string;
+    qaDesc: string;
+    disclaimerTitle: string;
+  };
+  hud: { previewSection: string; piTitle: string; dshTitle: string };
+  steps: {
+    jimsql: string[];
+    jimlang: string[];
+    jimclaw: string[];
+    jimmymed: string[];
+    piAgentHud: string[];
+    dshHud: string[];
+  };
+  courses: {
+    sectionLabel: string;
+    badge: string;
+    title: string;
+    intro1: string;
+    intro2: string;
+    viewCourse: string;
+    githubCta: string;
+  };
+  media: {
+    sectionLabel: string;
+    badge: string;
+    title: string;
+    intro1: string;
+    intro2: string;
+    accountsLabel: string;
+    allLabel: string;
+    viewWork: string;
+    followLabel: string;
+    emptyWorks: string;
+  };
+}
+
+export const pageLabels: PageLabels = {
+  nav: {
+    logoAlt: "熵减智算 Logo",
+    backHome: "返回首页",
+    openMenu: "打开菜单",
+    closeMenu: "关闭菜单",
+  },
+  common: {
+    githubRepo: "GitHub 仓库 →",
+    starFork: "在 GitHub 上 Star / Fork →",
+    backToIndex: "← 返回熵减智算首页",
+    viewOnHuggingFace: "在 Hugging Face 上查看模型 →",
+    featuresLabel: "核心特性",
+    quickstartLabel: "五分钟跑起来",
+    moreLabel: "详情 →",
+  },
+  jimsql: {
+    sql: "SQL 能力",
+    sqlWhere:
+      "WHERE 过滤：AND / OR / NOT、括号、比较运算、LIKE、IN、IS NULL，列名大小写不敏感。",
+    sqlAggregate: "聚合分析：COUNT / SUM / AVG / MIN / MAX，配合 GROUP BY 与 HAVING。",
+    aiNative: "AI 原生",
+    aiNativeTitle: "在 SQL 里直接调用大模型",
+    aiNativeDesc:
+      "内置函数 ask_llm(prompt[, overrides]) 由 llm.csv 配置驱动，支持 openai / openai_compatible / openai_response / ollama 四种提供方；设置 JIMSQL_LLM_DRYRUN=true 可空跑调试，日志自动掩码 api_key。同时提供 MCP（stdio）集成，让智能体直接把 JimSql 当工具调用。",
+  },
+  jimlang: {
+    features: "语言特性",
+    tour: "语言速览",
+    tourJson: "JSON / YAML 与文件读写，数据处理开箱即用。",
+    tourWeb: "一行启动 Web 服务器，路由与响应助手内置。",
+    interop: "与 Java 互通",
+    interopTitle: "函数即值，上下文即桥梁",
+    interopDesc:
+      "内置函数与普通函数一样可以被赋值和调用；通过 JimLangShell.eval(script, name, ctx) 注入 Map 上下文，标识符键自动成为脚本全局变量，特殊键用 ctx[\"user-id\"] 访问——让 JimLang 既能做嵌入脚本，也能做规则引擎。",
+  },
+  jimclaw: {
+    team: "拟人化团队",
+    workflow: "工作流",
+    workflowTitle: "编写 → 运行 → 修复，直到部署",
+    workflowDesc:
+      "QA 路由规则：通过则 deploy；重试超限则 post_mortem 复盘；重试 ≥ 2 且未仲裁则触发 architect_mediation；其余回到 coder 继续重试。每一步都有结构化纪要与审计事件，可回放、可溯源。",
+    techStack: "技术栈",
+    quickstart: "快速开始",
+  },
+  jimmymed: {
+    qa: "医疗问答",
+    qaTitle: "面向中文临床场景的对话能力",
+    qaDesc:
+      "模型遵循 Human / Assistant 对话格式：输入症状与主诉，即可获得辅助检查建议、鉴别诊断思路与处理方向。以下为模型卡片中的示例提问，可在 Hugging Face 页面直接体验 Inference Widget。",
+    disclaimerTitle: "免责声明 · Disclaimer",
+  },
+  hud: {
+    previewSection: "显示效果",
+    piTitle: "终端底部的实时仪表盘",
+    dshTitle: "输入框下方的两行会话仪表",
+  },
+  steps: {
+    jimsql: ["① Docker 启动服务端", "② 引入 JDBC 驱动", "③ 像普通数据库一样查询"],
+    jimlang: ["① 引入依赖", "② 用 Shell 执行脚本", "③ 或走 JSR-223 引擎", "④ 命令行与 REPL"],
+    jimclaw: ["① 配置环境", "② 运行任务", "③ 模型与重试配置"],
+    jimmymed: ["① 安装依赖", "② 加载模型并推理"],
+    piAgentHud: ["① 安装扩展", "② 配置元素与布局", "③ 编写自定义插件"],
+    dshHud: ["① 构建插件", "② 安装到 profile", "③ 自定义费用单价"],
+  },
+  courses: {
+    sectionLabel: "Courses · 全部课程",
+    badge: "硬核课程",
+    title: "从零构建，不依赖黑盒。",
+    intro1: "{n} 门实战课程，覆盖 AI Agent、底层系统、大模型、性能工程与商业实战。",
+    intro2: "每门课程都有自己的世界与配色——点击进入对应的独立站点。",
+    viewCourse: "查看课程详情 →",
+    githubCta: "在 GitHub 上查看课程仓库 →",
+  },
+  media: {
+    sectionLabel: "Works · 时间线",
+    badge: "自媒体",
+    title: "麒思妙想 · 全平台作品",
+    intro1: "同一个创作宇宙，在多个平台同步生长。已收录 {n} 条公开发表的作品，",
+    intro2: "按时间倒序串联——抖音、B站、视频号、公众号。",
+    accountsLabel: "Accounts · 全平台账号",
+    allLabel: "全部",
+    viewWork: "查看作品 →",
+    followLabel: "关注 →",
+    emptyWorks: "该平台暂未收录作品",
+  },
 };
 
 // ============================================================
@@ -95,28 +274,28 @@ export const capabilitiesConfig: CapabilitiesConfig = {
       slug: "distributed-architecture",
       description:
         "高并发、高可用、可弹性伸缩的系统架构。从单体拆分到异地多活，让系统在规模增长中保持稳定与清晰。",
-      image: "/images/capability-1.png",
+      image: "/images/capability-1.webp",
     },
     {
       title: "Agentic 智能体",
       slug: "agentic-systems",
       description:
         "多智能体编排、工具调用与长任务执行。让 AI 不止于对话，而是真正驱动业务流程自动运转。",
-      image: "/images/capability-2.png",
+      image: "/images/capability-2.webp",
     },
     {
       title: "商业智能 BI",
       slug: "business-intelligence",
       description:
         "指标体系、实时数仓与决策驾驶舱。把分散的数据沉淀为可计算、可追溯、可行动的商业资产。",
-      image: "/images/capability-3.png",
+      image: "/images/capability-3.webp",
     },
     {
       title: "技术治理顾问",
       slug: "tech-advisory",
       description:
         "架构评审、性能调优与降本增效。以 CTO 级视角为团队提供关键决策支持与长期演进路线。",
-      image: "/images/capability-4.png",
+      image: "/images/capability-4.webp",
     },
   ],
 };
@@ -653,6 +832,305 @@ npx ts-node src/index.ts "你的任务需求"`,
 };
 
 // ============================================================
+// Jimmy_Med (open-source medical model page)
+// ============================================================
+
+export interface JimmymedFeature {
+  title: string;
+  description: string;
+}
+
+export interface JimmymedConfig {
+  sectionLabel: string;
+  title: string;
+  tagline: string;
+  intro: string;
+  huggingfaceUrl: string;
+  modelscopeUrl: string;
+  badges: string[];
+  features: JimmymedFeature[];
+  quickstart: {
+    install: string;
+    python: string;
+  };
+  examples: string[];
+  disclaimer: string;
+}
+
+export const jimmymedConfig: JimmymedConfig = {
+  sectionLabel: "开源项目 · Open Source",
+  title: "Jimmy_Med",
+  tagline: "基于 BLOOM 指令微调的中文医疗大模型。",
+  intro:
+    "Jimmy_Med 在 Langboat/bloom-800m-zh 底模上进行指令微调，并采用本草（原名华驼 HuaTuo）中文医疗数据集训练，显著提升模型在医疗领域的问答效果：辅助检查、诊断建议、用药咨询等中文医疗场景开箱即用。约 7.5 亿参数、BF16 精度，消费级显卡即可部署推理。",
+  huggingfaceUrl: "https://huggingface.co/dafei1288/Jimmy_Med",
+  modelscopeUrl: "https://modelscope.cn/models/dafei1288/Jimmy_Med",
+  badges: ["BLOOM-800M", "PyTorch", "Transformers", "Safetensors", "Apache-2.0", "中文医疗"],
+  features: [
+    {
+      title: "中文医疗问答",
+      description: "面向辅助检查、鉴别诊断、用药咨询等中文医疗场景优化，问答效果相较底模显著提升。",
+    },
+    {
+      title: "指令微调",
+      description: "在 bloom-800m-zh 基础模型上进行指令微调（Instruction Tuning），学会遵循 Human/Assistant 对话格式。",
+    },
+    {
+      title: "本草 HuaTuo 数据集",
+      description: "基于本草（原名华驼 HuaTuo）中文医疗知识训练数据，覆盖临床问答与医学文献知识。",
+    },
+    {
+      title: "轻量易部署",
+      description: "约 7.5 亿参数、BF16 精度（safetensors 分发），消费级显卡即可加载推理。",
+    },
+    {
+      title: "双平台发布",
+      description: "Hugging Face 与 ModelScope 同步发布：dafei1288/Jimmy_Med，国内外都能秒拉模型。",
+    },
+    {
+      title: "Transformers 原生支持",
+      description: "AutoModelForCausalLM + AutoTokenizer 直接加载，也兼容 text-generation-inference。",
+    },
+  ],
+  quickstart: {
+    install: `pip install -U transformers torch`,
+    python: `from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
+import torch
+
+tokenizer = AutoTokenizer.from_pretrained("dafei1288/Jimmy_Med")
+model = AutoModelForCausalLM.from_pretrained(
+    "dafei1288/Jimmy_Med",
+    low_cpu_mem_usage=True,
+    torch_dtype=torch.half,
+    device_map="cuda")
+
+pipe = pipeline("text-generation", model=model,
+                tokenizer=tokenizer, truncation=True)
+
+ipt = "Human: {}\n{}".format(
+    "关节部位红肿疼痛，排尿困难，怎么办？", "").strip() \
+      + "\n\nAssistant: "
+
+print(pipe(ipt, max_length=400, do_sample=True))`,
+  },
+  examples: [
+    "弥漫性血管内凝血、充血性心力衰竭等并发症，应该怎样进行辅助检查和诊断？",
+    "关节部位红肿疼痛，排尿困难，怎么办？",
+    "患者夜间阵发性呼吸困难，伴双下肢水肿，需要考虑哪些鉴别诊断？",
+  ],
+  disclaimer:
+    "本项目相关资源仅供学术研究之用，严禁用于商业用途。模型生成的内容受模型计算、随机性和量化精度损失等因素影响，无法保证准确性；训练数据绝大部分由模型生成，即使符合某些医学事实，也不能被用作实际医学诊断的依据。",
+};
+
+// ============================================================
+// pi-agent-hud (agent menu page)
+// ============================================================
+
+export interface HudFeature {
+  title: string;
+  description: string;
+}
+
+export interface PiAgentHudConfig {
+  sectionLabel: string;
+  title: string;
+  tagline: string;
+  intro: string;
+  githubUrl: string;
+  badges: string[];
+  features: HudFeature[];
+  hudPreview: string;
+  previewNotes: { label: string; text: string }[];
+  quickstart: {
+    install: string;
+    config: string;
+    plugin: string;
+  };
+}
+
+export const piAgentHudConfig: PiAgentHudConfig = {
+  sectionLabel: "智能体 · Agent Tools",
+  title: "pi-agent-hud",
+  tagline: "pi 编码智能体的终端 HUD：模型、上下文、令牌、费用、工具调用，一屏尽览。",
+  intro:
+    "pi-agent-hud 是 pi-coding-agent 的状态栏扩展，在终端底部实时渲染三行会话信息：从模型、Git 分支、上下文占用到工具调用统计与正在运行的 Agent；支持 Ctrl+H 历史与执行计划浮层、气泡编辑器、网格布局与插件系统，灵感来自 claude-hud。",
+  githubUrl: "https://github.com/dafei1288/pi-agent-hud",
+  badges: ["TypeScript", "pi 扩展", "HUD", "网格布局", "插件系统", "MIT"],
+  features: [
+    {
+      title: "三行实时状态栏",
+      description: "第一行：模型 / 项目 / Git 分支 / thinking 档位 + 上下文进度条 + 会话时长；第二行：配置文件 / skills / 扩展工具 / 令牌 / 费用 / 工具统计；第三行：最近输入。",
+    },
+    {
+      title: "上下文与额度监控",
+      description: "上下文进度条 70% 变黄、90% 变红；Coding Plan 5 小时 / 周窗口用量与重置倒计时；按量付费 API 每 5 分钟轮询账户余额。",
+    },
+    {
+      title: "Ctrl+H 浮层",
+      description: "统一浮层内 Tab 切换历史记录与执行计划：输入回填、分类统计、工具调用时间线（✓完成 / ◐运行中）与 Turn log。",
+    },
+    {
+      title: "多 Provider 额度适配",
+      description: "Claude OAuth / Codex OAuth 从响应头解析配额；GLM、MiniMax、Kimi Coding Plan 轮询查询；DeepSeek 显示余额，切换 provider 自动清除。",
+    },
+    {
+      title: "网格布局",
+      description: "layout: [1,2,2] 定义每行列数，最多 5 行 20 格；placement 把任意元素钉到指定行列，内置 2 列分栏与 5 行仪表盘示例。",
+    },
+    {
+      title: "插件系统",
+      description: "放一个 .js 到 pi-agent-hud-plugins/ 即可向任意行注入内容：render(ctx, theme, width) 一个函数搞定，可复用全部 HUD 数据。",
+    },
+  ],
+  hudPreview: `[claude-sonnet-4-6] pi-agent-hud git:(main) · medium    [████████░░░░░░░░░░░░] 39%    ⏱ 21m
+AGENTS.md · skills x5 · ext.tools x2 · 📋 12t 🔍📖✎ · ✓ Grep ×10 · ✓ Bash ×3 · ◐ Edit (12s) · ◐ agent (2m 15s)
+▸ how to build a REST API with authentication?  Ctrl+H:5`,
+  previewNotes: [
+    { label: "Line 1", text: "模型 / 项目 / 分支 / thinking 档位 / 上下文进度条 / 会话时长" },
+    { label: "Line 2", text: "配置文件 / skills / 扩展工具 / 令牌明细 / 工具统计 / 运行中任务" },
+    { label: "Line 3", text: "最近输入 + Ctrl+H 历史数量提示" },
+    { label: "进度条配色", text: "0–70% 绿 / 70–90% 黄 / 90%+ 红" },
+  ],
+  quickstart: {
+    install: `# 安装扩展
+pi install npm:pi-agent-hud
+
+# 或临时加载试用
+pi -e npm:pi-agent-hud
+
+# 验证安装
+pi list
+# 重启 pi 或在会话中输入 /reload 即可激活`,
+    config: `// .pi/pi-agent-hud.json（项目级）
+// 或 ~/.pi/agent/pi-agent-hud.json（全局）
+{
+  // Token 显示模式："always" 始终 | "highContext" 仅高占用时
+  "tokenMode": "always",
+  "tokenThreshold": 85,
+
+  // 显示/隐藏元素
+  "disabled": ["extCmds"],
+
+  // 输入框组件："default" 默认 | "bubble" 气泡编辑器
+  // 运行时可用 /bubble 命令切换
+  "editor": "bubble",
+
+  // 网格布局：每行列数数组，最多 5 行，每行 1/2/4 列
+  "layout": [1, 2, 2],
+  "placement": {
+    "tokens":    { "line": 1, "col": 0 },
+    "toolStats": { "line": 1, "col": 1 }
+  }
+}`,
+    plugin: `// ~/.pi/agent/pi-agent-hud-plugins/my-plugin.js
+// 项目级：.pi/pi-agent-hud-plugins/my-plugin.js
+module.exports = {
+  name: "my-plugin",   // 唯一名称
+  target: "line2",     // line1 ~ line5
+  order: 100,          // 排序，越小越靠前
+  col: 0,              // 可选：网格模式下指定列号
+
+  render(ctx, theme, width) {
+    // ctx: 包含所有 HUD 数据
+    // theme.fg(color, text): text|dim|accent|success|warning|error
+    return theme.fg("dim", ` + "`🔁 ${ctx.inputHistory.length} turns`" + `);
+  },
+};`,
+  },
+};
+
+// ============================================================
+// dsh-hud (agent menu page)
+// ============================================================
+
+export interface DshHudConfig {
+  sectionLabel: string;
+  title: string;
+  tagline: string;
+  intro: string;
+  githubUrl: string;
+  badges: string[];
+  features: HudFeature[];
+  hudPreview: string;
+  previewNotes: { label: string; text: string }[];
+  quickstart: {
+    build: string;
+    install: string;
+    pricing: string;
+  };
+}
+
+export const dshHudConfig: DshHudConfig = {
+  sectionLabel: "智能体 · Agent Tools",
+  title: "dsh-hud",
+  tagline: "DeepSeek Harness（DSH）的 Web GUI HUD 状态栏插件。",
+  intro:
+    "dsh-hud 在 DeepSeek Harness Web GUI 的输入框下方常驻显示当前会话实时信息，复刻 pi-agent-hud 的终端体验：状态呼吸圆点、上下文占用进度条、令牌与缓存命中、LLM / 工具耗时、估算费用与上一次会话，两行尽览。作为 Cordis 客户端插件，注入即挂载、塌缩即卸载。",
+  githubUrl: "https://github.com/dafei1288/dsh-hud",
+  badges: ["TypeScript", "Cordis 插件", "Web GUI", "DeepSeek Harness", "pnpm", "MIT"],
+  features: [
+    {
+      title: "两行实时信息栏",
+      description: "第一行：状态（空闲 / 思考中 / 输出中，彩色呼吸圆点）· 上下文进度条 · 令牌与缓存命中率 · 轮次步骤 · LLM / 工具耗时与平均 TTFT；第二行：模型 · 工作目录 · 用量分桶 · 费用 · 上一次会话。",
+    },
+    {
+      title: "全日志持久投影",
+      description: "sessionStats / tokenUsage / contextPressure 由 Host 从全日志计算，翻页与压缩（compaction）都不会改变数字，历史统计始终可信。",
+    },
+    {
+      title: "费用估算",
+      description: "按单价 × 令牌量估算，单价表在 src/client/pricing.ts 可编辑（默认人民币 / 每百万 token）；模型名取自目录，费用按实际模型计价。",
+    },
+    {
+      title: "Cordis 客户端插件",
+      description: "package.json 的 dsh.client 清单 + exports[\"./client\"]，modules 节点半边扫进 window.__DSH_BOOT__，浏览器半边经 ctx.slots.register 挂载。",
+    },
+    {
+      title: "槽位挂载",
+      description: "ctx.slots.inject('conversation.composer.dock') 等待槽位声明后再注册，槽位塌缩时随之卸载，不侵入宿主 UI 结构。",
+    },
+    {
+      title: "零值级耦合",
+      description: "只消费框架标准套件（useSession / useSessions / useProjection）、可选服务与类型级导入，无任何 @deepseek-ai 值级跨包依赖。",
+    },
+  ],
+  hudPreview: `● 输出中   [██████████░░░░░░] 62% 已用 98k/157k   ↑12.5k ↓3.2k 缓存 71%   8 轮 · 23 步   LLM 1m42s · 工具 3m10s · TTFT 0.8s   ⏱ 02:15
+deepseek-v3 · ~/work/project   输入 45.2k · 输出 12.8k   ¥0.42   上次会话: 修复登录超时 · 26 分钟前`,
+  previewNotes: [
+    { label: "第一行", text: "状态呼吸圆点 / 上下文进度条（≥75% 黄、≥90% 红）/ 令牌与缓存命中 / 轮次步骤 / 计时 / 回合用时" },
+    { label: "第二行", text: "模型 / 工作目录（悬停全路径）/ 用量分桶（悬停明细）/ 估算费用 / 上一次会话" },
+    { label: "数据源", text: "sessionStats / tokenUsage / contextPressure 全日志持久投影" },
+  ],
+  quickstart: {
+    build: `# 构建
+pnpm install
+pnpm build      # 产出 lib/index.js（host 半）与 lib/client.js（浏览器半）
+pnpm typecheck  # 可选：类型检查`,
+    install: `# 从本地仓库（开发）：
+dsh plugin --profile web add link:$(pwd)
+
+# 发布到 npm 后：
+dsh plugin --profile web add dsh-hud
+
+# 安装后重启 dsh web 生效`,
+    pricing: `// src/client/pricing.ts —— 单价表可编辑
+// 单位：每百万 token（默认人民币）
+
+'deepseek-chat'  / 'deepseek-v3':
+  输入 ¥2 · 缓存读 ¥0.5 · 输出 ¥8
+
+'deepseek-reasoner' / 'deepseek-r1':
+  输入 ¥4 · 缓存读 ¥1 · 输出 ¥16
+
+'deepseek-v4':
+  占位价，请按实际部署单价修改
+
+未知模型 → 回退 deepseek-chat 单价
+// 改完 pnpm build 即可生效`,
+  },
+};
+
+// ============================================================
 // Footer
 // ============================================================
 
@@ -793,11 +1271,31 @@ export const coursesConfig: CourseItem[] = [
     accent: "#84cc16",
     href: "/courses/15_ai_infra_perf/index.html",
   },
+  {
+    num: "15",
+    title: "6 天 AI 工作台实战营",
+    tag: "AI 工具 · 零基础 · 训练营",
+    desc: "D0 准备日 + 6 天实战，无需编程基础：建第二大脑、解放生产力、打通通路，结营带走 6 个真实交付物，点亮你的个人 AI 工作台。",
+    techs: ["Obsidian", "ChatGPT/Claude", "NotebookLM", "飞书文档"],
+    accent: "#f59e0b",
+    href: "/courses/16_ai_workbench_camp/index.html",
+  },
 ];
+
+export interface FooterQr {
+  img: string;
+  label: string;
+  /** 账号名（如 dafei1288 / 麒思妙想） */
+  handle: string;
+  /** 可跳转的主页链接（无则纯展示） */
+  href?: string;
+}
 
 export interface FooterLinkColumn {
   title: string;
   links: (string | FooterBottomLink)[];
+  /** 联系列的扫码条目（图片由 scripts/gen-qrcodes.mjs 生成） */
+  qrs?: FooterQr[];
 }
 
 export interface FooterBottomLink {
@@ -834,6 +1332,17 @@ export const footerConfig: FooterConfig = {
         { label: "JimLang · GitHub", href: "https://github.com/dafei1288/jimlang" },
         { label: "JimClaw 官方页", href: "/jimclaw" },
         { label: "JimClaw · GitHub", href: "https://github.com/dafei1288/jimclaw" },
+        { label: "Jimmy_Med 官方页", href: "/jimmymed" },
+        { label: "Jimmy_Med · Hugging Face", href: "https://huggingface.co/dafei1288/Jimmy_Med" },
+      ],
+    },
+    {
+      title: "智能体",
+      links: [
+        { label: "pi-agent-hud 官方页", href: "/pi-agent-hud" },
+        { label: "pi-agent-hud · GitHub", href: "https://github.com/dafei1288/pi-agent-hud" },
+        { label: "dsh-hud 官方页", href: "/dsh-hud" },
+        { label: "dsh-hud · GitHub", href: "https://github.com/dafei1288/dsh-hud" },
       ],
     },
     {
@@ -841,10 +1350,13 @@ export const footerConfig: FooterConfig = {
       links: [
         "dafei1288@sina.com",
         "天津 · 远程协作",
-        "公众号：麒思妙想",
         { label: "GitHub：dafei1288", href: "https://github.com/dafei1288/" },
-        "微信：dafei1288",
-        "抖音：dafei1288",
+      ],
+      qrs: [
+        { img: "/images/qr-douyin.webp", label: "抖音", handle: "dafei1288", href: "https://www.douyin.com/user/MS4wLjABAAAAicf9buNURf-0zllaKoBg0yStnz3x_VpVGMSZxQxtaOtfEkZQjbiXWUuXZbCNlgju" },
+        { img: "/images/qr-bilibili.webp", label: "B站", handle: "麒思妙想", href: "https://space.bilibili.com/153448131" },
+        { img: "/images/qr-gongzhonghao.webp", label: "公众号", handle: "麒思妙想" },
+        { img: "/images/qr-wechat.webp", label: "微信", handle: "dafei1288" },
       ],
     },
   ],

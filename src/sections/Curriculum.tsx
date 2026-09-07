@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import Parallax from '../components/Parallax';
-import { capabilitiesConfig } from '../config';
+import { useConfigs, useLang } from '../i18n';
 
 export default function Curriculum() {
+  const { capabilitiesConfig } = useConfigs();
+  const { withLang } = useLang();
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -92,7 +94,7 @@ export default function Curriculum() {
               ref={(el) => { itemRefs.current[i] = el; }}
               className="flex flex-col md:flex-row md:items-start"
               style={{ gap: '40px', cursor: 'pointer' }}
-              onClick={() => navigate(`/capability/${discipline.slug}`)}
+              onClick={() => navigate(withLang(`/capability/${discipline.slug}`))}
               onMouseEnter={() => setHoveredIndex(i)}
               onMouseLeave={() => setHoveredIndex(null)}
             >

@@ -1,0 +1,47 @@
+# 熵减智算 Entropy-Reduced Computing
+# 面向 AI 爬虫的站点摘要（llms.txt 规范：https://llmstxt.org/）
+# %SITE_URL% / %BUILD_DATE% 由 vite 插件在构建时替换
+
+> 熵减智算（Entropy-Reduced Computing）是一家 AI 原生技术工作室，聚焦分布式架构、Agentic 智能体、商业智能 BI 与技术治理顾问，同时开源多个项目并开设系统实战课程。
+
+## 核心能力
+- [分布式架构设计](%SITE_URL%/capability/distributed-architecture)：高并发、高可用、可弹性伸缩的系统架构，从单体拆分到异地多活。
+- [Agentic 智能体](%SITE_URL%/capability/agentic-systems)：多智能体编排、工具调用与长任务执行，让 AI 驱动业务流程自动运转。
+- [商业智能 BI](%SITE_URL%/capability/business-intelligence)：指标体系、实时数仓与决策驾驶舱。
+- [技术治理顾问](%SITE_URL%/capability/tech-advisory)：CTO 级架构评审、性能调优与降本增效。
+
+## 开源项目
+- [JimSql](%SITE_URL%/jimsql) — 用 Java 实现的文件系统文本数据库（CSV 即数据表，内置 ask_llm 与 MCP 集成）。https://github.com/dafei1288/jimsql
+- [JimLang](%SITE_URL%/jimlang) — 基于 JVM 的编程语言（JSR-223 引擎、REPL/CLI、Java 双向互通）。https://github.com/dafei1288/jimlang
+- [JimClaw](%SITE_URL%/jimclaw) — 自主编程智能体开发系统（角色团队 + Sisyphus 闭环 + 架构师仲裁）。https://github.com/dafei1288/jimclaw
+- [Jimmy_Med](%SITE_URL%/jimmymed) — 中文医疗大模型（BLOOM-800M 指令微调，本草 HuaTuo 数据集训练）。
+- [pi-agent-hud](%SITE_URL%/pi-agent-hud) — pi 编码智能体终端 HUD 状态栏。https://github.com/dafei1288/pi-agent-hud
+- [dsh-hud](%SITE_URL%/dsh-hud) — DeepSeek Harness 网页 HUD 状态栏插件。https://github.com/dafei1288/dsh-hud
+
+## 课程（15 门实战课程）
+- [Jim Agent From Scratch](%SITE_URL%/courses/01_ai_coding_agent/) — 25 章实战课程
+- [Codex CLI 实战课程](%SITE_URL%/courses/02_ai_codex_cli/) — 让 AI 住进你的终端
+- [AI 辅助量化交易实战](%SITE_URL%/courses/03_business_quant_trading/)
+- [OPC 实战课 — 用 AI Agent 打造一人公司](%SITE_URL%/courses/04_business_opc/)
+- [从零写数据库 JimSQL](%SITE_URL%/courses/05_cs_database/) — 30 章实战
+- [从零写编程语言 JimLang](%SITE_URL%/courses/06_cs_lang/) — 30 章实战
+- [从 0 手写大语言模型 JimGPT](%SITE_URL%/courses/07_ai_llm/) — 40 章实战
+- [Claude Code Harness 深度解析](%SITE_URL%/courses/08_ai_claude_harness/) — 38 章
+- [零基础使用 AI 重构内容工作流](%SITE_URL%/courses/09_ai_content_workflow/)
+- [Claude Code 架构解析](%SITE_URL%/courses/10_ai_claude_harness_source/) — 30 章
+- [从 0 做 Java AI Agent](%SITE_URL%/courses/11_cs_java_agent/) — 30 章，3 大企业级项目
+- [奔向明天 — 少年 Codex 专题训练营](%SITE_URL%/courses/13_kid_ai_codex_for_kids/)
+- [Pi 智能体内核实战](%SITE_URL%/courses/14_ai_pi_agent/) — 30 章
+- [AI Infra 性能工程实战](%SITE_URL%/courses/15_ai_infra_perf/) — 28 章
+- [6 天 AI 工作台实战营](%SITE_URL%/courses/16_ai_workbench_camp/) — 无需编程，6 天搭建个人 AI 工作台
+
+## 商业案例
+- [天鹭 TIANLU — AI 短剧创作流水线](%SITE_URL%/tianlu/) — 剧本、分镜、关键帧、视频、配音、成片一条龙，面向 Agent 的开放 API
+- [Anime OOTD — 天鹭试衣间](%SITE_URL%/ootd/) — AI 动漫穿搭灵感站，五语言全球发行，AI 试衣间在线体验
+
+## 自媒体
+- [麒思妙想 · 全平台作品时间线](%SITE_URL%/media) — 抖音（dafei1288）、B站、视频号、公众号公开发表作品汇总，按日期倒序
+
+## 其他
+- 联系方式与项目动态请访问主页 %SITE_URL%/
+- 最后更新：%BUILD_DATE%

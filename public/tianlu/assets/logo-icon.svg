@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <!-- 飞白笔触：干墨边缘 -->
+    <filter id="drybrush" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.55 0.45" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- 圆相：一笔墨环，右上留白缺口 -->
+  <path d="M 192.4 47.6 A 88 88 0 1 0 206.8 82.4" fill="none"
+        stroke="#F4EEE1" stroke-width="7" stroke-linecap="round" filter="url(#drybrush)"/>
+
+  <!-- 飞鹭：环中一笔成形 -->
+  <g transform="translate(55,55) scale(0.6)" fill="none" stroke="#F4EEE1" stroke-linecap="round" filter="url(#drybrush)">
+    <!-- 近侧主翼：向右上扬起 -->
+    <path d="M98 138 C 108 96, 142 62, 198 46" stroke-width="14"/>
+    <!-- 主翼翼尖飞白分叉 -->
+    <path d="M170 60 C 182 53, 194 48, 202 46" stroke-width="5"/>
+    <!-- 远侧副翼：向左上扬起，墨色较淡 -->
+    <path d="M100 140 C 88 102, 66 78, 32 62" stroke-width="9"/>
+    <!-- 身体：一笔拖出 -->
+    <path d="M34 148 C 66 152, 112 142, 152 128" stroke-width="11"/>
+    <!-- 折叠的颈：柔和 S 形 -->
+    <path d="M150 128 C 164 124, 174 118, 178 106" stroke-width="7"/>
+    <!-- 头 -->
+    <circle cx="184" cy="101" r="6" fill="#F4EEE1" stroke="none"/>
+    <!-- 喙 -->
+    <path d="M188 100 C 197 96, 205 93, 214 91" stroke-width="3.2"/>
+    <!-- 长拖双腿 -->
+    <path d="M36 150 C 24 154, 14 158, 2 164" stroke-width="3.2"/>
+    <path d="M38 156 C 26 161, 16 166, 5 172" stroke-width="2.6"/>
+  </g>
+</svg>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6 天 AI 工作台实战营 — 给普通人的 AI 提效课</title>
+<meta name="description" content="无需编程，6 天搭建属于你的个人 AI 工作台：第二大脑 · 解放生产力 · 打通通路。结营带走 6 个真实交付物。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF6EF; --paper2:#F3EDE2; --white:#FFFFFF;
+  --ink:#1C1917; --ink2:#57534E; --ink3:#A8A29E;
+  --line:#E7DFD2; --line2:#DCD2BF;
+  --orange:#EA580C; --orange-soft:#FFF1E6; --orange-line:#F5C9A8;
+  --blue:#0284C7;  --blue-soft:#EAF5FC;  --blue-line:#B9DDF0;
+  --gold:#CA8A04;  --gold-soft:#FCF6E3;  --gold-line:#EBDDA4;
+  --green:#16A34A; --green-soft:#EBF7EF;
+  --r-lg:24px; --r-md:16px; --r-sm:10px;
+  --shadow:0 1px 2px rgba(28,25,23,.04),0 8px 24px rgba(28,25,23,.06);
+  --shadow-lg:0 2px 4px rgba(28,25,23,.05),0 20px 48px rgba(28,25,23,.1);
+  --font-d:'Fraunces','Noto Serif SC',Georgia,serif;
+  --font-b:'Inter','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  --font-m:'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--paper);color:var(--ink);line-height:1.7;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--orange);color:#fff}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+/* ---- reveal ---- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,.68,.32,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* ---- nav ---- */
+nav{position:sticky;top:0;z-index:50;background:rgba(250,246,239,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1120px;margin:0 auto;padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.02rem;letter-spacing:-.01em}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--orange);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(234,88,12,.3)}
+.nav-links{display:flex;gap:28px;font-size:.9rem;font-weight:500;color:var(--ink2)}
+.nav-links a{transition:color .2s}
+.nav-links a:hover{color:var(--orange)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:100px;font-weight:600;font-size:.95rem;cursor:pointer;transition:all .25s;border:1.5px solid transparent}
+.btn-solid{background:var(--ink);color:var(--paper)}
+.btn-solid:hover{background:var(--orange);transform:translateY(-2px);box-shadow:0 10px 24px rgba(234,88,12,.28)}
+.btn-ghost{background:var(--white);color:var(--ink);border-color:var(--line2)}
+.btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+.btn-sm{padding:9px 18px;font-size:.85rem}
+
+/* ---- hero ---- */
+.hero{padding:88px 0 72px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--orange-line);
+  color:var(--orange);font-size:.8rem;font-weight:600;padding:7px 16px;border-radius:100px;margin-bottom:26px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--orange)}
+h1{font-family:var(--font-d);font-size:clamp(2.6rem,5.4vw,4.1rem);font-weight:900;line-height:1.08;letter-spacing:-.02em;margin-bottom:22px}
+h1 .hl{color:var(--orange);font-style:italic}
+h1 .u{position:relative;white-space:nowrap}
+h1 .u::after{content:'';position:absolute;left:0;right:0;bottom:.08em;height:.32em;background:var(--gold-soft);border-bottom:3px solid var(--gold);z-index:-1;border-radius:2px}
+.hero-sub{font-size:1.08rem;color:var(--ink2);max-width:480px;margin-bottom:32px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px}
+.hero-stats{display:flex;gap:0;border-top:1px solid var(--line);padding-top:24px}
+.hstat{flex:1}
+.hstat+.hstat{border-left:1px solid var(--line);padding-left:24px}
+.hstat b{font-family:var(--font-d);font-size:2rem;font-weight:700;display:block;line-height:1.1}
+.hstat b i{font-style:normal;color:var(--orange)}
+.hstat span{font-size:.82rem;color:var(--ink3)}
+
+/* hero mock: workbench preview */
+.mock{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);overflow:hidden;transform:rotate(1.2deg)}
+.mock-bar{display:flex;align-items:center;gap:6px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--paper2)}
+.mock-bar i{width:10px;height:10px;border-radius:50%;background:var(--line2)}
+.mock-bar i:first-child{background:#F0856B}.mock-bar i:nth-child(2){background:#F2C14E}.mock-bar i:nth-child(3){background:#7FC98F}
+.mock-bar span{margin-left:10px;font-family:var(--font-m);font-size:.68rem;color:var(--ink3)}
+.mock-body{padding:18px;display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+.m-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--paper)}
+.m-card h6{font-size:.68rem;letter-spacing:.08em;color:var(--ink3);font-weight:600;margin-bottom:8px;text-transform:uppercase}
+.m-task{display:flex;align-items:center;gap:8px;font-size:.78rem;padding:5px 0;color:var(--ink2)}
+.m-task::before{content:'';width:12px;height:12px;border:1.5px solid var(--line2);border-radius:4px;flex:none}
+.m-task.done{color:var(--ink3);text-decoration:line-through}
+.m-task.done::before{background:var(--green);border-color:var(--green)}
+.m-agent{display:inline-block;font-size:.72rem;background:var(--orange-soft);border:1px solid var(--orange-line);color:var(--orange);border-radius:100px;padding:3px 10px;margin:0 6px 6px 0;font-weight:600}
+.m-flow{font-family:var(--font-m);font-size:.68rem;color:var(--blue);background:var(--blue-soft);border:1px solid var(--blue-line);border-radius:8px;padding:7px 10px;line-height:1.9}
+.m-tag{position:absolute;background:var(--ink);color:var(--paper);font-size:.75rem;font-weight:600;padding:8px 16px;border-radius:100px;box-shadow:var(--shadow-lg)}
+.mock-wrap{position:relative}
+.mock-wrap .m-tag{bottom:-18px;left:24px}
+
+/* ---- section base ---- */
+section{padding:84px 0}
+.sec-head{max-width:640px;margin-bottom:48px}
+.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+.kicker{display:inline-block;font-family:var(--font-m);font-size:.72rem;font-weight:700;letter-spacing:.14em;color:var(--orange);margin-bottom:14px;text-transform:uppercase}
+h2{font-family:var(--font-d);font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:700;letter-spacing:-.015em;line-height:1.2;margin-bottom:14px}
+.sec-head p{color:var(--ink2);font-size:1.02rem}
+
+/* ---- model: 3 steps ---- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative}
+.step{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px 28px;box-shadow:var(--shadow);position:relative;transition:all .3s}
+.step:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.step .no{font-family:var(--font-d);font-style:italic;font-size:.95rem;color:var(--orange);font-weight:700;margin-bottom:14px;display:block}
+.step .glyph{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.step:nth-child(1) .glyph{background:var(--blue-soft);color:var(--blue)}
+.step:nth-child(2) .glyph{background:var(--gold-soft);color:var(--gold)}
+.step:nth-child(3) .glyph{background:var(--orange-soft);color:var(--orange)}
+.step h3{font-size:1.25rem;font-weight:700;margin-bottom:4px}
+.step .en{font-family:var(--font-m);font-size:.72rem;color:var(--ink3);display:block;margin-bottom:12px}
+.step p{font-size:.92rem;color:var(--ink2)}
+.step .arrow{position:absolute;right:-19px;top:50%;transform:translateY(-50%);z-index:2;color:var(--line2);background:var(--paper);border-radius:50%;padding:2px}
+.result-band{margin-top:20px;background:var(--ink);color:var(--paper);border-radius:var(--r-lg);padding:28px 32px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.result-band .rb-ic{width:48px;height:48px;border-radius:12px;background:var(--orange);display:flex;align-items:center;justify-content:center;flex:none}
+.result-band b{font-family:var(--font-d);font-size:1.2rem;display:block;margin-bottom:2px}
+.result-band p{color:rgba(250,246,239,.7);font-size:.92rem}
+
+/* ---- timeline: 6 days ---- */
+.timeline{position:relative;padding-left:8px}
+.tl-item{display:grid;grid-template-columns:92px 1fr;gap:28px;padding:22px 0;border-top:1px solid var(--line);align-items:start}
+.tl-item:first-child{border-top:none}
+.tl-day{font-family:var(--font-d);font-style:italic;font-weight:700;font-size:1.5rem;color:var(--ink3)}
+.tl-item.live .tl-day{color:var(--orange)}
+.tl-body h4{font-size:1.12rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tl-body h4 .badge{font-family:var(--font-b);font-size:.68rem;font-weight:600;background:var(--green-soft);color:var(--green);border-radius:100px;padding:3px 10px;letter-spacing:.03em}
+.tl-body p{font-size:.92rem;color:var(--ink2);max-width:640px;margin-bottom:10px}
+.tl-meta{display:flex;gap:10px;flex-wrap:wrap}
+.tl-meta span{font-family:var(--font-m);font-size:.7rem;padding:4px 12px;border-radius:100px;border:1px solid var(--line2);color:var(--ink2);background:var(--white)}
+.tl-meta .mvp{border-color:var(--gold-line);background:var(--gold-soft);color:var(--gold)}
+
+/* ---- deliverables ---- */
+.deliv{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.d-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;box-shadow:var(--shadow);transition:all .3s}
+.d-card:hover{transform:translateY(-4px);border-color:var(--orange-line)}
+.d-card .d-day{font-family:var(--font-m);font-size:.7rem;font-weight:700;color:var(--orange);letter-spacing:.1em}
+.d-card h4{font-size:1.05rem;font-weight:700;margin:8px 0 8px}
+.d-card p{font-size:.88rem;color:var(--ink2)}
+.d-card.final{grid-column:span 3;background:var(--ink);color:var(--paper);border-color:var(--ink);display:flex;align-items:center;gap:24px;padding:28px}
+.d-card.final h4{font-size:1.3rem;font-family:var(--font-d)}
+.d-card.final p{color:rgba(250,246,239,.72);margin:0}
+.d-card.final .d-day{color:var(--gold)}
+
+/* ---- personas ---- */
+.personas{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.p-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;box-shadow:var(--shadow)}
+.p-card .p-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.p-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:700;font-size:1.1rem}
+.p-card:nth-child(1) .p-avatar{background:var(--blue-soft);color:var(--blue)}
+.p-card:nth-child(2) .p-avatar{background:var(--gold-soft);color:var(--gold)}
+.p-card:nth-child(3) .p-avatar{background:var(--orange-soft);color:var(--orange)}
+.p-card h4{font-size:1.05rem;font-weight:700}
+.p-card .p-role{font-size:.78rem;color:var(--ink3)}
+.p-card dl{font-size:.88rem}
+.p-card dt{font-weight:600;color:var(--ink);margin-top:10px}
+.p-card dd{color:var(--ink2);margin-top:2px}
+.nofit{margin-top:20px;background:var(--paper2);border:1px dashed var(--line2);border-radius:var(--r-md);padding:20px 24px;font-size:.9rem;color:var(--ink2)}
+.nofit b{color:var(--ink)}
+
+/* ---- faq ---- */
+.faq{max-width:760px;margin:0 auto}
+.faq details{background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);margin-bottom:12px;overflow:hidden;transition:border-color .2s}
+.faq details[open]{border-color:var(--orange-line)}
+.faq summary{cursor:pointer;padding:18px 22px;font-weight:600;font-size:.98rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font-family:var(--font-m);font-size:1.2rem;color:var(--orange);transition:transform .25s;flex:none}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq .a{padding:0 22px 18px;color:var(--ink2);font-size:.92rem}
+
+/* ---- final cta ---- */
+.final-cta{background:var(--ink);border-radius:32px;padding:72px 48px;text-align:center;color:var(--paper);position:relative;overflow:hidden}
+.final-cta::before{content:'';position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(234,88,12,.28),transparent 70%);top:-160px;right:-120px}
+.final-cta::after{content:'';position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(2,132,199,.2),transparent 70%);bottom:-140px;left:-100px}
+.final-cta h2{color:var(--paper)}
+.final-cta p{color:rgba(250,246,239,.7);max-width:520px;margin:0 auto 32px;position:relative}
+.final-cta .btn-solid{background:var(--orange);position:relative}
+.final-cta .btn-solid:hover{background:#F97316}
+.final-cta .note{display:block;margin-top:18px;font-size:.8rem;color:rgba(250,246,239,.5)}
+
+/* ---- footer ---- */
+footer{padding:40px 0;border-top:1px solid var(--line);margin-top:84px}
+.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:.85rem;color:var(--ink3)}
+.foot a{color:var(--ink2);margin-left:20px}
+.foot a:hover{color:var(--orange)}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .steps,.deliv,.personas{grid-template-columns:1fr}
+  .d-card.final{grid-column:span 1;flex-direction:column;align-items:flex-start}
+  .step .arrow{display:none}
+  .nav-links{display:none}
+  .hstat+.hstat{padding-left:16px}
+  .mock{transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="#" class="logo">
+      <span class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></span>
+      AI 工作台实战营
+    </a>
+    <div class="nav-links">
+      <a href="#model">心智模型</a>
+      <a href="#days">6 天安排</a>
+      <a href="#deliverables">交付物</a>
+      <a href="#fit">适合谁</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="docs/index.html" class="btn btn-solid btn-sm">开始学习</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>给普通人的 AI 提效训练营 · 无需编程</div>
+      <h1>6 天，给自己<br>造一个 <span class="hl">AI</span> <span class="u">工作台</span></h1>
+      <p class="hero-sub">结营带走的不是笔记，而是一个真实可运行的系统：你的资料、任务和 AI 助手，从此在一个台面上转起来。</p>
+      <div class="hero-cta">
+        <a href="docs/index.html" class="btn btn-solid">开始学习
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#days" class="btn btn-ghost">看看 6 天学什么</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><b>6<i>天</i></b><span>每天 2 小时</span></div>
+        <div class="hstat"><b>6</b><span>个结营交付物</span></div>
+        <div class="hstat"><b>0</b><span>编程门槛</span></div>
+        <div class="hstat"><b>¥0</b><span>工具全部免费</span></div>
+      </div>
+    </div>
+    <div class="mock-wrap reveal">
+      <div class="mock">
+        <div class="mock-bar"><i></i><i></i><i></i><span>workbench.home</span></div>
+        <div class="mock-body">
+          <div class="m-card">
+            <h6>今日任务</h6>
+            <div class="m-task done">写本周周报 → 周报工作流</div>
+            <div class="m-task">整理会议纪要 → 纪要整理官</div>
+            <div class="m-task">回复客户咨询 → 初复咨询师</div>
+          </div>
+          <div class="m-card">
+            <h6>我的助手</h6>
+            <span class="m-agent">纪要整理官</span>
+            <span class="m-agent">初复咨询师</span>
+            <span class="m-agent">数据快读官</span>
+          </div>
+          <div class="m-card" style="grid-column:span 2">
+            <h6>工作流 · 五站连线</h6>
+            <div class="m-flow">任务进站 → 资料调取 → AI 处理 → 人工验收 → 产出归档</div>
+          </div>
+        </div>
+      </div>
+      <div class="m-tag">🏆 这就是你第 6 天的结营成果</div>
+    </div>
+  </div>
+</header>
+
+<section id="model">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">01 · 心智模型</span>
+      <h2>三步，把工作台点亮</h2>
+      <p>不是收藏碎片技巧，而是一条完整的能力路径。每天一个交付物，6 天组装成一个系统。</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <span class="no">第一步</span>
+        <div class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a5 5 0 0 0-5 5c0 1.5.6 2.6 1.4 3.6.9 1 1.6 1.9 1.6 3.4h4c0-1.5.7-2.4 1.6-3.4C16.4 10.6 17 9.5 17 8a5 5 0 0 0-5-5Z"/><path d="M10 18h4M11 21h2"/></svg></div>
+        <h3>第二大脑</h3>
+        <span class="en">REMEMBER · 记得住</span>
+        <p>没有你的资料，AI 只是通用聊天框。先把经历、资料、经验存进知识库——存得下、找得到、AI 读得懂。</p>
+        <div class="arrow"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div>
+      </div>
+      <div class="step reveal">
+        <span class="no">第二步</span>
+        <div class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg></div>
+        <h3>解放生产力</h3>
+        <span class="en">PRODUCE · 干得快</span>
+        <p>高频 + 有套路 + 无创意 = 该交给 AI。写作走三步成型法，重复劳动固化成 SOP 提示词助手。</p>
+        <div class="arrow"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div>
+      </div>
+      <div class="step reveal">
+        <span class="no">第三步</span>
+        <div class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7.5 10.5 16M16 7.5 13.5 16M8.5 6h7"/></svg></div>
+        <h3>打通通路</h3>
+        <span class="en">FLOW · 转得起来</span>
+        <p>单点提效有天花板，断点在衔接。五站连线：任务进 → 资料取 → AI 处理 → 人工验 → 产出存。</p>
+      </div>
+    </div>
+    <div class="result-band reveal">
+      <div class="rb-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></div>
+      <div>
+        <b>最终成果：个人 AI 工作台 1.0</b>
+        <p>一个入口管所有：今日任务、快速入口、AI 助手、工作流、本周节奏。每天的工作从"想"变成"看"。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="days" style="background:var(--paper2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">02 · 课程安排</span>
+      <h2>6 天，每天 2 小时</h2>
+      <p>认知课 30 分钟 + 实战 60–90 分钟，用你当周的真实任务练手。每章设完整版与 MVP 保底版两档标准，做完保底即算过关。</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-day">D0</div>
+        <div class="tl-body">
+          <h4>开营准备清单</h4>
+          <p>装好 Obsidian、注册 AI 工具、记录 20 份资料的位置（只找不整理）、规划 6 天节奏。约 30 分钟，不计入正课。</p>
+          <div class="tl-meta"><span>环境就绪</span><span>随报随学 · 无直播</span></div>
+        </div>
+      </div>
+      <div class="tl-item live reveal">
+        <div class="tl-day">D1</div>
+        <div class="tl-body">
+          <h4>建脑 · 从零搭建第二大脑<span class="badge">🧠 模块一</span></h4>
+          <p>四层目录 + 命名公式，完成资料第一次搬家。验收：全局搜索 30 秒命中。</p>
+          <div class="tl-meta"><span>交付物：知识库骨架</span><span class="mvp">MVP：目录 + 5 份入库</span></div>
+        </div>
+      </div>
+      <div class="tl-item live reveal">
+        <div class="tl-day">D2</div>
+        <div class="tl-body">
+          <h4>入库 · 让 AI 真正认识你<span class="badge">🧠 模块一</span></h4>
+          <p>AI 辅助自我访谈，产出"AI 认识我"资料包三件套，挂载到 NotebookLM / Claude Projects。验收：AI 用你的口吻写自我介绍。</p>
+          <div class="tl-meta"><span>交付物：资料包三件套</span><span class="mvp">MVP：完成个人档案</span></div>
+        </div>
+      </div>
+      <div class="tl-item live reveal">
+        <div class="tl-day">D3</div>
+        <div class="tl-body">
+          <h4>对话力 · 写出能直接用的东西<span class="badge">⚡ 模块二</span></h4>
+          <p>三步成型法 + 提问公式 + 5 句迭代话术 + 验收清单。用本周真实的周报、邮件、方案练手。</p>
+          <div class="tl-meta"><span>交付物：写作模板包 3 套</span><span class="mvp">MVP：1 套达到"能直接发"</span></div>
+        </div>
+      </div>
+      <div class="tl-item live reveal">
+        <div class="tl-day">D4</div>
+        <div class="tl-body">
+          <h4>自动化 · 重复劳动交给 AI 助手<span class="badge">⚡ 模块二</span></h4>
+          <p>重复劳动识别公式 + 盘点 + 四步上线法。助手 = 存进知识库的 SOP 提示词，工具无关、永远属于你。</p>
+          <div class="tl-meta"><span>交付物：3 个 AI 助手</span><span class="mvp">MVP：上线 1 个并真用</span></div>
+        </div>
+      </div>
+      <div class="tl-item live reveal">
+        <div class="tl-day">D5</div>
+        <div class="tl-body">
+          <h4>连线 · 任务顺畅流转<span class="badge">🔗 模块三</span></h4>
+          <p>五站模型画流转图，一个真实任务全链路跑通，母版化成操作卡。人工验收与决策不外包。</p>
+          <div class="tl-meta"><span>交付物：工作流 1 条</span><span class="mvp">MVP：跑通 1 次</span></div>
+        </div>
+      </div>
+      <div class="tl-item live reveal">
+        <div class="tl-day">D6</div>
+        <div class="tl-body">
+          <h4>成台 · 组装你的 AI 工作台<span class="badge">🔗 模块三 · 结营日</span></h4>
+          <p>6 天交付物组装成工作台 1.0，建立晨晚双五分钟流程，启动 30 天打卡把系统固化成习惯。</p>
+          <div class="tl-meta"><span>交付物：🏆 工作台 1.0</span><span class="mvp">MVP：主页可用 + 完成 1 件真实工作</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="deliverables">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="kicker">03 · 结营交付物</span>
+      <h2>带走的不是笔记，是系统</h2>
+      <p>6 个交付物逐日累积，第 6 天由前 5 个组装点亮。</p>
+    </div>
+    <div class="deliv">
+      <div class="d-card reveal"><span class="d-day">DAY 1</span><h4>🗂️ 第二大脑骨架</h4><p>四层目录 + 首批资料入库，全局搜索 30 秒命中。</p></div>
+      <div class="d-card reveal"><span class="d-day">DAY 2</span><h4>📇 "AI 认识我"资料包</h4><p>个人档案 + 风格指南 + 常用背景，AI 第一次用你的口吻说话。</p></div>
+      <div class="d-card reveal"><span class="d-day">DAY 3</span><h4>✍️ 写作模板包</h4><p>周报 / 邮件 / 方案 3 套模板，达到"能直接发"标准。</p></div>
+      <div class="d-card reveal"><span class="d-day">DAY 4</span><h4>🤖 3 个 AI 助手</h4><p>工具无关的 SOP 提示词助手，存进知识库随时调用。</p></div>
+      <div class="d-card reveal"><span class="d-day">DAY 5</span><h4>🔄 个人工作流</h4><p>五站连线流转图 + 操作卡，真实任务全链路跑通。</p></div>
+      <div class="d-card reveal"><span class="d-day">DAY 6</span><h4>📅 30 天打卡表</h4><p>结营后固化习惯的工具，撑过第 2 周崩塌高发期。</p></div>
+      <div class="d-card final reveal">
+        <div class="rb-ic" style="width:56px;height:56px;flex:none"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M17 4H7v6a5 5 0 0 0 10 0V4Z"/><path d="M17 6h3a2 2 0 0 1-2 3M7 6H4a2 2 0 0 0 2 3"/></svg></div>
+        <div>
+          <span class="d-day">最终点亮</span>
+          <h4>个人 AI 工作台 1.0</h4>
+          <p>以上全部组装成你的总入口——打开一个页面，看到任务、资料、助手和产线。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fit" style="background:var(--paper2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">04 · 适合谁</span>
+      <h2>这门课为三种人而设计</h2>
+      <p>不需要编程基础。需要你每天投入 2 小时，并且愿意用真实任务练手。</p>
+    </div>
+    <div class="personas">
+      <div class="p-card reveal">
+        <div class="p-top"><div class="p-avatar">李</div><div><h4>小李 · 28 岁</h4><span class="p-role">互联网公司运营</span></div></div>
+        <dl>
+          <dt>痛点</dt><dd>每天 2–3 小时耗在周报、邮件、纪要上；AI 用过，产出没法直接用。</dd>
+          <dt>学完后</dt><dd>文字工作 30 分钟收工；工作台成为每天上班第一个打开的页面。</dd>
+        </dl>
+      </div>
+      <div class="p-card reveal">
+        <div class="p-top"><div class="p-avatar">王</div><div><h4>王姐 · 35 岁</h4><span class="p-role">自由顾问 / 咨询师</span></div></div>
+        <dl>
+          <dt>痛点</dt><dd>一个人干三个人的活；资料散落微信网盘，找东西靠记忆。</dd>
+          <dt>学完后</dt><dd>客户与素材全部入库；AI 助手接管咨询初复和资料整理。</dd>
+        </dl>
+      </div>
+      <div class="p-card reveal">
+        <div class="p-top"><div class="p-avatar">张</div><div><h4>老张 · 42 岁</h4><span class="p-role">贸易公司老板</span></div></div>
+        <dl>
+          <dt>痛点</dt><dd>经验都在"老人"脑子里，员工离职就带走。</dd>
+          <dt>学完后</dt><dd>公司有了第一版数字资产库；个人工作台成为团队模板。</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="nofit reveal">
+      <b>这门课不适合：</b>想学编程开发 AI 的（本课零代码）· 想要"全自动躺赚"的（本课坚持人工验收与决策不外包）· 只想看视频不愿动手的（每天都要产出交付物）。
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="kicker">05 · 常见疑虑</span>
+      <h2>报名前，你可能想问</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>我不懂技术，能学会吗？</summary><div class="a">全程零编程，会用电脑办公即可。每一步有图文教案 + 常见卡点 FAQ；Obsidian 装不上还有飞书文档替代路径，任何一章都不会被工具卡住。</div></details>
+      <details><summary>每天只有 1 小时怎么办？</summary><div class="a">每章设 MVP 保底版——忙碌学员的最低完成线，做完保底即算过关。6 天也不必连续，断了从断点续上即可。</div></details>
+      <details><summary>需要花钱买软件吗？</summary><div class="a">不需要。Obsidian、NotebookLM、AI 对话工具的免费额度，完成全部课程内容绰绰有余。</div></details>
+      <details><summary>和市面上的 AI 课有什么不同？</summary><div class="a">不教"提示词 100 招"式碎片技巧，而是以终为始：6 天组装出一个工作台系统。实战全部用你自己的真实任务——学完，活儿也干完了。</div></details>
+      <details><summary>6 天之后呢？</summary><div class="a">带走 30 天打卡表固化习惯；想深入一人公司商业落地可接课程 04，想深耕内容创作可接课程 09——你的工作台就是这两门课的载具。</div></details>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="final-cta reveal">
+      <h2>第二大脑、AI 助手、工作台<br>6 天后全部就位</h2>
+      <p>无需编程 · 每天 2 小时 · 用你自己的真实任务练手 · 结营带走 6 个交付物</p>
+      <a href="docs/index.html" class="btn btn-solid" style="font-size:1.05rem;padding:16px 36px">现在就开始 · 从 D0 准备清单出发
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <span class="note">图文教案 · 随报随学 · 无直播 · 全流程免费工具可行</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 6 天 AI 工作台实战营 · AI 出力，你拍板</span>
+    <span>
+      <a href="../../../index.html">所有课程</a>
+      <a href="docs/index.html">在线文档</a>
+      <a href="#model">心智模型</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

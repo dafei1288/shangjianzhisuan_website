@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import AmberCascades from './AmberCascades';
 import Parallax from '../components/Parallax';
 import Footer from './Footer';
-import { siteConfig, coursesConfig } from '../config';
+import { useConfigs, useLang } from '../i18n';
 
 function SectionHead({ label }: { label: string }) {
   return (
@@ -33,6 +33,8 @@ function SectionHead({ label }: { label: string }) {
 
 export default function CoursesPage() {
   const navigate = useNavigate();
+  const { siteConfig, coursesConfig, pageLabels } = useConfigs();
+  const { withLang } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const heroRef = useRef<HTMLDivElement | null>(null);
@@ -83,11 +85,11 @@ export default function CoursesPage() {
       >
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="text-white no-underline flex items-center"
           style={{ gap: 12 }}
         >
-          <img src="/images/logo.png" alt="熵减智算 Logo" style={{ width: 34, height: 'auto', display: 'block' }} />
+          <img src="/images/logo.png" alt={pageLabels.nav.logoAlt} style={{ width: 34, height: 'auto', display: 'block' }} />
           <span
             style={{
               fontFamily: "'GeistMono', 'PingFang SC', 'Microsoft YaHei', monospace",
@@ -101,10 +103,10 @@ export default function CoursesPage() {
         </a>
         <a
           href="/"
-          onClick={(e) => { e.preventDefault(); navigate('/'); }}
+          onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
           className="nav-link"
         >
-          返回首页
+          {pageLabels.nav.backHome}
         </a>
       </nav>
 
@@ -127,7 +129,7 @@ export default function CoursesPage() {
                     width: 'fit-content',
                   }}
                 >
-                  硬核课程
+                  {pageLabels.courses.badge}
                 </h1>
                 <p
                   style={{
@@ -141,7 +143,7 @@ export default function CoursesPage() {
                     textShadow: '0 2px 12px rgba(0,0,0,0.6), 0 0 40px rgba(0,180,216,0.1)',
                   }}
                 >
-                  从零构建，不依赖黑盒。
+                  {pageLabels.courses.title}
                 </p>
                 <p
                   style={{
@@ -154,8 +156,8 @@ export default function CoursesPage() {
                     maxWidth: 560,
                   }}
                 >
-                  {coursesConfig.length} 门实战课程，覆盖 AI Agent、底层系统、大模型、性能工程与商业实战。
-                  每门课程都有自己的世界与配色——点击进入对应的独立站点。
+                  {pageLabels.courses.intro1.replace('{n}', String(coursesConfig.length))}
+                  {pageLabels.courses.intro2}
                 </p>
               </div>
             </Parallax>
@@ -165,7 +167,7 @@ export default function CoursesPage() {
         {/* Course grid */}
         <section className="relative w-full" style={{ padding: '6vh 5vw 12vh' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <SectionHead label="Courses · 全部课程" />
+            <SectionHead label={pageLabels.courses.sectionLabel} />
             <div
               style={{
                 display: 'grid',
@@ -276,7 +278,7 @@ export default function CoursesPage() {
                       color: course.accent,
                     }}
                   >
-                    查看课程详情 →
+                    {pageLabels.courses.viewCourse}
                   </div>
                 </a>
               ))}
@@ -299,10 +301,10 @@ export default function CoursesPage() {
           >
             <a
               href="/"
-              onClick={(e) => { e.preventDefault(); navigate('/'); }}
+              onClick={(e) => { e.preventDefault(); navigate(withLang('/')); }}
               className="nav-link"
             >
-              ← 返回熵减智算首页
+              {pageLabels.common.backToIndex}
             </a>
             <a
               href="https://github.com/dafei1288/courses_intro"
@@ -310,7 +312,7 @@ export default function CoursesPage() {
               rel="noopener noreferrer"
               className="nav-link"
             >
-              在 GitHub 上查看课程仓库 →
+              {pageLabels.courses.githubCta}
             </a>
           </div>
         </section>

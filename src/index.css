@@ -1,3 +1,7 @@
+/* 自托管字体（scripts/gen-fonts.mjs 下载 Google Fonts 到 public/fonts/）
+   @import 必须在 @tailwind 之前（CSS 规范：@import 须在文件最前，否则被打包器忽略） */
+@import './fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,7 +41,7 @@
 
   body {
     @apply bg-[#060D1A] text-white;
-    font-family: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
     font-weight: 200;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -45,7 +49,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'EB Garamond', 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+    font-family: 'EB Garamond', 'Songti SC', 'SimSun', 'STSong', serif;
     font-weight: 400;
   }
 }
@@ -147,9 +151,26 @@
     transition: color 0.3s ease, background-color 0.3s ease;
   }
 
+  .nav-dropdown-item:has(.nav-dropdown-item-desc) {
+    padding: 12px 22px;
+  }
+
+  .nav-dropdown-item .nav-dropdown-item-desc {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    opacity: 0.55;
+  }
+
   .nav-dropdown-item:hover {
     color: #FF8C42;
     background-color: rgba(0, 180, 216, 0.06);
+  }
+
+  .nav-dropdown-item:hover .nav-dropdown-item-desc {
+    opacity: 0.85;
   }
 
   .course-card {
@@ -163,5 +184,27 @@
 
   .course-card:hover .course-card-title {
     color: var(--course-accent) !important;
+  }
+
+  .media-item {
+    transition: background-color 0.3s ease;
+  }
+
+  .media-item:hover {
+    background-color: rgba(0, 180, 216, 0.04);
+  }
+
+  .media-item:hover .media-item-title {
+    color: var(--platform-color) !important;
+  }
+
+  .media-chip {
+    transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .media-chip:hover {
+    color: #ffffff;
+    border-color: rgba(0, 180, 216, 0.45);
   }
 }

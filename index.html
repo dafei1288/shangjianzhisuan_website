@@ -3,13 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>熵减智算 — 分布式架构 · Agentic · BI</title>
+
+    <!-- ============================================================
+         微信 / QQ / Telegram 等分享卡片 meta
+         ★ 部署域名统一由 config.yml 的 site_url 配置，
+           此处 %SITE_URL% 占位符由 vite 插件在构建/预览时替换；
+           运行时路由切换由 src/shareMeta.ts 实时更新 og:*。
+         ============================================================ -->
+    <title>熵减智算 — 分布式架构 · Agentic 智能体 · 商业智能 BI</title>
+    <meta name="description" content="AI 原生技术工作室：分布式架构、Agentic 智能体、商业智能 BI 与技术治理顾问；开源 JimSql 文本数据库、JimLang 编程语言、JimClaw 智能体与 Jimmy_Med 医疗大模型。" />
+    <meta name="keywords" content="熵减智算, 分布式架构, Agentic 智能体, 商业智能 BI, JimSql, JimLang, JimClaw, Jimmy_Med, AI 原生, 技术咨询" />
+    <meta name="author" content="熵减智算 Entropy-Reduced Computing" />
+
+    <!-- 规范化 URL（各路由分享页由 scripts/gen-share-pages.mjs 按路由改写） -->
+    <link rel="canonical" href="%SITE_URL%/" />
+
+    <!-- 中英双语 hreflang（gen-share-pages.mjs 按路由改写） -->
+    <link rel="alternate" hreflang="zh-CN" href="%SITE_URL%/" />
+    <link rel="alternate" hreflang="en" href="%SITE_URL%/en" />
+    <link rel="alternate" hreflang="x-default" href="%SITE_URL%/" />
+
+    <!-- 结构化数据：Organization + WebSite（GEO/SEO 实体识别；路由级 JSON-LD 由 gen-share-pages.mjs 注入） -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "%SITE_URL%/#organization",
+          "name": "熵减智算 Entropy-Reduced Computing",
+          "alternateName": ["熵减智算", "Entropy-Reduced Computing"],
+          "url": "%SITE_URL%/",
+          "logo": "%SITE_URL%/images/logo.png",
+          "description": "AI 原生技术工作室：分布式架构、Agentic 智能体、商业智能 BI 与技术治理顾问。",
+          "sameAs": ["https://github.com/dafei1288/"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "%SITE_URL%/#website",
+          "url": "%SITE_URL%/",
+          "name": "熵减智算 — 分布式架构 · Agentic 智能体 · 商业智能 BI",
+          "inLanguage": "zh-CN",
+          "publisher": { "@id": "%SITE_URL%/#organization" }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Open Graph（微信 / QQ / Facebook 等分享卡片） -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="熵减智算" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:url" content="%SITE_URL%/" />
+    <meta property="og:title" content="熵减智算 — 分布式架构 · Agentic 智能体 · 商业智能 BI" />
+    <meta property="og:description" content="AI 原生技术工作室：分布式架构 · Agentic 智能体 · 商业智能 BI，附开源项目与系统实战课程。" />
+    <meta property="og:image" content="%SITE_URL%/images/og/index.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="熵减智算 — 分布式架构 · Agentic 智能体 · 商业智能 BI" />
+    <meta name="twitter:description" content="AI 原生技术工作室：分布式架构 · Agentic 智能体 · 商业智能 BI，附开源项目与系统实战课程。" />
+    <meta name="twitter:image" content="%SITE_URL%/images/og/index.png" />
+
     <link rel="icon" type="image/png" href="/images/logo.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@200;300;400;500&family=Fira+Code:wght@400;500&family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@200;300;400;500&display=swap" rel="stylesheet" />
+    <link rel="apple-touch-icon" href="/images/favicon-180.png" />
+    <!-- 字体已自托管（scripts/gen-fonts.mjs 下载到 public/fonts/，样式在 src/fonts.css），
+         不再加载 fonts.googleapis.com / fonts.gstatic.com，避免中国大陆访问被墙/超时 -->
   </head>
   <body>
+    <!-- ============================================================
+         微信卡片图（微信爬虫不解析 og:image，改抓“页面第一个可见的图片标签 img”）
+         - HTTPS 绝对路径（%SITE_URL% 由 vite 插件构建时替换）
+         - 文件本身 ≥300×300（share-card.png 为 512×512 PNG）
+         - 非隐藏状态（不用 display:none / 不移出视口）、不懒加载
+         - 服务器需返回 200，且不能限制 Referer / Cookie（微信爬虫不带）
+         - 用 1×1 内联占位，不影响版面；换图只需改 src
+         - 微信会缓存抓取结果（最长 24h+），改图后可在链接后加 ?v=2 强刷
+         ============================================================ -->
+    <img src="%SITE_URL%/images/share-card.png" alt="熵减智算 Entropy-Reduced Computing" width="1" height="1" loading="eager" />
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

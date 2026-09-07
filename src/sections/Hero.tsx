@@ -2,9 +2,10 @@ import { useRef, useEffect, useState } from 'react';
 import AmberCascades from './AmberCascades';
 import LiquidGlassButton from '../components/LiquidGlassButton';
 import Parallax from '../components/Parallax';
-import { heroConfig } from '../config';
+import { useConfigs } from '../i18n';
 
 export default function Hero() {
+  const { heroConfig } = useConfigs();
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [titleWidth, setTitleWidth] = useState<number>(0);
 

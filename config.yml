@@ -1,0 +1,30 @@
+# ============================================================
+# 站点可配置项（域名 / 页脚版权 / 备案号）
+# 修改后需重新构建：npm run build
+# ============================================================
+
+# 站点主域名（分享卡片 og:url / og:image / twitter:image 用），
+# 需包含协议，结尾不要带斜杠，例如：https://www.example.com
+#
+# ★ 多站点（不同域名 / 版权 / 备案）：把本文件复制一份，
+#   例如 cp config.yml config_9999data.yml，修改新文件后：
+#     node scripts/build-profile.mjs 9999data
+#   等价于 CONFIG_FILE=config_9999data.yml npm run build。
+#
+# ★ 多域名（同一 profile 部署到多个域名）：
+#     node scripts/build-domain.mjs https://www.example.com
+#   等价于 SITE_URL=<url> npm run build。
+#
+# 两个维度可组合：build-profile 决定配置，SITE_URL 可临时覆盖域名。
+# 每次构建只产出一个站点的 dist/，构建完部署到对应站点。
+site_url: "https://www.paytimes.cn/"
+
+# 页脚版权声明（{year} 会自动替换为当前年份）
+copyright: "© {year} 熵减智算 Entropy-Reduced Computing. 保留所有权利。"
+
+# ICP 备案号（留空则不显示；个人备案填个人姓名缩写或主体名）
+icp:
+  number: "津ICP备15004116号"            # 例如 "京ICP备2024123456号-1"
+  url: "https://beian.miit.gov.cn/"   # 备案链接，默认工信部备案系统
+  police_number: ""     # 公安备案号（可选，例如 "津公网安备 120xxxxxxxxx号"）
+  police_url: ""        # 公安备案链接（可选）
