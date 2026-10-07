@@ -1,13 +1,122 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { NavLink } from '../config';
 import { useConfigs, useLang, LangToggle } from '../i18n';
 import ShareButton from '../ShareButton';
+
+/** 桌面端下拉菜单：悬停 / 点击 / 键盘（Tab、Enter、↓、Esc）均可打开与关闭 */
+function NavDropdown({
+  label,
+  subs,
+  onNavigate,
+}: {
+  label: string;
+  subs: NavLink[];
+  onNavigate: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const suppressOpenRef = useRef(false);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => {
+        if (suppressOpenRef.current) {
+          suppressOpenRef.current = false;
+          return;
+        }
+        setOpen(true);
+      }}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          suppressOpenRef.current = true;
+          setOpen(false);
+          triggerRef.current?.focus();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setOpen(true);
+          panelRef.current?.querySelector('a')?.focus();
+        }
+      }}
+    >
+      <button
+        ref={triggerRef}
+        type="button"
+        className="nav-link"
+        style={{ gap: 6 }}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={label}
+        onClick={() => setOpen((v) => !v)}
+      >
+        {label}
+        <svg
+          width="10"
+          height="6"
+          viewBox="0 0 10 6"
+          fill="none"
+          aria-hidden="true"
+          style={{ transition: 'transform 0.3s ease', transform: open ? 'rotate(180deg)' : 'none' }}
+        >
+          <path
+            d="M1 1L5 5L9 1"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      </button>
+      <div
+        ref={panelRef}
+        className={`absolute left-1/2 top-full pt-3 -translate-x-1/2 transition-all duration-300 ${
+          open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'
+        }`}
+      >
+        <div
+          role="menu"
+          style={{
+            background: '#0B1626',
+            border: '1px solid rgba(0, 180, 216, 0.12)',
+            borderRadius: 10,
+            padding: '8px 0',
+            minWidth: 210,
+            boxShadow: '0 16px 48px rgba(0, 0, 0, 0.55)',
+          }}
+        >
+          {subs.map((sub) => (
+            <a
+              key={sub.label}
+              href={sub.href}
+              role="menuitem"
+              onClick={(e) => onNavigate(e, sub.href)}
+              className="nav-dropdown-item"
+            >
+              <span style={{ display: 'block' }}>{sub.label}</span>
+              {sub.description && (
+                <span className="nav-dropdown-item-desc">{sub.description}</span>
+              )}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const { siteConfig, navigationConfig, pageLabels } = useConfigs();
+
+
   const { withLang } = useLang();
 
   useEffect(() => {
@@ -24,6 +133,15 @@ export default function Navigation() {
     };
   }, [mobileOpen]);
 
+  // Esc 关闭移动端菜单
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileOpen]);
   const closeMobileMenu = () => {
     setMobileOpen(false);
     // 同步解锁滚动，保证随后的平滑滚动生效
@@ -147,54 +265,12 @@ export default function Navigation() {
       <div className="hidden md:flex items-center" style={{ gap: 40 }}>
         {navigationConfig.links.map((link) =>
           link.children ? (
-            <div key={link.label} className="relative group">
-              <span
-                className="nav-link flex items-center"
-                style={{ gap: 6, cursor: 'default' }}
-              >
-                {link.label}
-                <svg
-                  width="10"
-                  height="6"
-                  viewBox="0 0 10 6"
-                  fill="none"
-                  className="transition-transform duration-300 group-hover:rotate-180"
-                >
-                  <path
-                    d="M1 1L5 5L9 1"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
-              <div className="absolute left-1/2 top-full pt-3 -translate-x-1/2 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300">
-                <div
-                  style={{
-                    background: '#0B1626',
-                    border: '1px solid rgba(0, 180, 216, 0.12)',
-                    borderRadius: 10,
-                    padding: '8px 0',
-                    minWidth: 210,
-                    boxShadow: '0 16px 48px rgba(0, 0, 0, 0.55)',
-                  }}
-                >
-                  {link.children.map((sub) => (
-                    <a
-                      key={sub.label}
-                      href={sub.href}
-                      onClick={(e) => handleClick(e, sub.href)}
-                      className="nav-dropdown-item"
-                    >
-                      <span style={{ display: 'block' }}>{sub.label}</span>
-                      {sub.description && (
-                        <span className="nav-dropdown-item-desc">{sub.description}</span>
-                      )}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <NavDropdown
+              key={link.label}
+              label={link.label}
+              subs={link.children}
+              onNavigate={handleClick}
+            />
           ) : (
             <a
               key={link.label}

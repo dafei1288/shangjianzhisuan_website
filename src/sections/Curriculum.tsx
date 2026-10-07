@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
+import { prefersReducedMotion } from '../lib/motion';
 import Parallax from '../components/Parallax';
 import { useConfigs, useLang } from '../i18n';
 
@@ -9,11 +10,14 @@ export default function Curriculum() {
   const { withLang } = useLang();
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const itemRefs = useRef<(HTMLElement | null)[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const items = itemRefs.current.filter(Boolean) as HTMLDivElement[];
+    // 「减弱动态效果」时不做入场动画，条目直接可见
+    if (prefersReducedMotion()) return;
+
+    const items = itemRefs.current.filter(Boolean) as HTMLElement[];
     const observers: IntersectionObserver[] = [];
 
     items.forEach((item, index) => {
@@ -89,18 +93,22 @@ export default function Curriculum() {
 
         <div className="flex flex-col" style={{ gap: 100 }}>
           {capabilitiesConfig.items.map((discipline, i) => (
-            <div
+            <a
               key={discipline.title}
               ref={(el) => { itemRefs.current[i] = el; }}
-              className="flex flex-col md:flex-row md:items-start"
-              style={{ gap: '40px', cursor: 'pointer' }}
-              onClick={() => navigate(withLang(`/capability/${discipline.slug}`))}
+              href={withLang(`/capability/${discipline.slug}`)}
+              className="focus-card flex flex-col md:flex-row md:items-start"
+              style={{ gap: '40px' }}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(withLang(`/capability/${discipline.slug}`));
+              }}
               onMouseEnter={() => setHoveredIndex(i)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
               <div style={{ flex: '0 0 70%' }}>
                 <Parallax speed={i % 2 === 0 ? 0.26 : 0.12}>
-                <h3
+                <h2
                   style={{
                     fontFamily: "'EB Garamond', serif",
                     fontWeight: 400,
@@ -114,7 +122,7 @@ export default function Curriculum() {
                   }}
                 >
                   {discipline.title}
-                </h3>
+                </h2>
                 </Parallax>
               </div>
               <Parallax speed={0.07} style={{ flex: '1 1 30%' }}>
@@ -166,7 +174,7 @@ export default function Curriculum() {
                 )}
               </div>
               </Parallax>
-            </div>
+            </a>
           ))}
         </div>
       </div>

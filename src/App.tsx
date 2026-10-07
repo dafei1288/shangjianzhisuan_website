@@ -16,6 +16,7 @@ import CoursesPage from './sections/CoursesPage';
 import MediaPage from './sections/MediaPage';
 import { PageMeta } from './shareMeta';
 import { LangProvider } from './i18n';
+import BackToTop from './components/BackToTop';
 
 function HomePage() {
   return (
@@ -71,6 +72,7 @@ export default function App() {
       <Route path="/en/courses" element={<CoursesPage />} />
       <Route path="/en/media" element={<MediaPage />} />
       </Routes>
+      <BackToTop />
       </LangProvider>
     </>
   );

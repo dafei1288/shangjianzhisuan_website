@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
  * speed > 0 时元素"滞后"于滚动（经典的背景慢速感）；
  * speed < 0 时元素反向移动。
  * maxShift 限制最大位移（px），防止高速率元素滑出视口。
+ * 系统开启「减弱动态效果」时完全禁用视差（前庭安全）。
  */
 export default function useParallax<T extends HTMLElement>(speed = 0.1, maxShift = 0) {
   const ref = useRef<T>(null);
@@ -16,6 +17,18 @@ export default function useParallax<T extends HTMLElement>(speed = 0.1, maxShift
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let disabled = mql.matches;
+    // 偏好变化时实时生效：禁用则清除历史位移
+    const onPreferenceChange = () => {
+      disabled = mql.matches;
+      if (disabled) el.style.transform = '';
+    };
+    mql.addEventListener('change', onPreferenceChange);
+    if (disabled) {
+      return () => mql.removeEventListener('change', onPreferenceChange);
+    }
 
     let raf = 0;
     const update = () => {
@@ -43,6 +56,7 @@ export default function useParallax<T extends HTMLElement>(speed = 0.1, maxShift
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
+      mql.removeEventListener('change', onPreferenceChange);
     };
   }, []);
 

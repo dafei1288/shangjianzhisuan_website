@@ -54,6 +54,65 @@
   }
 }
 
+  html {
+    /* 固定导航栏高 80px：锚点跳转/scrollIntoView 不再把目标藏到导航下 */
+    scroll-padding-top: 96px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* 主题化选中文本 */
+  ::selection {
+    background: rgba(0, 180, 216, 0.35);
+    color: #ffffff;
+  }
+
+  /* 深色细滚动条（与站点配色一致） */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 180, 216, 0.35) #060D1A;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #060D1A;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 180, 216, 0.28);
+    border-radius: 5px;
+    border: 2px solid #060D1A;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 180, 216, 0.5);
+  }
+
+  /* 键盘导航焦点态：量子青描边，仅 :focus-visible（不打断鼠标点击） */
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid rgba(0, 180, 216, 0.85);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* 前庭安全：系统开启「减弱动态效果」时关闭所有动画/过渡 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
 @layer components {
   @keyframes blur-text {
     0% {
@@ -108,20 +167,25 @@
 
   .nav-link {
     position: relative;
+    display: inline-flex;
+    align-items: center;
     color: #A8B8CC;
     font-family: 'GeistMono', 'Fira Code', 'PingFang SC', 'Microsoft YaHei', monospace;
     font-weight: 300;
     font-size: 13px;
     letter-spacing: 0.5px;
     text-decoration: none;
-    padding-bottom: 2px;
+    padding: 10px 2px;
+    background: none;
+    border: none;
+    cursor: pointer;
     transition: color 0.3s ease;
   }
 
   .nav-link::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: 4px;
     left: 0;
     width: 100%;
     height: 1px;
@@ -135,13 +199,19 @@
     color: #ffffff;
   }
 
-  .nav-link:hover::after {
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
     transform: scaleX(1);
   }
 
+  .nav-link:focus-visible {
+    color: #ffffff;
+  }
+
+
   .nav-dropdown-item {
     display: block;
-    padding: 10px 22px;
+    padding: 12px 22px;
     color: #A8B8CC;
     font-family: 'GeistMono', 'Fira Code', 'PingFang SC', 'Microsoft YaHei', monospace;
     font-weight: 300;
@@ -152,7 +222,7 @@
   }
 
   .nav-dropdown-item:has(.nav-dropdown-item-desc) {
-    padding: 12px 22px;
+    padding: 14px 22px;
   }
 
   .nav-dropdown-item .nav-dropdown-item-desc {
@@ -164,13 +234,29 @@
     opacity: 0.55;
   }
 
-  .nav-dropdown-item:hover {
+  .nav-dropdown-item:hover,
+  .nav-dropdown-item:focus-visible {
     color: #FF8C42;
     background-color: rgba(0, 180, 216, 0.06);
   }
 
-  .nav-dropdown-item:hover .nav-dropdown-item-desc {
+  .nav-dropdown-item:hover .nav-dropdown-item-desc,
+  .nav-dropdown-item:focus-visible .nav-dropdown-item-desc {
     opacity: 0.85;
+  }
+
+  /* 可聚焦卡片（课程/能力条目）的统一焦点环 */
+  .focus-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .focus-card:focus-visible {
+    outline: 2px solid rgba(0, 180, 216, 0.85);
+    outline-offset: 4px;
+    border-radius: 8px;
   }
 
   .course-card {
@@ -208,3 +294,4 @@
     border-color: rgba(0, 180, 216, 0.45);
   }
 }
+

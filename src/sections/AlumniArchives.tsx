@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
+import { prefersReducedMotion } from '../lib/motion';
 import Parallax from '../components/Parallax';
 import { useConfigs, useLang } from '../i18n';
 
@@ -9,10 +10,10 @@ export default function AlumniArchives() {
   const { withLang } = useLang();
   const navigate = useNavigate();
   const gridRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const itemRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
-    const items = itemRefs.current.filter(Boolean) as HTMLDivElement[];
+    const items = prefersReducedMotion() ? [] : itemRefs.current.filter(Boolean) as HTMLElement[];
 
     items.forEach((item) => {
       gsap.set(item, { opacity: 0, y: 30 });
@@ -102,19 +103,21 @@ export default function AlumniArchives() {
           className="grid grid-cols-2 md:grid-cols-4"
           style={{ gap: 0 }}
         >
-          {researchConfig.projects.map((project, i) => (
-            <div
+          {researchConfig.projects.map((project, i) => {
+            const courseHref = courseLinksByImage[project.image];
+            return (
+            <a
               key={`${project.title}-${i}`}
               ref={(el) => { itemRefs.current[i] = el; }}
-              className="group cursor-pointer"
-              onClick={() => {
-                const href = courseLinksByImage[project.image];
-                if (href) window.open(href, '_blank', 'noopener,noreferrer');
-              }}
+              href={courseHref ?? undefined}
+              target={courseHref ? '_blank' : undefined}
+              rel={courseHref ? 'noopener noreferrer' : undefined}
+              className="group focus-card"
               style={{
                 borderBottom: '1px solid rgba(0, 180, 216, 0.1)',
                 borderRight: (i + 1) % 4 !== 0 ? '1px solid rgba(0, 180, 216, 0.1)' : 'none',
                 padding: '24px 20px',
+                cursor: courseHref ? undefined : 'default',
               }}
             >
               <div
@@ -149,7 +152,7 @@ export default function AlumniArchives() {
                   </Parallax>
                 )}
               </div>
-              <h4
+              <h3
                 style={{
                   fontFamily: "'EB Garamond', serif",
                   fontWeight: 400,
@@ -160,7 +163,7 @@ export default function AlumniArchives() {
                 }}
               >
                 {project.title}
-              </h4>
+              </h3>
               <div
                 className="flex items-center justify-between"
               >
@@ -187,8 +190,9 @@ export default function AlumniArchives() {
                   {project.year}
                 </span>
               </div>
-            </div>
-          ))}
+            </a>
+            );
+          })}
         </div>
       </div>
     </section>

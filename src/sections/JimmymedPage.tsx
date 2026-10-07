@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
+import { prefersReducedMotion } from '../lib/motion';
 import AmberCascades from './AmberCascades';
 import Parallax from '../components/Parallax';
 import Footer from './Footer';
@@ -44,7 +45,10 @@ export default function JimmymedPage() {
     const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    const items = [...featureRefs.current, ...revealRefs.current].filter(Boolean) as HTMLDivElement[];
+    // 「减弱动态效果」时不做入场动画，内容直接可见
+    const items = prefersReducedMotion()
+      ? []
+      : [...featureRefs.current, ...revealRefs.current].filter(Boolean) as HTMLDivElement[];
     items.forEach((el) => gsap.set(el, { opacity: 0, y: 40 }));
 
     const observer = new IntersectionObserver(

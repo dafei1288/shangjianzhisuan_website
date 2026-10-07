@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
+import { prefersReducedMotion } from '../lib/motion';
 import AmberCascades from './AmberCascades';
 import Parallax from '../components/Parallax';
 import Footer from './Footer';
@@ -80,7 +81,10 @@ export default function MediaPage() {
     const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    const items = [heroRef.current, ...accountRefs.current].filter(Boolean) as HTMLElement[];
+    // 「减弱动态效果」时不做入场动画，内容直接可见
+    const items = prefersReducedMotion()
+      ? []
+      : [heroRef.current, ...accountRefs.current].filter(Boolean) as HTMLElement[];
     items.forEach((el) => gsap.set(el, { opacity: 0, y: 40 }));
 
     const observer = new IntersectionObserver(
@@ -103,7 +107,10 @@ export default function MediaPage() {
 
   // 时间线条目：随筛选结果重新 reveal
   useEffect(() => {
-    const items = itemRefs.current.filter(Boolean) as HTMLElement[];
+    // 「减弱动态效果」时时间线条目直接可见
+    const items = prefersReducedMotion()
+      ? []
+      : itemRefs.current.filter(Boolean) as HTMLElement[];
     items.forEach((el) => gsap.set(el, { opacity: 0, y: 24 }));
     const observer = new IntersectionObserver(
       (entries) => {

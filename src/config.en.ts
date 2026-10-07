@@ -517,6 +517,7 @@ export const pageLabels: PageLabels = {
     featuresLabel: "Core Features",
     quickstartLabel: "Up & Running in 5 Minutes",
     moreLabel: "More →",
+    backToTop: "Back to top",
   },
   jimsql: {
     sql: "SQL Capabilities",

@@ -80,6 +80,7 @@ export interface PageLabels {
     featuresLabel: string;
     quickstartLabel: string;
     moreLabel: string;
+    backToTop: string;
   };
   jimsql: {
     sql: string;
@@ -159,6 +160,7 @@ export const pageLabels: PageLabels = {
     featuresLabel: "核心特性",
     quickstartLabel: "五分钟跑起来",
     moreLabel: "详情 →",
+    backToTop: "返回顶部",
   },
   jimsql: {
     sql: "SQL 能力",

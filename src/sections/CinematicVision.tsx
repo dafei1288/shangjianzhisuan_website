@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { prefersReducedMotion } from '../lib/motion';
 import Parallax from '../components/Parallax';
 import { useConfigs } from '../i18n';
 
@@ -14,6 +15,7 @@ export default function CinematicVision() {
     const text = textRef.current;
     if (!section || !text) return;
 
+    if (prefersReducedMotion()) return; // 「减弱动态效果」时文本直接可见
     gsap.set(text, { opacity: 0, y: 40 });
 
     const observer = new IntersectionObserver(
@@ -93,6 +95,7 @@ export default function CinematicVision() {
             >
               <video
                 ref={videoRef}
+                preload="metadata"
                 src={architectureConfig.videoPath}
                 autoPlay
                 muted
